@@ -1,5 +1,7 @@
 # RHOMBICHESS
-
+<p align="center">
+  <img src="rhombichess.png" />
+</p>
 Chess has a rich history tracing back to the 6th century, and today it's played worldwide. As
 students intrigued by the game of chess, we were very eager to learn more about a chess variant
 with fresh new board rules, new pieces, and even a new board type. This is a project worth doing
@@ -12,8 +14,7 @@ which enables people to form new connections.
 The purpose of this application is to introduce a chess variant that has special rules and pieces
 which could be challenging for even some chess enthusiasts as it forces the player to see the
 chessboard from various angles. It is significantly different from a traditional chessboard in that it
-is a variant chessboard that is made up of rhombuses instead of squares (refer to the image on the
-cover page). This chess variant is intended to encourage the growth of the players’ problem-solving
+is a variant chessboard that is made up of rhombuses instead of squares (refer to the image on the). This chess variant is intended to encourage the growth of the players’ problem-solving
 skills as well as their overall chess skills. It could also be a platform for social interactions as we
 intend to host this game online.
 
