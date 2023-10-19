@@ -7,12 +7,12 @@ setup-backend:
 clean-backend:
 	rm -rf src/backend/venv
 
-setup-frontend:
-	cd src/frontend && \
+setup-client:
+	cd src/client && \
 		npm install
 
-clean-frontend:
-	rm -rf src/frontend/node_modules
+clean-client:
+	rm -rf src/client/node_modules
 
-clean-all: clean-backend clean-frontend
+clean-all: clean-backend clean-client
 
