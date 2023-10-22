@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google'
-import '../globals.css'
+import '@/app/globals.css'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation';
 import { authOptions } from '../api/auth/[...nextauth]/route';
@@ -20,7 +20,9 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          {children}
+        </body>
     </html>
   )
 }
