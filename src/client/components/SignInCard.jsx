@@ -5,6 +5,9 @@ import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { ClosedEye, OpenEye } from '@/components/icons/EyeIcons';
 import Spinner from '@/components/Spinner';
+import {Logo} from '@/components/icons/Logo';
+
+
 
 export default function SignInCard() {
   const router = useRouter();
@@ -40,8 +43,13 @@ export default function SignInCard() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" action="#">
-      <h5 className="mb-6 text-2xl font-medium">
-        Sign in to RhombiChess
+      <h5 className="mb-6">
+        <div className="flex justify-center">
+          <Logo />
+        </div>
+        <p className="font-jockeyOne text-5xl text-center text-gray-700">
+          RhombiChess
+        </p>
       </h5>
       <div>
         <label htmlFor="email" className="mb-2 block font-medium">
