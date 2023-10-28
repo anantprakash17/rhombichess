@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       backgroundImage: {
-        'custom-image': "url('/signinbackground.png')",
+        'custom-image': "url('/signinbackground.svg')",
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',

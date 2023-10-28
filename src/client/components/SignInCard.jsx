@@ -43,13 +43,11 @@ export default function SignInCard() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" action="#">
-      <h5 className="mb-6">
-        <div className="flex justify-center">
-          <Logo />
-        </div>
-        <p className="font-jockeyOne text-5xl text-center text-gray-700">
-          RhombiChess
-        </p>
+      <div className="flex justify-center">
+        <Logo />
+      </div>
+      <h5 className="font-jockeyOne text-5xl text-center text-gray-700">
+        RhombiChess
       </h5>
       <div>
         <label htmlFor="email" className="mb-2 block font-medium">
