@@ -1,8 +1,8 @@
-import { getServerSession } from "next-auth";
-import React from "react";
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { getServerSession } from 'next-auth';
+import React from 'react';
 import { redirect } from 'next/navigation';
-import { SignOutButton } from "@/components/Buttons";
+import { authOptions } from './api/auth/[...nextauth]/route';
+import SignOutButton from '../components/Buttons';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -16,5 +16,5 @@ export default async function Home() {
       <SignOutButton />
       RhombiChess
     </main>
-  )
+  );
 }

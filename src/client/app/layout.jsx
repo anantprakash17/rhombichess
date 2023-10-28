@@ -1,15 +1,16 @@
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { getServerSession } from 'next-auth'
-import { authOptions } from './api/auth/[...nextauth]/route'
+import React from 'react';
+import { Inter } from 'next/font/google';
+import './globals.css';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
 import AuthProvider from './AuthProvider';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'RhombiChess',
   description: 'An exciting new chess variant.',
-}
+};
 
 export default async function RootLayout({ children }) {
   const session = await getServerSession(authOptions);
@@ -20,5 +21,5 @@ export default async function RootLayout({ children }) {
         <body className={inter.className}>{children}</body>
       </html>
     </AuthProvider>
-  )
+  );
 }

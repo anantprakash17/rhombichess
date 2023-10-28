@@ -3,11 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
-import { ClosedEye, OpenEye } from '@/components/icons/EyeIcons';
-import Spinner from '@/components/Spinner';
-import {Logo} from '@/components/icons/Logo';
-
-
+import { ClosedEye, OpenEye } from './icons/EyeIcons';
+import Spinner from './Spinner';
+import Logo from './icons/Logo';
 
 export default function SignInCard() {
   const router = useRouter();
@@ -28,8 +26,8 @@ export default function SignInCard() {
 
     event.preventDefault();
     const status = await signIn('credentials', {
-      email: email,
-      password: password,
+      email,
+      password,
       redirect: false,
       callbackUrl: '/',
     });
@@ -73,9 +71,9 @@ export default function SignInCard() {
             id="password"
             name="password"
             onChange={handlePasswordChange}
-            placeholder={showPassword ? 'password' : '••••••••' }
+            placeholder={showPassword ? 'password' : '••••••••'}
             required
-            type={showPassword ? 'text' : 'password' }
+            type={showPassword ? 'text' : 'password'}
           />
           <button
             aria-label={showPassword ? 'Hide password' : 'Show password'}
@@ -102,18 +100,18 @@ export default function SignInCard() {
             />
           </div>
           <label htmlFor="remember" className="ml-2 text-sm font-medium">
-              Remember me
+            Remember me
           </label>
         </div>
-        <a href="#" className="ml-auto text-sm text-blue-500 hover:underline">
-            Forgot Password?
-        </a>
+        <span className="ml-auto text-sm text-blue-500 hover:underline hover:cursor-pointer">
+          Forgot Password?
+        </span>
       </div>
       <button disabled={loading} type="submit" className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed">
         {loading ? (
           <div className="flex items-center justify-center">
             <Spinner />
-              Signing in...
+            Signing in...
           </div>
         ) : (
           'Sign in to your account'

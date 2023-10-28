@@ -14,15 +14,15 @@ module.exports = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
       fontFamily: {
-        'jockeyOne': ['"Jockey One"', 'sans-serif'],
+        jockeyOne: ['"Jockey One"', 'sans-serif'],
       },
       screens: {
-        'sm': '640px',
-        'md': '820px', //768px
-        'lg': '1024px',
-        'xl': '1280px',
-      }
+        sm: '640px',
+        md: '820px', // 768px
+        lg: '1024px',
+        xl: '1280px',
+      },
     },
   },
   plugins: [],
-}
+};

@@ -3,7 +3,7 @@ import sha256 from 'crypto-js/sha256';
 import { omit } from 'lodash';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import prisma from '@/lib/prisma';
+import prisma from '../../../../lib/prisma';
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
@@ -33,11 +33,10 @@ export const authOptions = {
             password: true,
           },
         });
-        if (user && user.password == sha256(credentials.password).toString()) {
+        if (user && user.password === sha256(credentials.password).toString()) {
           return omit(user, 'password');
-        } else {
-          return null;
         }
+        return null;
       },
     }),
   ],
@@ -54,7 +53,7 @@ export const authOptions = {
     },
     async session({ session, token, user }) {
       const dbUser = await prisma.user.findUnique({
-        where: { email: user?.email ?? token?.email }
+        where: { email: user?.email ?? token?.email },
       });
 
       if (dbUser && session.user) {
