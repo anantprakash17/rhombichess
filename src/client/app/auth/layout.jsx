@@ -1,5 +1,5 @@
+import '../globals.css';
 import { Inter } from 'next/font/google';
-import '@/app/globals.css';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
 import React from 'react';

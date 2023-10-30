@@ -44,9 +44,9 @@ export default function SignInCard() {
       <div className="flex justify-center">
         <Logo />
       </div>
-      <h5 className="font-jockeyOne text-5xl text-center text-gray-700">
+      <h1 className="font-jockeyOne text-5xl text-center text-gray-700">
         RhombiChess
-      </h5>
+      </h1>
       <div>
         <label htmlFor="email" className="mb-2 block font-medium">
           Email
