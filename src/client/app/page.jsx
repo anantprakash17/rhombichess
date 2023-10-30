@@ -1,20 +1,19 @@
 import { getServerSession } from 'next-auth';
 import React from 'react';
-import { redirect } from 'next/navigation';
 import { authOptions } from './api/auth/[...nextauth]/route';
-import SignOutButton from '../components/Buttons';
+import SideBar from '../components/SideBar';
+import { PlayLocalButton, PlayOnlineButton } from '../components/Buttons';
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
-    redirect('/api/auth/signin');
-  }
-
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <SignOutButton />
-      RhombiChess
+    <main className="flex min-h-screen w-full">
+      <SideBar session={session} />
+      <div className="sm:ml-64 p-5 flex justify-center items-center flex-grow gap-4">
+        <PlayOnlineButton />
+        <PlayLocalButton />
+      </div>
     </main>
   );
 }
