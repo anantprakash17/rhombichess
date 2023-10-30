@@ -13,6 +13,7 @@ export default function SignInCard() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleEmailChange = (event) => setEmail(event.target.value.trim());
   const handlePasswordChange = (event) => setPassword(event.target.value);
@@ -36,6 +37,8 @@ export default function SignInCard() {
       router.refresh();
     } else {
       setLoading(false);
+      setPassword('');
+      setErrorMessage('Incorrect email or password. Please try again.');
     }
   };
 
@@ -47,6 +50,12 @@ export default function SignInCard() {
       <h5 className="font-jockeyOne text-5xl text-center text-gray-700">
         RhombiChess
       </h5>
+      {errorMessage && (
+        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+          <span class="font-medium">{errorMessage}</span>
+        </div>
+        
+      )}
       <div>
         <label htmlFor="email" className="mb-2 block font-medium">
           Email
@@ -70,6 +79,7 @@ export default function SignInCard() {
             className="block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
             id="password"
             name="password"
+            value={password}
             onChange={handlePasswordChange}
             placeholder={showPassword ? 'password' : '••••••••'}
             required
