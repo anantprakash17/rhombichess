@@ -1,11 +1,10 @@
 import React from 'react';
-import { PlayLocalButton, PlayOnlineButton } from '../../components/Buttons';
+import LandingHero from '../../components/LandingHero';
 
 export default async function Home() {
   return (
-    <main className="flex justify-center items-center min-h-screen gap-3">
-      <PlayOnlineButton />
-      <PlayLocalButton />
+    <main className="relative flex justify-center items-center min-h-screen gap-3">
+      <LandingHero />
     </main>
   );
 }

@@ -13,7 +13,7 @@ export function SignOutButton() {
 
 export function PlayOnlineButton() {
   return (
-    <button className="text-5xl rounded-lg font-semibold bg-blue-400 text-white px-8 py-6 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={() => {}}>
+    <button className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700" type="button" onClick={() => {}}>
       Play Online
     </button>
   );
@@ -21,7 +21,7 @@ export function PlayOnlineButton() {
 
 export function PlayLocalButton() {
   return (
-    <button className="text-5xl rounded-lg font-semibold bg-blue-400 text-white px-8 py-6 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={() => {}}>
+    <button className="text-3xl rounded-lg font-semibold bg-blue-400 text-white px-6 py-4 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={() => {}}>
       Play Local
     </button>
   );
