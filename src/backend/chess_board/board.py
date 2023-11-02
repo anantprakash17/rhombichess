@@ -104,7 +104,7 @@ class chess_board:
             )
             for i in range(size)
         ]
-    
+
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> None:
         """
         Moves a piece from start to end
