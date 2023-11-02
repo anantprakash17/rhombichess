@@ -1,16 +1,38 @@
 class chess_tile:
-    def __init__(self, piece, color, orientation):
+    def __init__(self, piece, color, orientation) -> None:
+        """
+        Initializes a chess tile
+        Args:
+            piece (str): piece on the tile
+            color (int): color of the tile
+            orientation (int): orientation of the tile
+        """
         self.piece = piece
         self.color = color
         self.orientation = orientation
 
-    def get_piece(self):
+    def get_piece(self) -> str:
+        """
+        Get the piece on the tile
+        Returns:
+            str: piece on the tile
+        """
         return self.piece
     
-    def get_color(self):
+    def get_color(self) -> int:
+        """
+        Get the color of the tile
+        Returns:
+            int: color of the tile
+        """
         return self.color
     
-    def get_orientation(self):
+    def get_orientation(self) -> int:
+        """
+        Get the orientation of the tile
+        Returns:
+            int: orientation of the tile
+        """
         return self.orientation
     
     def __str__(self):
@@ -18,10 +40,16 @@ class chess_tile:
     
 class chess_board:
     def __init__(self):
+        """
+        Creates a chess board
+        """
         self.create_board()
 
         
     def create_board(self) -> None:
+        """
+        Creates an empty chess board with 17 columns
+        """
         # Create half the board columns then duplicate and reverse after adding the middle column
         board = [[] for _ in range(8)]
         color_list = [[0,1,2], [2,1,0], [1,2,0], [0,2,1], [2,0,1], [1,0,2], [0,1,2], [2,1,0]]
@@ -40,10 +68,15 @@ class chess_board:
 
         self.board = board
 
-    def get_board(self):
+    def get_board(self) -> list[list[chess_tile]]:
+        """
+        Get the chess board
+        Returns:
+            list[list[chess_tile]]: chess board
+        """
         return self.board
     
-    def create_tile_column(self, colors, size, orientation):
+    def create_tile_column(self, colors: list[int], size: int, orientation: int) -> list[chess_tile]:
         """
         Assigns color to a column of tiles based on given pattern
         Args:
