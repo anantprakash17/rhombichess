@@ -57,10 +57,10 @@ class chess_board:
         min_horiz = 12
         for i in range(8):
             if i % 2 == 0:
-                board[i] = self.create_tile_column(color_list[i], min_diag, 1)
+                board[i] = self.create_tile_column(color_list[i], min_diag, 0)
                 min_diag += 1
             else:
-                board[i] = (self.create_tile_column(color_list[i], min_horiz, 0))
+                board[i] = (self.create_tile_column(color_list[i], min_horiz, 1))
                 min_horiz += 2
 
 
@@ -82,8 +82,9 @@ class chess_board:
         Args:
             colors (list): list of colors to assign to column
             size (int): size 
+            orientation (int): orientation of the column
         """
-        return[chess_tile("", colors[i % 3], orientation) for i in range(size)]
+        return [chess_tile("", colors[i % 3], (orientation * (-1) ** i) if orientation == 1 else orientation) for i in range(size)]
         
 
 
