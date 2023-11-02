@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 function Spinner({ width = 'w-4', height = 'h-4' }) {
   return (
@@ -9,15 +8,5 @@ function Spinner({ width = 'w-4', height = 'h-4' }) {
     </svg>
   );
 }
-
-Spinner.propTypes = {
-  width: PropTypes.string,
-  height: PropTypes.string,
-};
-
-Spinner.defaultProps = {
-  width: 'w-4',
-  height: 'h-4',
-};
 
 export default Spinner;

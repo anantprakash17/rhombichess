@@ -47,14 +47,13 @@ export default function SignInCard() {
       <div className="flex justify-center">
         <Logo />
       </div>
-      <h5 className="font-jockeyOne text-5xl text-center text-gray-700">
+      <h1 className="font-jockeyOne text-5xl text-center text-gray-700">
         RhombiChess
-      </h5>
+      </h1>
       {errorMessage && (
-        <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
-          <span class="font-medium">{errorMessage}</span>
+        <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+          <span className="font-medium">{errorMessage}</span>
         </div>
-        
       )}
       <div>
         <label htmlFor="email" className="mb-2 block font-medium">
