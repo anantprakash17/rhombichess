@@ -11,7 +11,7 @@ function Board() {
       <Tile
         key={`${columnNumber}: ${index}`}
         orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
-        colour = {(index+columnHeight) % 3}
+        colour={(index + columnHeight) % 3}
       />
     ))
   );
