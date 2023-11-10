@@ -11,10 +11,26 @@ export function SignOutButton() {
   );
 }
 
-export function PlayOnlineButton() {
+export function PlayOnlineButton({ onClick }) {
   return (
-    <button className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700" type="button" onClick={() => {}}>
+    <button className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700" type="button" onClick={onClick}>
       Play Online
+    </button>
+  );
+}
+
+export function CreateLobbyButton({ onClick }) {
+  return (
+    <button className="text-3xl rounded-lg font-semibold bg-blue-400 text-white px-6 py-4 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={onClick}>
+      Create Lobby
+    </button>
+  );
+}
+
+export function JoinExistingLobbyButton({ onClick }) {
+  return (
+    <button className="text-3xl rounded-lg font-semibold bg-blue-400 text-white px-6 py-4 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={onClick}>
+      Join Existing Lobby
     </button>
   );
 }
@@ -26,3 +42,4 @@ export function PlayLocalButton() {
     </button>
   );
 }
+
