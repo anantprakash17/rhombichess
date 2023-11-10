@@ -42,6 +42,7 @@ export const authOptions = {
   ],
   pages: {
     signIn: '/auth/signin',
+    playOnline: '/play/online'
   },
   callbacks: {
     async jwt({ token, user }) {
