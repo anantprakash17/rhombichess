@@ -1,4 +1,14 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
 
-module.exports = nextConfig;
+const nextConfig = {
+    async rewrites() {
+      return [
+        {
+          source: '/rules/:path*',
+          destination: '/api/rules/:path*',
+        },
+      ];
+    },
+  };
+  
+  module.exports = nextConfig;
