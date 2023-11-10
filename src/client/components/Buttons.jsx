@@ -1,9 +1,7 @@
 
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import { signOut } from 'next-auth/react';
-import { useNavigate } from 'react-router-dom';
 
 
 export function SignOutButton() {
@@ -15,12 +13,12 @@ export function SignOutButton() {
 }
 
 export function PlayOnlineButton() {
-  //const navigate = useNavigate();
-  const router = useRouter();
   return (
-    <button className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700" type="button" onClick={() => router.push('/play/online')}>
-      Play Online
-    </button>
+    <a href="/play/online">
+      <button className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700" type="button">
+        Play Online
+      </button>
+    </a>
   );
 }
 
