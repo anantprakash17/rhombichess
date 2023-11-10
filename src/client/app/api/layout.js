@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Rules',
-  description: 'The official rules for the Rhombichess variant',
+  description: 'The official rules for the RhombiChess variant',
 }
 
 export default async function RootLayout({ children }) {

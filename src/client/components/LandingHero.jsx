@@ -6,8 +6,8 @@ export default function LandingHero() {
   return (
     <section className="bg-whitebg-gray-900 mb-12">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
-      <Link href="/api/rules">
-        <div href="#a" className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full bg-gray-800text-white hover:bg-gray-200hover:bg-gray-700">
+      <Link href="/rules">
+        <div className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full bg-gray-800text-white hover:bg-gray-200hover:bg-gray-700">
           <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 mr-3">New</span>
           <span className="text-sm font-medium">
             Check out the rules for this variant!
