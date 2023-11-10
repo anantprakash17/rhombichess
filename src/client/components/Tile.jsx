@@ -28,8 +28,8 @@ function Tile({
   }
 
   return (
-    <button type="button" className="group hover:cursor-pointer hover:z-50 pointer-events-none">
-      <div>
+    <button type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none">
+      <div className="absolute inset-0 flex flex-col justify-center items-center">
         {children}
       </div>
       <div>
