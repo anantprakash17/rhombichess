@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { signOut } from 'next-auth/react';
+import PlayOnlineSetUp from './PlayOnlineSetUp';
 
 export function SignOutButton() {
   return (
@@ -11,9 +12,13 @@ export function SignOutButton() {
   );
 }
 
-export function PlayOnlineButton() {
+export function PlayOnlineButton({ onClick }) {
   return (
-    <button className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700" type="button" onClick={() => {}}>
+    <button
+      className="text-3xl rounded-lg font-semibold bg-green-500 text-white px-6 py-4 hover:bg-green-600 focus:bg-green-700"
+      type="button"
+      onClick={onClick}
+    >
       Play Online
     </button>
   );

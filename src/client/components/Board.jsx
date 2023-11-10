@@ -3,6 +3,7 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import Tile from './Tile';
+import {PieceType, PieceColour, Piece} from './Piece';
 
 function Board() {
   let flip = false;

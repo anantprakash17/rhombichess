@@ -1,4 +1,5 @@
 import React from 'react';
+import {PieceType, PieceColour, Piece} from './Piece';
 
 function Tile({
   children, orientation, colour,
@@ -28,12 +29,19 @@ function Tile({
   }
 
   return (
-    <button type="button" className="group hover:cursor-pointer hover:z-50 pointer-events-none">
+    <button type="button" className="group hover:cursor-pointer hover:z-50 pointer-events-none relative">
       <div>
         {children}
       </div>
       <div>
         {tile}
+      </div>
+      <div className="absolute inset-0 flex flex-col justify-center items-center">
+        <Piece
+          type={PieceType.QUEEN}
+          colour={PieceColour.BLACK}
+          location="1: 6"
+        />
       </div>
     </button>
   );
