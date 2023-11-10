@@ -1,5 +1,5 @@
 import React from 'react';
-import PlayOnlineHome from '../../../components/PlayOnlineHome';
+import PlayOnlineHome from '../../../../components/PlayOnlineHome';
 
 export default async function Home() {
   return (
