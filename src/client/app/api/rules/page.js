@@ -15,7 +15,7 @@ export default function Rules_Page() {
         </div>
         <div className="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
           <div className="flex flex-col items-center">
-            <div className="flex justify-center items-center mb-4 w-50 h-50 rounded-full lg:h-20 lg:w-20 bg-gray-800">
+            <div className="flex justify-center items-center mb-4 w-10 h-10 rounded-full lg:h-20 lg:w-20 bg-gray-800">
                 <Image src="/images/rook-wht.png" alt="rook" width={300} height={200} className="mx-auto"/>
             </div>
             <h3 className="mb-2 text-xl font-bold text-gray-900">Rook</h3>

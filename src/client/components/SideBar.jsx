@@ -36,7 +36,7 @@ export default function SideBar({ session }) {
               </a>
             </li>
             <li>
-              <Link href="api/rules">
+              <Link href="/api/rules" as="/api/rules">
                 <div className="flex items-center p-2 w-full text-base font-normal rounded-lg transition duration-75 group text-white hover:bg-gray-700">
                 <svg aria-hidden="true" className="flex-shrink-0 w-6 h-6 transition duration-75 text-gray-400 group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
