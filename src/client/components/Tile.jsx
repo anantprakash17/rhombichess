@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Tile({
-  children, orientation, colour,
+  children, orientation, colour, onClick
 }) {
   let tile;
 
@@ -28,7 +28,7 @@ function Tile({
   }
 
   return (
-    <button type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none">
+    <button type="button" className="group relative hover:cursor-pointer hover:z-50" onClick={onClick}>
       <div className="absolute inset-0 flex flex-col justify-center items-center">
         {children}
       </div>
