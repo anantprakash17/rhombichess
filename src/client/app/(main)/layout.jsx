@@ -5,6 +5,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import AuthProvider from '../AuthProvider';
 import SideBar from '../../components/SideBar';
+import ToastProvider from '../ToastProvider';
+import 'react-toastify/dist/ReactToastify.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,10 +22,12 @@ export default async function RootLayout({ children }) {
     <AuthProvider session={session}>
       <html lang="en">
         <body className={inter.className}>
-          <SideBar session={session} />
-          <div className="sm:ml-64 flex-grow">
-            {children}
-          </div>
+          <ToastProvider>
+            <SideBar session={session} />
+            <div className="sm:ml-64 flex-grow">
+              {children}
+            </div>
+          </ToastProvider>
         </body>
       </html>
     </AuthProvider>
