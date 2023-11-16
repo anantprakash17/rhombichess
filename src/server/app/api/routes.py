@@ -6,3 +6,7 @@ def return_home():
     return jsonify({
         'message': "Hello World!"
     })
+
+@app.route('/')
+def test():
+	return '<h1>Hello World lol</h1>'
