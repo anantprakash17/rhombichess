@@ -34,6 +34,8 @@ source src/backend/venv/bin/activate
 ```
 This will switch you to the virtual environment, and install all the required dependencies. To exit the virtual environment, simply run `deactivate`.
 
+In order to start the backend, navigate to `src/server/` and type `flask --app server run` to start the flask application.
+
 ### Frontend
 The frontend for this project is based on React. To get started, you will need to have `npm` installed. To install all the required dependencies, run the following command:
 ```bash
