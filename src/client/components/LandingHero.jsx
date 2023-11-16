@@ -4,7 +4,6 @@ import React from 'react';
 import { PlayLocalButton, PlayOnlineButton } from './Buttons';
 
 export default function LandingHero() {
-
   return (
     <section className="bg-whitebg-gray-900 mb-12">
       <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
