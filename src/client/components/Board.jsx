@@ -3,8 +3,9 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
 import Tile from './Tile';
+import Piece from './Piece';
 
-function Board() {
+function Board({ pieces }) {
   let flip = false;
   const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
     Array.from({ length: columnHeight }, (_, index) => (
@@ -12,9 +13,10 @@ function Board() {
         key={`${columnNumber}: ${index}`}
         orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
         colour={(index + columnHeight) % 3}
-      />
-    ))
-  );
+      >
+        {pieces[columnNumber][index] && <Piece name={pieces[columnNumber][index]} />}
+      </Tile>
+    )));
 
   const columns = [];
 
@@ -22,12 +24,12 @@ function Board() {
   for (let i = 6; i <= 9; i++) {
     columns.push(
       <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length + 1, columnHeight: i, isSecondColumn: false })}
+        {generateColumn({ columnNumber: columns.length, columnHeight: i, isSecondColumn: false })}
       </div>,
     );
     columns.push(
       <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length + 1, columnHeight: i * 2, isSecondColumn: true })}
+        {generateColumn({ columnNumber: columns.length, columnHeight: i * 2, isSecondColumn: true })}
       </div>,
     );
   }
@@ -35,7 +37,7 @@ function Board() {
   // Manually add the 10th column
   columns.push(
     <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-      {generateColumn({ columnNumber: columns.length + 1, columnHeight: 10, isSecondColumn: false })}
+      {generateColumn({ columnNumber: columns.length, columnHeight: 10, isSecondColumn: false })}
     </div>,
   );
 
@@ -45,12 +47,12 @@ function Board() {
   for (let i = 9; i >= 6; i--) {
     columns.push(
       <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length + 1, columnHeight: i * 2, isSecondColumn: true })}
+        {generateColumn({ columnNumber: columns.length, columnHeight: i * 2, isSecondColumn: true })}
       </div>,
     );
     columns.push(
       <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length + 1, columnHeight: i, isSecondColumn: false })}
+        {generateColumn({ columnNumber: columns.length, columnHeight: i, isSecondColumn: false })}
       </div>,
     );
   }
