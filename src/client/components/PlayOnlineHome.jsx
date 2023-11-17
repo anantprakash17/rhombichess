@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { CreateLobbyButton, JoinExistingLobbyButton } from './Buttons';
-
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
 export default function PlayOnlineHome() {
@@ -63,9 +62,9 @@ export default function PlayOnlineHome() {
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
               id="lobbyCode"
               name="lobbyCode"
-              placeholder=""
+              placeholder="Code"
               required
-              type="lobbyCode"
+              type="text"
             />
           </div>
           <div className="text-center">
