@@ -1,40 +1,78 @@
 'use client'
 
 import React, { useState } from 'react';
-import { CreateLobbyPageButton, JoinExistingLobbyPageButton } from './Buttons';
-import CreateLobby from './CreateLobby';
-import JoinExistingLobby from './JoinExistingLobby';
+import { CreateLobbyButton, JoinExistingLobbyButton } from './Buttons';
+
+import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
 export default function PlayOnlineHome() {
-  const [createLobby, setCreateLobby] = useState(false);
-  const [joinLobby, setJoinLobby] = useState(false);
 
-  const handleCreateLobbyClick = () => {
-    setCreateLobby(true);
-  };
-
-  const handleJoinExistingLobby = () => {
-    setJoinLobby(true);
-  }
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <section className="bg-whitebg-gray-900 mb-12">
-      {!createLobby && !joinLobby && (
-        <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
-          <h1 className="mb-4 text-6xl font-bold tracking-tight leading-none text-gray-900">
-            Choose Your Online Play
-          </h1>
-          <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48text-gray-400">
-            Select an option to get started with online play.
-          </p>
-          <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-            <CreateLobbyPageButton onClick={handleCreateLobbyClick} />
-            <JoinExistingLobbyPageButton onClick={handleJoinExistingLobby} />
+    <section className="bg-whitebg-gray-900 mb-28 w-full rounded-lg p-6 max-w-[500px]">
+      <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
+        Start a new game
+      </h1>
+      <form className="space-y-6 mb-10"> 
+        <div>
+          <label htmlFor="password" className="mb-4 block font-medium">
+            Password (optional)
+          </label>
+          <div className="relative">
+            <input
+              className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+              id="password"
+              name="password"
+              placeholder={showPassword ? 'password' : '••••••••'}
+              type={showPassword ? 'text' : 'password'}
+            />
+            <button
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              className="absolute inset-y-0 right-0 my-auto ml-2 mr-2.5 flex h-fit items-center p-1"
+              onClick={() => setShowPassword(!showPassword)}
+              type="button"
+            >
+              {showPassword ? (
+                <OpenEye />
+              ) : (
+                <ClosedEye />
+              )}
+            </button>
+          </div>
+          <div className="text-center">
+            <CreateLobbyButton />
           </div>
         </div>
-      )}
-      {createLobby && <CreateLobby />}
-      {joinLobby && <JoinExistingLobby />}
+      </form>
+      <div className="flex items-center justify-center space-x-2 py-4 mb-6">
+        <div className="flex-1 border-t border-gray-400" />
+        <span className="px-2 text-sm text-gray-600">OR</span>
+        <div className="flex-1 border-t border-gray-400" />
+      </div>
+      <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
+        Join an existing game
+      </h1>
+      <form className="space-y-6"> 
+        <div>
+          <label htmlFor="lobbyCode" className="mb-4 block font-medium">
+            Code
+          </label>
+          <div className="relative">
+            <input
+              className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+              id="lobbyCode"
+              name="lobbyCode"
+              placeholder=""
+              required
+              type="lobbyCode"
+            />
+          </div>
+          <div className="text-center">
+            <JoinExistingLobbyButton />
+          </div>
+        </div>
+      </form>
     </section>
   );
 }
