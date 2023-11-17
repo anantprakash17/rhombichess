@@ -9,7 +9,7 @@ export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <section className="bg-whitebg-gray-900 mb-28 w-full rounded-lg p-6 max-w-[500px]">
+    <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
         Start a new game
       </h1>
@@ -62,7 +62,7 @@ export default function PlayOnlineHome() {
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
               id="lobbyCode"
               name="lobbyCode"
-              placeholder="Code"
+              placeholder="code"
               required
               type="text"
             />
