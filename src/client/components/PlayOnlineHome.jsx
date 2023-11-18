@@ -7,6 +7,9 @@ import { ClosedEye, OpenEye } from './icons/EyeIcons';
 export default function PlayOnlineHome() {
 
   const [showPassword, setShowPassword] = useState(false);
+  const [lobbyCode, setLobbyCode] = useState('');
+
+  const handleLobbyCodeChange = (event) => setLobbyCode(event.target.value.trim());
 
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
@@ -62,13 +65,14 @@ export default function PlayOnlineHome() {
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
               id="lobbyCode"
               name="lobbyCode"
+              onChange={handleLobbyCodeChange}
               placeholder="code"
               required
               type="text"
             />
           </div>
           <div className="text-center">
-            <JoinExistingLobbyButton />
+            <JoinExistingLobbyButton lobbyCode={lobbyCode} />
           </div>
         </div>
       </form>
