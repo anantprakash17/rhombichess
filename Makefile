@@ -1,11 +1,11 @@
 setup-backend:
-	cd src/backend && \
+	cd src/server && \
 		python3 -m venv venv && \
 		source venv/bin/activate && \
 		pip install -r requirements.txt
 
 clean-backend:
-	rm -rf src/backend/venv
+	rm -rf src/server/venv
 
 setup-client:
 	cd src/client && \
