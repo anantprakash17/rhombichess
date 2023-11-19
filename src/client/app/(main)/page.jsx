@@ -12,7 +12,7 @@ export default async function Home() {
         <LandingHero />
       </div>
       <div className="w-1/2 scale-[.85] flex justify-center items-center content-center">
-        <Board pieces={pieces} />
+        <Board pieces={pieces} disabled />
       </div>
     </main>
   );
