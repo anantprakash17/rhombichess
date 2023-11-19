@@ -5,7 +5,7 @@ import React from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
-function Board({ pieces }) {
+function Board({ pieces, disabled }) {
   let flip = false;
   const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
     Array.from({ length: columnHeight }, (_, index) => (
@@ -13,6 +13,7 @@ function Board({ pieces }) {
         key={`${columnNumber}: ${index}`}
         orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
         colour={(index + columnHeight) % 3}
+        disabled={disabled}
       >
         {pieces[columnNumber][index] && <Piece name={pieces[columnNumber][index]} />}
       </Tile>
