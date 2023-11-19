@@ -1,6 +1,5 @@
 from app import app
 from flask_socketio import SocketIO, join_room
-from flask_cors import CORS
 
 socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
 
