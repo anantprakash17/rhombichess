@@ -47,3 +47,11 @@ export function JoinExistingLobbyButton({ lobbyCode }) {
   );
 }
 
+export function SendMessageButton({ onClick }) {
+  return (
+    <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="button" onClick={onClick}>
+      Send Message
+    </button>
+  );
+}
+
