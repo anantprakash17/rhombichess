@@ -44,7 +44,12 @@ function Board({ pieces }) {
         colour={(index + columnHeight) % 3}
         onClick={() => handleTileClick(columnNumber, index)}
       >
-        {pieces[columnNumber][index] && <Piece name={pieces[columnNumber][index]} />}
+        {p[columnNumber][index] && (
+          <Piece 
+            name={p[columnNumber][index]}
+            isSelected={selectedPiece && selectedPiece.columnNumber === columnNumber && selectedPiece.index === index}
+          />
+        )}
       </Tile>
     )));
 
