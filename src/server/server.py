@@ -1,10 +1,4 @@
-from app import app
-from flask_socketio import SocketIO, join_room
-
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
-
-@socketio.on('connection')
-def handle_connection():
+from app import app, socketio, join_room
 
 @socketio.on('join_room')
 def handle_join_room(data):
