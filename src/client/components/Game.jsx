@@ -1,8 +1,10 @@
-'use client'
+/* eslint-disable max-len */
+
+'use client';
 
 import { React, useEffect, useState } from 'react';
-import Board from './Board';
 import io from 'socket.io-client';
+import Board from './Board';
 import ChatWindow from './ChatWindow';
 
 const socket = io.connect('http://localhost:8080');
@@ -25,10 +27,9 @@ export default function Game({ lobbyCode }) {
 
   useEffect(() => {
     socket.on('receive_message', (data) => {
-      setMessages(prevMessages => [...prevMessages, data.message]);
+      setMessages((prevMessages) => [...prevMessages, data.message]);
     });
   }, [socket]);
-
 
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6">
@@ -40,7 +41,7 @@ export default function Game({ lobbyCode }) {
       >
         {isChatVisible ? 'Hide Chat' : 'Show Chat'}
       </button>
-      {isChatVisible && <ChatWindow lobbyCode={lobbyCode} toggleChatWindow={toggleChatWindow} messages={messages}/> }
+      {isChatVisible && <ChatWindow lobbyCode={lobbyCode} toggleChatWindow={toggleChatWindow} messages={messages} /> }
     </section>
   );
 }
