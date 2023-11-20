@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import io from 'socket.io-client';
 import { React, useEffect, useState } from 'react';
@@ -12,11 +12,10 @@ export default function ChatWindow({ lobbyCode, toggleChatWindow, messages }) {
   const [room, setRoom] = useState(lobbyCode);
 
   const sendMessage = () => {
-    socket.emit('send_message', {message, room});
+    socket.emit('send_message', { message, room });
     setMessage('');
   };
 
-  
   return (
     <section className="border-2 fixed bottom-5 right-5 w-64 h-96 bg-white shadow-lg rounded-lg p-4 flex flex-col">
       <div className="flex justify-end items-center p-2">
@@ -35,12 +34,12 @@ export default function ChatWindow({ lobbyCode, toggleChatWindow, messages }) {
           </div>
         ))}
       </div>
-      <input 
+      <input
         className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-        placeholder="Message" 
+        placeholder="Message"
         value={message}
         onChange={(event) => {
-          setMessage(event.target.value)
+          setMessage(event.target.value);
         }}
       />
       <SendMessageButton onClick={sendMessage} />
