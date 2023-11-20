@@ -1,11 +1,10 @@
-'use client'
+'use client';
 
 import React, { useState } from 'react';
 import { CreateLobbyButton, JoinExistingLobbyButton } from './Buttons';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
 export default function PlayOnlineHome() {
-
   const [showPassword, setShowPassword] = useState(false);
   const [lobbyCode, setLobbyCode] = useState('');
 
@@ -14,9 +13,9 @@ export default function PlayOnlineHome() {
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
-        Start a new game
+        Start a New Game
       </h1>
-      <form className="space-y-6 mb-10"> 
+      <form className="space-y-6 mb-10">
         <div>
           <label htmlFor="password" className="mb-4 block font-medium">
             Password (optional)
@@ -53,9 +52,9 @@ export default function PlayOnlineHome() {
         <div className="flex-1 border-t border-gray-400" />
       </div>
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
-        Join an existing game
+        Join an Existing Game
       </h1>
-      <form className="space-y-6"> 
+      <form className="space-y-6">
         <div>
           <label htmlFor="lobbyCode" className="mb-4 block font-medium">
             Code
