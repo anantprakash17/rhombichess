@@ -1,9 +1,12 @@
 from flask import jsonify, request
-from app import app
+from flask_socketio import SocketIO, join_room
+from app import app, socketio
 from app.chess_board.board import ChessBoard
 import uuid
 
 games: dict[str,ChessBoard] = {}
+
+messages = []
 
 def create_game(game_id):
     games[game_id] = ChessBoard()
@@ -16,7 +19,7 @@ def return_home():
 
 @app.route("/api/new_game", methods=['POST'])
 def new_game():
-    game_id = str(uuid.uuid4())[:4]
+    game_id = str(uuid.uuid4())[:4].upper()
     create_game(game_id)
     return jsonify({
         'game_id': game_id
@@ -48,3 +51,18 @@ def game(game_id):
         return jsonify({
             'message': "Invalid method"
         })
+    
+@socketio.on('join_room')
+def handle_join_room(data):
+    join_room(data)
+
+@socketio.on('send_message')
+def handle_send_message(data):
+    room = data.get('room')
+    messages.append(data.get('message'))
+    socketio.emit('receive_message', messages, to=room)
+
+@socketio.on('send_move')
+def handle_send_move(data):
+    room = data.get('room')
+    socketio.emit('receive_move', data, to=room)
