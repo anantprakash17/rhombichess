@@ -19,4 +19,4 @@ def handle_send_message(data):
     socketio.emit('receive_message', data, to=room)
 
 if __name__ == '__main__':
-    socketio.run(app, port=3001)
+    socketio.run(app, port=8080)
