@@ -4,10 +4,10 @@ import { PlayLocalButton, PlayOnlineButton } from './Buttons';
 
 export default function LandingHero() {
   return (
-    <section className="bg-whitebg-gray-900 mb-12">
-      <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
+    <section className="bg-white mb-12">
+      <div className="py-8 px-4 mx-auto max-w-screen-xl text-center">
         <Link href="/rules">
-          <div className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full bg-gray-800text-white hover:bg-gray-200hover:bg-gray-700">
+          <div className="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200">
             <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 mr-3">New</span>
             <span className="text-sm font-medium">
               Check out the rules for this variant!
@@ -16,9 +16,11 @@ export default function LandingHero() {
           </div>
         </Link>
         <h1 className="mb-4 text-5xl font-bold tracking-tight leading-none text-gray-900">
-          All-New Strategic Online Chess Variant!
+          All-New Strategic Online
+          <br />
+          Chess Variant!
         </h1>
-        <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48text-gray-400">
+        <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16">
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Voluptate necessitatibus optio libero, tempore,
           labore fugit adipisci nobis soluta iusto animi nihil voluptatum?

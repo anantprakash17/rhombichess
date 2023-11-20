@@ -7,11 +7,10 @@ import React, { useState } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
-function Board({ pieces }) {
+function Board({ pieces, disabled }) {
 
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [p, setPieces] = useState(pieces);
-
   let flip = false;
 
   const handleTileClick = (columnNumber, index) => {
@@ -43,6 +42,7 @@ function Board({ pieces }) {
         orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
         colour={(index + columnHeight) % 3}
         onClick={() => handleTileClick(columnNumber, index)}
+        disabled={disabled}
       >
         {p[columnNumber][index] && (
           <Piece 
