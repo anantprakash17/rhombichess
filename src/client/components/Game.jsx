@@ -27,7 +27,7 @@ export default function Game({ lobbyCode }) {
 
   useEffect(() => {
     socket.on('receive_message', (data) => {
-      setMessages((prevMessages) => [...prevMessages, data.message]);
+      setMessages(data);
     });
   }, [socket]);
 
