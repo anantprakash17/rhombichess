@@ -1,21 +1,55 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
-import React from 'react';
+'use client'
+
+import React, { useState } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
 function Board({ pieces, disabled }) {
+
+  const [selectedPiece, setSelectedPiece] = useState(null);
+  const [p, setPieces] = useState(pieces);
   let flip = false;
+
+  const handleTileClick = (columnNumber, index) => {
+    if (selectedPiece) {
+      if (!p[columnNumber][index] && !(selectedPiece.columnNumber === columnNumber && selectedPiece.index === index)) {
+        const newPieces = p.map((col, colIndex) => {
+          const newColumn = [...col];
+          if (colIndex === selectedPiece.columnNumber) {
+            newColumn[selectedPiece.index] = '';
+          }
+          if (colIndex === columnNumber) {
+            newColumn[index] = p[selectedPiece.columnNumber][selectedPiece.index];
+          }
+          return newColumn;
+        });
+        setPieces(newPieces);
+        setSelectedPiece(null);
+      }
+    } else if (p[columnNumber][index]) {
+      setSelectedPiece({ columnNumber, index });
+    }
+  };
+
+
   const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
     Array.from({ length: columnHeight }, (_, index) => (
       <Tile
         key={`${columnNumber}: ${index}`}
         orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
         colour={(index + columnHeight) % 3}
+        onClick={() => handleTileClick(columnNumber, index)}
         disabled={disabled}
       >
-        {pieces[columnNumber][index] && <Piece name={pieces[columnNumber][index]} />}
+        {p[columnNumber][index] && (
+          <Piece 
+            name={p[columnNumber][index]}
+            isSelected={selectedPiece && selectedPiece.columnNumber === columnNumber && selectedPiece.index === index}
+          />
+        )}
       </Tile>
     )));
 

@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Tile({
-  children, orientation, colour, disabled,
+  children, orientation, colour, onClick, disabled,
 }) {
   let tile;
 
@@ -30,7 +30,7 @@ function Tile({
   }
 
   return (
-    <button disabled={disabled} type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none select-none">
+    <button onClick={onClick} disabled={disabled} type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none select-none">
       <div className="absolute inset-0 flex flex-col justify-center items-center">
         {children}
       </div>
