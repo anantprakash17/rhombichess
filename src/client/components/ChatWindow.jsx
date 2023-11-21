@@ -1,14 +1,15 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+
 'use client';
 
 import io from 'socket.io-client';
-import { React, useEffect, useState } from 'react';
+import { React, useState } from 'react';
 import { SendMessageButton } from './Buttons';
 
 const socket = io.connect('http://localhost:8080');
 
 export default function ChatWindow({ lobbyCode, toggleChatWindow, messages }) {
   const [message, setMessage] = useState('');
-
   const [room, setRoom] = useState(lobbyCode);
 
   const sendMessage = () => {

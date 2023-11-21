@@ -21,7 +21,7 @@ export default async function page({ params }) {
     },
   });
   const data = await response.json();
-  const initialBoard = data['board'];
+  const initialBoard = data.board;
 
   return (
     <main className="relative flex justify-center items-center min-h-screen gap-3">

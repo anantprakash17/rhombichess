@@ -13,38 +13,34 @@ if (typeof window !== 'undefined') {
 }
 
 export default function Game({ lobbyCode, initialBoard }) {
-  const [room, setRoom] = useState(lobbyCode);
+  const [room] = useState(lobbyCode);
   const [isChatVisible, setIsChatVisible] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [board, setBoard] = useState(initialBoard);
 
   const toggleChatWindow = () => {
     setIsChatVisible(!isChatVisible);
   };
 
   if (room !== '') {
-    if (socket)
-    socket.emit('join_room', room);
+    if (socket) socket.emit('join_room', room);
   }
 
   useEffect(() => {
-    if(!socket) return;
+    if (!socket) return;
     const handleMessage = (data) => {
       setMessages(data);
     };
   
     socket.on('receive_message', handleMessage);
-  
-    // Cleanup function
+
     return () => {
       socket.off('receive_message', handleMessage);
     };
   }, [socket]);
 
-
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6">
-      <Board pieces={board} lobbyCode={lobbyCode} socket={socket} />
+      <Board pieces={initialBoard} lobbyCode={lobbyCode} socket={socket} />
       <button
         onClick={toggleChatWindow}
         className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"

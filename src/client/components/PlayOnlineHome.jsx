@@ -1,16 +1,17 @@
+
 'use client';
 
 import React, { useState } from 'react';
 import { CreateLobbyButton, JoinExistingLobbyButton } from './Buttons';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
-export default function PlayOnlineHome( { newLobbyCode } ) {
+export default function PlayOnlineHome({ newLobbyCode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [lobbyCode, setLobbyCode] = useState('');
 
   const handleLobbyCodeChange = (event) => setLobbyCode(event.target.value.trim());
 
-  const onClick = () => {
+  const lobbyDestination = () => {
     window.location.href = `/game/${newLobbyCode}`;
   }
   
@@ -46,7 +47,7 @@ export default function PlayOnlineHome( { newLobbyCode } ) {
             </button>
           </div>
           <div className="text-center">
-            <CreateLobbyButton onClick={onClick} />
+            <CreateLobbyButton onClick={lobbyDestination} />
           </div>
         </div>
       </form>

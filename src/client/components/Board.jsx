@@ -1,26 +1,25 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
-'use client'
+
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
 function Board({ pieces, lobbyCode, disabled, socket }) {
-
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [p, setPieces] = useState(pieces);
   let flip = false;
 
   // Listen for changes
   useEffect(() => {
-    // ensure socket exists before continuing
     if (!socket) return;
     socket.on('receive_move', (data) => {
       setPieces(data);
     });
 
-    // Clean up the event listener when the component unmounts
     return () => {
       socket.off('receive_move');
     };
@@ -29,7 +28,6 @@ function Board({ pieces, lobbyCode, disabled, socket }) {
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
       // Make a POST request to the backend
-      console.log('hostname', window.location.hostname);
       fetch(`http://${window.location.hostname}:8080/api/game/${lobbyCode}`, {
         method: 'POST',
         headers: {
@@ -40,14 +38,14 @@ function Board({ pieces, lobbyCode, disabled, socket }) {
           new_pos: `${columnNumber},${index}`,
         }),
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           // Handle the response from the backend
-          setPieces(data['board']);
+          setPieces(data.board);
           setSelectedPiece(null);
           socket.emit('send_move', { room: lobbyCode, game_id: lobbyCode });
         })
-        .catch(error => {
+        .catch((error) => {
           // Handle any errors that occur during the request
           console.error(error);
         });
