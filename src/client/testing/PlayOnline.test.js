@@ -13,7 +13,7 @@ describe('PlayOnlineHome Component', () => {
   });
 
   it('renders without crashing', () => {
-    const createGameHeader = screen.getByText(/Start a New Game/i);
+    const createGameHeader = screen.getByText(/Create a New Game/i);
     const joinGameHeader = screen.getByText(/Join an Existing Game/i);
 
     const passwordField = screen.getByPlaceholderText('••••••••');

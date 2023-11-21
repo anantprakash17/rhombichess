@@ -24,7 +24,7 @@ export default function PlayOnlineHome() {
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
-        Start a New Game
+        Create a New Game
       </h1>
       <form className="space-y-6 mb-10" onSubmit={handleCreateGame}>
         <div>
@@ -54,7 +54,7 @@ export default function PlayOnlineHome() {
           </div>
           <div className="text-center">
             <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="submit" onClick={() => {}}>
-              Start New Game
+              Create Game
             </button>
           </div>
         </div>
