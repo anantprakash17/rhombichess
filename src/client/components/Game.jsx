@@ -25,21 +25,23 @@ export default function Game({ lobbyCode, initialBoard }) {
   }
 
   useEffect(() => {
-    socket.on('receive_message', (data) => {
+    const handleMessage = (data) => {
       console.log('Received message');
       setMessages(data);
-    });
-
-    socket.on('receive_move', (data) => {
-      console.log('Received move');
-      setBoard(data);
-    });
+    };
+  
+    socket.on('receive_message', handleMessage);
+  
+    // Cleanup function
+    return () => {
+      socket.off('receive_message', handleMessage);
+    };
   }, [socket]);
 
 
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6">
-      <Board pieces={board} lobbyCode={lobbyCode} />
+      <Board pieces={board} lobbyCode={lobbyCode} socket={socket} />
       <button
         onClick={toggleChatWindow}
         className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"

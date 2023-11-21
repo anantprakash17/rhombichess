@@ -7,21 +7,24 @@ import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
-const socket = io.connect('http://localhost:8080');
-
-function Board({ pieces, lobbyCode, disabled }) {
+function Board({ pieces, lobbyCode, disabled, socket }) {
 
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [p, setPieces] = useState(pieces);
   let flip = false;
 
-  // Listen for changes to the board
+  // Listen for changes
   useEffect(() => {
     socket.on('receive_move', (data) => {
-      console.log('Received move')
+      console.log('Received move');
       setPieces(data);
     });
-  }, [socket]);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      socket.off('receive_move');
+    };
+  }, []);
 
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
