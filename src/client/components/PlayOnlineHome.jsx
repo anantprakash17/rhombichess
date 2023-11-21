@@ -5,9 +5,9 @@ import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
 export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
-  const [lobbyCode, setLobbyCode] = useState('');
+  const [gameCode, setgameCode] = useState('');
 
-  const handleLobbyCodeChange = (event) => setLobbyCode(event.target.value.trim());
+  const handlegameCodeChange = (event) => setgameCode(event.target.value.trim());
 
   const handleCreateGame = (event) => {
     event.preventDefault();
@@ -16,8 +16,8 @@ export default function PlayOnlineHome() {
 
   const handleJoinGame = (event) => {
     event.preventDefault();
-    if (lobbyCode) {
-      window.location.href = `/game/${lobbyCode}`;
+    if (gameCode) {
+      window.location.href = `/game/${gameCode}`;
     }
   };
 
@@ -69,15 +69,15 @@ export default function PlayOnlineHome() {
       </h1>
       <form className="space-y-6" onSubmit={handleJoinGame}>
         <div>
-          <label htmlFor="lobbyCode" className="mb-2 block font-medium">
+          <label htmlFor="gameCode" className="mb-2 block font-medium">
             Game Code
           </label>
           <div className="relative">
             <input
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-              id="lobbyCode"
-              name="lobbyCode"
-              onChange={handleLobbyCodeChange}
+              id="gameCode"
+              name="gameCode"
+              onChange={handlegameCodeChange}
               placeholder="4ZP6A"
               required
               type="text"
