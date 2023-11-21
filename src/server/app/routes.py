@@ -33,7 +33,7 @@ def game(game_id):
     if game_id not in games:
         return jsonify({
             'message': "Game not found"
-        })
+        }), 404
     if request.method == 'GET':
         return jsonify({
             'board': games[game_id].get_piece_locations()

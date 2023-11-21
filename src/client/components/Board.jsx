@@ -2,7 +2,6 @@
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
 'use client'
-import io from 'socket.io-client';
 import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
@@ -30,7 +29,8 @@ function Board({ pieces, lobbyCode, disabled, socket }) {
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
       // Make a POST request to the backend
-      fetch(`http://localhost:8080/api/game/${lobbyCode}`, {
+      console.log('hostname', window.location.hostname);
+      fetch(`http://${window.location.hostname}:8080/api/game/${lobbyCode}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

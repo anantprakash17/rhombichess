@@ -7,8 +7,10 @@ import io from 'socket.io-client';
 import Board from './Board';
 import ChatWindow from './ChatWindow';
 
-const socket = io.connect('http://localhost:8080');
-
+let socket;
+if (typeof window !== 'undefined') {
+  socket = io.connect(`http://${window.location.hostname}:8080`);
+}
 
 export default function Game({ lobbyCode, initialBoard }) {
   const [room, setRoom] = useState(lobbyCode);
@@ -21,10 +23,12 @@ export default function Game({ lobbyCode, initialBoard }) {
   };
 
   if (room !== '') {
+    if (socket)
     socket.emit('join_room', room);
   }
 
   useEffect(() => {
+    if(!socket) return;
     const handleMessage = (data) => {
       setMessages(data);
     };
