@@ -49,7 +49,10 @@
     "transform": {
       "^.+\\.(js|jsx)$": "babel-jest"
     },
-    "testEnvironment": "jest-environment-jsdom"
+    "testEnvironment": "jest-environment-jsdom",
+    "globals": {
+      "baseUrl": "http://localhost/"
+    }
   },
   "babel": {
     "presets": [
