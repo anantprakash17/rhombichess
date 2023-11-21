@@ -1,7 +1,6 @@
 import React from 'react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import prisma from '../../../../lib/prisma';
 import PageNotFound from '../../../../components/PageNotFound';
 import Game from '../../../../components/Game';
 import { authOptions } from '../../../api/auth/[...nextauth]/route';

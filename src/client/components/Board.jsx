@@ -18,7 +18,6 @@ function Board({ pieces, lobbyCode, disabled, socket }) {
     // ensure socket exists before continuing
     if (!socket) return;
     socket.on('receive_move', (data) => {
-      console.log('Received move');
       setPieces(data);
     });
 

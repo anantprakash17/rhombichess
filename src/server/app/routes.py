@@ -69,4 +69,3 @@ def handle_send_message(data):
 def handle_send_move(data):
     room = data.get('room')
     socketio.emit('receive_move', games[str(data.get('game_id'))].get_piece_locations(), to=room)
-    print("did a lil movie move")

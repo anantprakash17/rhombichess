@@ -26,7 +26,6 @@ export default function Game({ lobbyCode, initialBoard }) {
 
   useEffect(() => {
     const handleMessage = (data) => {
-      console.log('Received message');
       setMessages(data);
     };
   
