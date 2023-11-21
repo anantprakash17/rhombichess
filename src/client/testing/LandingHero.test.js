@@ -10,9 +10,9 @@ describe('LandingHero Component', () => {
   });
 
   it('renders correctly', () => {
-    expect(screen.getByRole('heading', { name: /All-New Strategic Online/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Play Online/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Play Local/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /All-New Strategic Online/i })).toBeVisible();
+    expect(screen.getByRole('link', { name: /Play Online/i })).toBeVisible();
+    expect(screen.getByRole('button', { name: /Play Local/i })).toBeVisible();
   });
 
   it('navigates to rules page on link click', () => {
@@ -24,8 +24,8 @@ describe('LandingHero Component', () => {
     const onlinePlayButton = screen.getByRole('link', { name: /Play Online/i });
     const localPlayButton = screen.getByRole('button', { name: /Play Local/i });
 
-    expect(onlinePlayButton).toBeInTheDocument();
-    expect(localPlayButton).toBeInTheDocument();
+    expect(onlinePlayButton).toBeVisible();
+    expect(localPlayButton).toBeVisible();
 
     expect(onlinePlayButton).toHaveAttribute('href', '/play/online');
   });

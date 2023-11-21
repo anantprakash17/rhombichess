@@ -16,8 +16,13 @@ describe('PlayOnlineHome Component', () => {
     const createGameHeader = screen.getByText(/Start a New Game/i);
     const joinGameHeader = screen.getByText(/Join an Existing Game/i);
 
-    expect(createGameHeader).toBeInTheDocument();
-    expect(joinGameHeader).toBeInTheDocument();
+    const passwordField = screen.getByPlaceholderText('••••••••');
+    const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
+
+    expect(createGameHeader).toBeVisible();
+    expect(joinGameHeader).toBeVisible();
+    expect(passwordField).toBeVisible();
+    expect(gameCodeField).toBeVisible();
   });
 
   it('updates lobby code on input change', () => {
