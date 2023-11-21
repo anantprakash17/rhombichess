@@ -15,18 +15,19 @@ export default async function page({ params }) {
 
   const { gameId } = params;
 
-  // TODO: Once API has been set up, retrieve game information from API
-
-  const gameExists = await prisma.game.findUnique({
-    where: {
-      id: gameId,
+  const response = await fetch(`http://localhost:8080/api/game/${gameId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
     },
   });
+  const data = await response.json();
+  const board = data['board'];
 
   return (
     <main className="relative flex justify-center items-center min-h-screen gap-3">
       <span className=" font-semibold">
-        {gameExists ? <Game lobbyCode={gameId} /> : <PageNotFound title="Sorry, this game does not exist." message="Make sure the game URL has been entered correctly. Otherwise, this game either does not exist or has ended. Return to the homepage to start or join a different game!" />}
+        {response.ok ? <Game lobbyCode={gameId} board={board} /> : <PageNotFound title="Sorry, this game does not exist." message="Make sure the game URL has been entered correctly. Otherwise, this game either does not exist or has ended. Return to the homepage to start or join a different game!" />}
       </span>
     </main>
   );

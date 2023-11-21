@@ -6,6 +6,8 @@ import uuid
 
 games: dict[str,ChessBoard] = {}
 
+games['123456'] = ChessBoard()
+
 messages = []
 
 def create_game(game_id):
@@ -65,4 +67,5 @@ def handle_send_message(data):
 @socketio.on('send_move')
 def handle_send_move(data):
     room = data.get('room')
-    socketio.emit('receive_move', data, to=room)
+    socketio.emit('receive_move', games[str(data.get('game_id'))].get_piece_locations(), to=room)
+    print("did a lil movie move")

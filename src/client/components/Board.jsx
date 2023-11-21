@@ -2,33 +2,51 @@
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
 'use client'
-
-import React, { useState } from 'react';
+import io from 'socket.io-client';
+import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
-function Board({ pieces, disabled }) {
+const socket = io.connect('http://localhost:8080');
+
+function Board({ pieces, lobbyCode, disabled }) {
 
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [p, setPieces] = useState(pieces);
   let flip = false;
 
+  // Listen for changes to the board
+  useEffect(() => {
+    socket.on('receive_move', (data) => {
+      console.log('Received move')
+      setPieces(data);
+    });
+  }, [socket]);
+
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
-      if (!p[columnNumber][index] && !(selectedPiece.columnNumber === columnNumber && selectedPiece.index === index)) {
-        const newPieces = p.map((col, colIndex) => {
-          const newColumn = [...col];
-          if (colIndex === selectedPiece.columnNumber) {
-            newColumn[selectedPiece.index] = '';
-          }
-          if (colIndex === columnNumber) {
-            newColumn[index] = p[selectedPiece.columnNumber][selectedPiece.index];
-          }
-          return newColumn;
+      // Make a POST request to the backend
+      fetch(`http://localhost:8080/api/game/${lobbyCode}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          old_pos: `${selectedPiece.columnNumber},${selectedPiece.index}`,
+          new_pos: `${columnNumber},${index}`,
+        }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response from the backend
+          setPieces(data['board']);
+          setSelectedPiece(null);
+          socket.emit('send_move', { room: lobbyCode, game_id: lobbyCode });
+        })
+        .catch(error => {
+          // Handle any errors that occur during the request
+          console.error(error);
         });
-        setPieces(newPieces);
-        setSelectedPiece(null);
-      }
     } else if (p[columnNumber][index]) {
       setSelectedPiece({ columnNumber, index });
     }
