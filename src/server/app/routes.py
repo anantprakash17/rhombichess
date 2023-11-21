@@ -8,10 +8,11 @@ games: dict[str,ChessBoard] = {}
 
 games['123456'] = ChessBoard()
 
-messages = []
+messages: dict[str,list] = {}
 
 def create_game(game_id):
     games[game_id] = ChessBoard()
+    messages[game_id] = []
 
 @app.route("/api/home", methods=['GET'])
 def return_home():
@@ -61,8 +62,8 @@ def handle_join_room(data):
 @socketio.on('send_message')
 def handle_send_message(data):
     room = data.get('room')
-    messages.append(data.get('message'))
-    socketio.emit('receive_message', messages, to=room)
+    messages[room].append(data.get('message'))
+    socketio.emit('receive_message', messages[room], to=room)
 
 @socketio.on('send_move')
 def handle_send_move(data):

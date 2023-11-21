@@ -10,11 +10,11 @@ import ChatWindow from './ChatWindow';
 const socket = io.connect('http://localhost:8080');
 
 
-export default function Game({ lobbyCode, board }) {
+export default function Game({ lobbyCode, initialBoard }) {
   const [room, setRoom] = useState(lobbyCode);
   const [isChatVisible, setIsChatVisible] = useState(false);
   const [messages, setMessages] = useState([]);
-  const [newBoard, setBoard] = useState(board);
+  const [board, setBoard] = useState(initialBoard);
 
   const toggleChatWindow = () => {
     setIsChatVisible(!isChatVisible);
@@ -39,7 +39,7 @@ export default function Game({ lobbyCode, board }) {
 
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6">
-      <Board pieces={newBoard} lobbyCode={lobbyCode} />
+      <Board pieces={board} lobbyCode={lobbyCode} />
       <button
         onClick={toggleChatWindow}
         className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"

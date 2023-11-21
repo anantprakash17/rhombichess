@@ -22,12 +22,12 @@ export default async function page({ params }) {
     },
   });
   const data = await response.json();
-  const board = data['board'];
+  const initialBoard = data['board'];
 
   return (
     <main className="relative flex justify-center items-center min-h-screen gap-3">
       <span className=" font-semibold">
-        {response.ok ? <Game lobbyCode={gameId} board={board} /> : <PageNotFound title="Sorry, this game does not exist." message="Make sure the game URL has been entered correctly. Otherwise, this game either does not exist or has ended. Return to the homepage to start or join a different game!" />}
+        {response.ok ? <Game lobbyCode={gameId} initialBoard={initialBoard} /> : <PageNotFound title="Sorry, this game does not exist." message="Make sure the game URL has been entered correctly. Otherwise, this game either does not exist or has ended. Return to the homepage to start or join a different game!" />}
       </span>
     </main>
   );
