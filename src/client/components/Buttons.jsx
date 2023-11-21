@@ -28,21 +28,3 @@ export function PlayLocalButton() {
     </button>
   );
 }
-
-export function CreateLobbyButton() {
-  return (
-    <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="button" onClick={() => {}}>
-      Start New Game
-    </button>
-  );
-}
-
-export function JoinExistingLobbyButton({ lobbyCode }) {
-  return (
-    <a href={lobbyCode ? `/game/${lobbyCode}` : undefined}>
-      <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="button" onClick={() => {}}>
-        Join Game
-      </button>
-    </a>
-  );
-}

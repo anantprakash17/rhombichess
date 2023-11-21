@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { CreateLobbyButton, JoinExistingLobbyButton } from './Buttons';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
 export default function PlayOnlineHome() {
@@ -10,14 +9,26 @@ export default function PlayOnlineHome() {
 
   const handleLobbyCodeChange = (event) => setLobbyCode(event.target.value.trim());
 
+  const handleCreateGame = (event) => {
+    event.preventDefault();
+    // TODO: Create new game
+  };
+
+  const handleJoinGame = (event) => {
+    event.preventDefault();
+    if (lobbyCode) {
+      window.location.href = `/game/${lobbyCode}`;
+    }
+  };
+
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
         Start a New Game
       </h1>
-      <form className="space-y-6 mb-10">
+      <form className="space-y-6 mb-10" onSubmit={handleCreateGame}>
         <div>
-          <label htmlFor="password" className="mb-4 block font-medium">
+          <label htmlFor="password" className="mb-2 block font-medium">
             Password (optional)
           </label>
           <div className="relative">
@@ -42,7 +53,9 @@ export default function PlayOnlineHome() {
             </button>
           </div>
           <div className="text-center">
-            <CreateLobbyButton />
+            <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="button" onClick={() => {}}>
+              Start New Game
+            </button>
           </div>
         </div>
       </form>
@@ -54,10 +67,10 @@ export default function PlayOnlineHome() {
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
         Join an Existing Game
       </h1>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleJoinGame}>
         <div>
-          <label htmlFor="lobbyCode" className="mb-4 block font-medium">
-            Code
+          <label htmlFor="lobbyCode" className="mb-2 block font-medium">
+            Game Code
           </label>
           <div className="relative">
             <input
@@ -65,13 +78,15 @@ export default function PlayOnlineHome() {
               id="lobbyCode"
               name="lobbyCode"
               onChange={handleLobbyCodeChange}
-              placeholder="code"
+              placeholder="4ZP6A"
               required
               type="text"
             />
           </div>
           <div className="text-center">
-            <JoinExistingLobbyButton lobbyCode={lobbyCode} />
+            <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="button" onClick={() => {}}>
+              Join Game
+            </button>
           </div>
         </div>
       </form>
