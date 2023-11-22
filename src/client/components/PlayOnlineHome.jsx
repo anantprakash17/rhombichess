@@ -8,7 +8,7 @@ export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
   const [gameCode, setgameCode] = useState('');
 
-  const handlegameCodeChange = (event) => setgameCode(event.target.value.trim());
+  const handleGameCodeChange = (event) => setgameCode(event.target.value.trim());
 
   const handleCreateGame = async (event) => {
     event.preventDefault();
@@ -92,7 +92,7 @@ export default function PlayOnlineHome() {
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
               id="gameCode"
               name="gameCode"
-              onChange={handlegameCodeChange}
+              onChange={handleGameCodeChange}
               placeholder="4ZP6A"
               required
               type="text"
