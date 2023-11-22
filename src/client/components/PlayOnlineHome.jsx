@@ -1,9 +1,10 @@
+
 'use client';
 
 import React, { useState } from 'react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 
-export default function PlayOnlineHome() {
+export default function PlayOnlineHome({ newLobbyCode }) {
   const [showPassword, setShowPassword] = useState(false);
   const [gameCode, setgameCode] = useState('');
 
@@ -21,6 +22,10 @@ export default function PlayOnlineHome() {
     }
   };
 
+  const lobbyDestination = () => {
+    window.location.href = `/game/${newLobbyCode}`;
+  }
+  
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">

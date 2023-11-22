@@ -255,12 +255,12 @@ class ChessBoard:
         self.board[11][1].piece = ChessPiece("shield", 0)
         self.board[11][-2].piece = ChessPiece("shield", 1)
 
-        # add horses
-        self.board[7][3].piece = ChessPiece("horse", 0)
-        self.board[7][-4].piece = ChessPiece("horse", 1)
+        # add knights
+        self.board[7][3].piece = ChessPiece("knight", 0)
+        self.board[7][-4].piece = ChessPiece("knight", 1)
 
-        self.board[9][3].piece = ChessPiece("horse", 0)
-        self.board[9][-4].piece = ChessPiece("horse", 1)
+        self.board[9][3].piece = ChessPiece("knight", 0)
+        self.board[9][-4].piece = ChessPiece("knight", 1)
 
         # add rooks
         self.board[5][0].piece = ChessPiece("rook", 0)
@@ -316,5 +316,8 @@ class ChessBoard:
             start (tuple): starting position
             end (tuple): ending position
         """
+        # check to make sure there is no piece at the end
+        if self.board[end[0]][end[1]].piece:
+            return
         self.board[end[0]][end[1]].piece = self.board[start[0]][start[1]].piece
         self.board[start[0]][start[1]].piece = ""

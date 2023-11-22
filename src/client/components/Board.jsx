@@ -1,21 +1,75 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
-import React from 'react';
+
+'use client';
+
+import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
-function Board({ pieces, disabled }) {
+function Board({ pieces, lobbyCode, disabled, socket }) {
+  const [selectedPiece, setSelectedPiece] = useState(null);
+  const [p, setPieces] = useState(pieces);
   let flip = false;
+
+  // Listen for changes
+  useEffect(() => {
+    if (!socket) return;
+    socket.on('receive_move', (data) => {
+      setPieces(data);
+    });
+
+    return () => {
+      socket.off('receive_move');
+    };
+  }, []);
+
+  const handleTileClick = (columnNumber, index) => {
+    if (selectedPiece) {
+      // Make a POST request to the backend
+      fetch(`http://${window.location.hostname}:8080/api/game/${lobbyCode}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          old_pos: `${selectedPiece.columnNumber},${selectedPiece.index}`,
+          new_pos: `${columnNumber},${index}`,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // Handle the response from the backend
+          setPieces(data.board);
+          setSelectedPiece(null);
+          socket.emit('send_move', { room: lobbyCode, game_id: lobbyCode });
+        })
+        .catch((error) => {
+          // Handle any errors that occur during the request
+          console.error(error);
+        });
+    } else if (p[columnNumber][index]) {
+      setSelectedPiece({ columnNumber, index });
+    }
+  };
+
+
   const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
     Array.from({ length: columnHeight }, (_, index) => (
       <Tile
         key={`${columnNumber}: ${index}`}
         orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
         colour={(index + columnHeight) % 3}
+        onClick={() => handleTileClick(columnNumber, index)}
         disabled={disabled}
       >
-        {pieces[columnNumber][index] && <Piece name={pieces[columnNumber][index]} />}
+        {p[columnNumber][index] && (
+          <Piece 
+            name={p[columnNumber][index]}
+            isSelected={selectedPiece && selectedPiece.columnNumber === columnNumber && selectedPiece.index === index}
+          />
+        )}
       </Tile>
     )));
 
