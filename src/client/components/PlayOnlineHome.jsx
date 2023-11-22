@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 import baseUrl from '../constants';
 
-export default async function PlayOnlineHome() {
+export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
   const [gameCode, setgameCode] = useState('');
 
@@ -21,7 +21,7 @@ export default async function PlayOnlineHome() {
       },
     });
 
-    const data = response.json();
+    const data = await response.json();
     const newGameCode = data.game_id;
 
     if (newGameCode) {
