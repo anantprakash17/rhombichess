@@ -9,12 +9,12 @@ import { authOptions } from '../../../api/auth/[...nextauth]/route';
 export default async function page({ params }) {
   const session = await getServerSession(authOptions);
   const { gameId } = params;
-  const url = `${baseUrl}/api/game/${gameId}`;
 
   if (!session) {
     redirect('/api/auth/signin'); // TODO: Callback should be current game link
   }
 
+  const url = `${baseUrl}/api/game/${gameId}`;
   const response = await fetch(url, {
     method: 'GET',
     headers: {
