@@ -30,6 +30,10 @@ function Board({
   }, [socket]);
 
   const postMove = (oldPosition, newPosition) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     fetch(`http://${window.location.hostname}:8080/api/game/${gameCode}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
