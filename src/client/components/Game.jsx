@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import Board from './Board';
 import ChatWindow from './ChatWindow';
-import baseUrl from '../constants';
 
 export default function Game({ gameCode, initialBoard }) {
   const [isChatVisible, setIsChatVisible] = useState(false);
@@ -16,7 +15,7 @@ export default function Game({ gameCode, initialBoard }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const newSocket = io.connect(baseUrl);
+      const newSocket = io.connect(`http://${window.location.hostname}:8080`);
       setSocket(newSocket);
       return () => newSocket.disconnect();
     }

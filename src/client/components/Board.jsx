@@ -8,7 +8,6 @@
 import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
-import baseUrl from '../constants';
 
 function Board({
   initialBoard, gameCode, disabled, socket,
@@ -31,7 +30,7 @@ function Board({
   }, [socket]);
 
   const postMove = (oldPosition, newPosition) => {
-    fetch(`${baseUrl}/api/game/${gameCode}`, {
+    fetch(`http://${window.location.hostname}:8080/api/game/${gameCode}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ old_pos: oldPosition, new_pos: newPosition }),
