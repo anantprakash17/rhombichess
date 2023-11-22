@@ -25,23 +25,23 @@ describe('PlayOnlineHome Component', () => {
     expect(gameCodeField).toBeVisible();
   });
 
-  it('updates lobby code on input change', () => {
-    const lobbyCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
-    fireEvent.change(lobbyCodeInput, { target: { value: '4ZP6A' } });
+  it('updates game code on input change', () => {
+    const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
 
-    expect(lobbyCodeInput.value).toBe('4ZP6A');
+    expect(gameCodeInput.value).toBe('4ZP6A');
   });
 
-  it('does not navigate on join game with empty lobby code', () => {
+  it('does not navigate on join game with empty game code', () => {
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
 
     expect(window.location.href).toBe('');
   });
 
-  it('navigates on join game with valid lobby code', () => {
-    const lobbyCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
-    fireEvent.change(lobbyCodeInput, { target: { value: '4ZP6A' } });
+  it('navigates on join game with valid game code', () => {
+    const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
 
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
