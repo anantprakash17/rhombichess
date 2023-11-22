@@ -1,18 +1,32 @@
-
 'use client';
 
 import React, { useState } from 'react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
+import baseUrl from '../constants';
 
-export default function PlayOnlineHome({ newLobbyCode }) {
+export default async function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
   const [gameCode, setgameCode] = useState('');
 
   const handlegameCodeChange = (event) => setgameCode(event.target.value.trim());
 
-  const handleCreateGame = (event) => {
+  const handleCreateGame = async (event) => {
     event.preventDefault();
-    // TODO: Create new game
+
+    const url = `${baseUrl}/api/new_game`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = response.json();
+    const newGameCode = data.game_id;
+
+    if (newGameCode) {
+      window.location.href = `/game/${newGameCode}`;
+    }
   };
 
   const handleJoinGame = (event) => {
@@ -22,10 +36,6 @@ export default function PlayOnlineHome({ newLobbyCode }) {
     }
   };
 
-  const lobbyDestination = () => {
-    window.location.href = `/game/${newLobbyCode}`;
-  }
-  
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
