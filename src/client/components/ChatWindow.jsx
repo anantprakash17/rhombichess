@@ -8,9 +8,9 @@ import { SendMessageButton } from './Buttons';
 
 const socket = io.connect('http://localhost:8080');
 
-export default function ChatWindow({ lobbyCode, toggleChatWindow, messages }) {
+export default function ChatWindow({ gameCode, toggleChatWindow, messages }) {
   const [message, setMessage] = useState('');
-  const [room, setRoom] = useState(lobbyCode);
+  const [room, setRoom] = useState(gameCode);
 
   const sendMessage = () => {
     socket.emit('send_message', { message, room });
