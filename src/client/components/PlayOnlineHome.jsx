@@ -1,28 +1,49 @@
-
 'use client';
 
 import React, { useState } from 'react';
-import { CreateLobbyButton, JoinExistingLobbyButton } from './Buttons';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
+import baseUrl from '../constants';
 
-export default function PlayOnlineHome({ newLobbyCode }) {
+export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
-  const [lobbyCode, setLobbyCode] = useState('');
+  const [gameCode, setgameCode] = useState('');
 
-  const handleLobbyCodeChange = (event) => setLobbyCode(event.target.value.trim());
+  const handleGameCodeChange = (event) => setgameCode(event.target.value.trim());
 
-  const lobbyDestination = () => {
-    window.location.href = `/game/${newLobbyCode}`;
-  }
-  
+  const handleCreateGame = async (event) => {
+    event.preventDefault();
+
+    const url = `${baseUrl}/api/new_game`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const data = await response.json();
+    const newGameCode = data.game_id;
+
+    if (newGameCode) {
+      window.location.href = `/game/${newGameCode}`;
+    }
+  };
+
+  const handleJoinGame = (event) => {
+    event.preventDefault();
+    if (gameCode) {
+      window.location.href = `/game/${gameCode}`;
+    }
+  };
+
   return (
     <section className="bg-whitebg-gray-900 w-full rounded-lg p-6 max-w-[500px]">
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
-        Start a New Game
+        Create a New Game
       </h1>
-      <form className="space-y-6 mb-10">
+      <form className="space-y-6 mb-10" onSubmit={handleCreateGame}>
         <div>
-          <label htmlFor="password" className="mb-4 block font-medium">
+          <label htmlFor="password" className="mb-2 block font-medium">
             Password (optional)
           </label>
           <div className="relative">
@@ -47,7 +68,9 @@ export default function PlayOnlineHome({ newLobbyCode }) {
             </button>
           </div>
           <div className="text-center">
-            <CreateLobbyButton onClick={lobbyDestination} />
+            <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="submit" onClick={() => {}}>
+              Create Game
+            </button>
           </div>
         </div>
       </form>
@@ -59,24 +82,26 @@ export default function PlayOnlineHome({ newLobbyCode }) {
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
         Join an Existing Game
       </h1>
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleJoinGame}>
         <div>
-          <label htmlFor="lobbyCode" className="mb-4 block font-medium">
-            Code
+          <label htmlFor="gameCode" className="mb-2 block font-medium">
+            Game Code
           </label>
           <div className="relative">
             <input
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-              id="lobbyCode"
-              name="lobbyCode"
-              onChange={handleLobbyCodeChange}
-              placeholder="code"
+              id="gameCode"
+              name="gameCode"
+              onChange={handleGameCodeChange}
+              placeholder="4ZP6A"
               required
               type="text"
             />
           </div>
           <div className="text-center">
-            <JoinExistingLobbyButton lobbyCode={lobbyCode}/>
+            <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="submit" onClick={() => {}}>
+              Join Game
+            </button>
           </div>
         </div>
       </form>

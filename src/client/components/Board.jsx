@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
 /* eslint-disable no-nested-ternary */
@@ -8,53 +9,54 @@ import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
 
-function Board({ pieces, lobbyCode, disabled, socket }) {
+function Board({
+  initialBoard, gameCode, disabled, socket,
+}) {
   const [selectedPiece, setSelectedPiece] = useState(null);
-  const [p, setPieces] = useState(pieces);
-  let flip = false;
+  const [board, setBoard] = useState(initialBoard);
 
-  // Listen for changes
   useEffect(() => {
     if (!socket) return;
-    socket.on('receive_move', (data) => {
-      setPieces(data);
-    });
+
+    const handleReceiveMove = (data) => {
+      setBoard(data);
+    };
+
+    socket.on('receive_move', handleReceiveMove);
 
     return () => {
-      socket.off('receive_move');
+      socket.off('receive_move', handleReceiveMove);
     };
-  }, []);
+  }, [socket]);
+
+  const postMove = (oldPosition, newPosition) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    fetch(`http://${window.location.hostname}:8080/api/game/${gameCode}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ old_pos: oldPosition, new_pos: newPosition }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setBoard(data.board);
+        setSelectedPiece(null);
+        socket.emit('send_move', { room: gameCode, game_id: gameCode });
+      })
+      .catch((error) => console.error(error));
+  };
 
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
-      // Make a POST request to the backend
-      fetch(`http://${window.location.hostname}:8080/api/game/${lobbyCode}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          old_pos: `${selectedPiece.columnNumber},${selectedPiece.index}`,
-          new_pos: `${columnNumber},${index}`,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // Handle the response from the backend
-          setPieces(data.board);
-          setSelectedPiece(null);
-          socket.emit('send_move', { room: lobbyCode, game_id: lobbyCode });
-        })
-        .catch((error) => {
-          // Handle any errors that occur during the request
-          console.error(error);
-        });
-    } else if (p[columnNumber][index]) {
+      postMove(`${selectedPiece.columnNumber},${selectedPiece.index}`, `${columnNumber},${index}`);
+    } else if (board[columnNumber][index]) {
       setSelectedPiece({ columnNumber, index });
     }
   };
 
-
+  let flip = false;
   const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
     Array.from({ length: columnHeight }, (_, index) => (
       <Tile
@@ -64,9 +66,9 @@ function Board({ pieces, lobbyCode, disabled, socket }) {
         onClick={() => handleTileClick(columnNumber, index)}
         disabled={disabled}
       >
-        {p[columnNumber][index] && (
-          <Piece 
-            name={p[columnNumber][index]}
+        {board[columnNumber][index] && (
+          <Piece
+            name={board[columnNumber][index]}
             isSelected={selectedPiece && selectedPiece.columnNumber === columnNumber && selectedPiece.index === index}
           />
         )}
@@ -74,42 +76,19 @@ function Board({ pieces, lobbyCode, disabled, socket }) {
     )));
 
   const columns = [];
+  let vertical = false;
 
-  // First loop: 6 to 9
-  for (let i = 6; i <= 9; i++) {
+  for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
+    const column = board[columnIndex];
     columns.push(
       <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length, columnHeight: i, isSecondColumn: false })}
+        {generateColumn({ columnNumber: columnIndex, columnHeight: column.length, isSecondColumn: vertical })}
       </div>,
     );
-    columns.push(
-      <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length, columnHeight: i * 2, isSecondColumn: true })}
-      </div>,
-    );
-  }
-
-  // Manually add the 10th column
-  columns.push(
-    <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-      {generateColumn({ columnNumber: columns.length, columnHeight: 10, isSecondColumn: false })}
-    </div>,
-  );
-
-  flip = true;
-
-  // Second loop: 9 to 6
-  for (let i = 9; i >= 6; i--) {
-    columns.push(
-      <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length, columnHeight: i * 2, isSecondColumn: true })}
-      </div>,
-    );
-    columns.push(
-      <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columns.length, columnHeight: i, isSecondColumn: false })}
-      </div>,
-    );
+    vertical = !vertical;
+    if (columnIndex === 7) {
+      flip = true;
+    }
   }
 
   return (
