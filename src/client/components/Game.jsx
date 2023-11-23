@@ -45,8 +45,10 @@ export default function Game({ gameCode, initialBoard }) {
   };
 
   return (
-    <section className="bg-white w-full rounded-lg p-6">
-      <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+    <section className="w-full flex">
+      <div className="scale-90 ml-16">
+        <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+      </div>
       <button
         onClick={toggleChatWindow}
         className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
