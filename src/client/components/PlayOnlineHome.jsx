@@ -7,8 +7,11 @@ import baseUrl from '../constants';
 export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
   const [gameCode, setgameCode] = useState('');
+  const [gamePassword, setGamePassword] = useState('');
 
   const handleGameCodeChange = (event) => setgameCode(event.target.value.trim());
+
+  const handleGamePasswordChange = (event) => setGamePassword(event.target.value.trim());
 
   const handleCreateGame = async (event) => {
     event.preventDefault();
@@ -19,6 +22,7 @@ export default function PlayOnlineHome() {
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ game_password: gamePassword }),
     });
 
     const data = await response.json();
@@ -51,6 +55,7 @@ export default function PlayOnlineHome() {
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
               id="password"
               name="password"
+              onChange = {handleGamePasswordChange}
               placeholder={showPassword ? 'password' : '••••••••'}
               type={showPassword ? 'text' : 'password'}
             />
