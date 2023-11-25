@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState } from 'react';
 import io from 'socket.io-client';
+import { useSession } from 'next-auth/react';
 import Board from './Board';
 import ChatWindow from './ChatWindow';
 
@@ -12,6 +13,7 @@ export default function Game({ gameCode, initialBoard }) {
   const [isChatVisible, setIsChatVisible] = useState(false);
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
+  const session = useSession();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -23,7 +25,7 @@ export default function Game({ gameCode, initialBoard }) {
 
   useEffect(() => {
     if (socket && gameCode !== '') {
-      socket.emit('join_room', gameCode);
+      socket.emit('join_room', { room: gameCode, name: session.data?.user?.name });
     }
   }, [socket, gameCode]);
 
@@ -45,8 +47,10 @@ export default function Game({ gameCode, initialBoard }) {
   };
 
   return (
-    <section className="bg-white w-full rounded-lg p-6">
-      <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+    <section className="w-full flex">
+      <div className="scale-90 ml-16">
+        <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+      </div>
       <button
         onClick={toggleChatWindow}
         className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"

@@ -1,16 +1,24 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 'use client';
 
 import io from 'socket.io-client';
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { SendMessageButton } from './Buttons';
-
-const socket = io.connect('http://localhost:8080');
 
 export default function ChatWindow({ gameCode, toggleChatWindow, messages }) {
   const [message, setMessage] = useState('');
   const [room, setRoom] = useState(gameCode);
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const newSocket = io.connect(`http://${window.location.hostname}:8080`);
+      setSocket(newSocket);
+      return () => newSocket.disconnect();
+    }
+  }, []);
 
   const sendMessage = () => {
     socket.emit('send_message', { message, room });
@@ -30,8 +38,10 @@ export default function ChatWindow({ gameCode, toggleChatWindow, messages }) {
       </div>
       <div className="flex-1 overflow-y-auto mt-2">
         {messages.map((msg, index) => (
-          <div key={index} className="flex items-center space-x-2 mb-2">
-            <span>{msg}</span>
+          <div key={`message-${index}`} className="flex items-center space-x-2 mb-2">
+            <span>
+              {msg}
+            </span>
           </div>
         ))}
       </div>

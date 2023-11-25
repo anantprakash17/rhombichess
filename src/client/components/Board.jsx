@@ -16,7 +16,7 @@ function Board({
   const [board, setBoard] = useState(initialBoard);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || disabled) return;
 
     const handleReceiveMove = (data) => {
       setBoard(data);
@@ -81,7 +81,7 @@ function Board({
   for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
     const column = board[columnIndex];
     columns.push(
-      <div className="flex flex-col justify-center items-center ml-[-1.9rem]">
+      <div key={`column-${columnIndex}`} className="flex flex-col justify-center items-center ml-[-1.9rem]">
         {generateColumn({ columnNumber: columnIndex, columnHeight: column.length, isSecondColumn: vertical })}
       </div>,
     );
