@@ -50,7 +50,13 @@ def game(game_id):
 
 @socketio.on("join_room")
 def handle_join_room(data):
-    join_room(data)
+    room = data.get("room")
+    name = data.get("name")
+    join_room(room)
+
+    system_message = f"{name} has joined the game."
+    messages[room].append(system_message)
+    socketio.emit("receive_message", messages[room], to=room)
 
 
 @socketio.on("send_message")
