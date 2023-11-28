@@ -21,9 +21,8 @@ export default function LandingHero() {
           Chess Variant!
         </h1>
         <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Voluptate necessitatibus optio libero, tempore,
-          labore fugit adipisci nobis soluta iusto animi nihil voluptatum?
+          Experience the thrill of RhombiChess, where traditional strategy meets innovative gameplay!
+          A fresh twist on classic chess, featuring a challenging rhombus-shaped board and exciting new pieces!
         </p>
         <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
           <PlayOnlineButton />
