@@ -11,8 +11,8 @@ games: dict[str, (str, ChessBoard)] = {}
 messages: dict[str, list] = {}
 
 
-def create_game(game_id, game_password):
-    games[game_id] = (game_password, ChessBoard())
+def create_game(game_id, password):
+    games[game_id] = (password, ChessBoard())
     messages[game_id] = []
 
 
@@ -24,9 +24,9 @@ def return_home():
 @app.route("/api/new_game", methods=["POST"])
 def new_game():
     data = request.get_json()
-    game_password = data["game_password"]
+    password = data["password"]
     game_id = str(uuid.uuid4())[:4].upper()
-    create_game(game_id, game_password)
+    create_game(game_id, password)
     return jsonify({"game_id": game_id})
 
 
