@@ -11,6 +11,7 @@ export default function PlayOnlineHome() {
   const [password, setPassword] = useState('');
   const [existingGamePassword, setExistingGamePassword] = useState('');
   const [showGamePasswordField, setShowGamePasswordField] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleGameCodeChange = (event) => setgameCode(event.target.value.trim());
 
@@ -56,11 +57,14 @@ export default function PlayOnlineHome() {
         window.location.href = `/game/${gameCode}`;
       }
       else {
+        if (existingGamePassword === '') {
+          setErrorMessage('This game requires a password.');
+        } else if (gamePassword === existingGamePassword) {
+          window.location.href = `/game/${gameCode}`;
+        } else if (gamePassword !== existingGamePassword) {
+          setErrorMessage('Incorrect game code or game password. Please try again.');
+        }
         setShowGamePasswordField(true);
-      }
-
-      if (gamePassword === existingGamePassword) {
-        window.location.href = `/game/${gameCode}`;
       }
     }
   };
@@ -112,6 +116,11 @@ export default function PlayOnlineHome() {
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
         Join an Existing Game
       </h1>
+      {errorMessage && (
+        <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+          <span className="font-medium">{errorMessage}</span>
+        </div>
+      )}
       <form className="space-y-6" onSubmit={handleJoinGame}>
         <div>
           <label htmlFor="gameCode" className="mb-2 block font-medium">
