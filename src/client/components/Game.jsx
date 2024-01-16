@@ -45,10 +45,10 @@ export default function Game({ gameCode, initialBoard }) {
   return (
     <section className="w-full flex h-screen">
       <div className="flex flex-1">
-        <div className="scale-90 ml-16">
+        <div className="scale-90 ml-16 flex-grow">
           <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
         </div>
-        <div className="rounded-3xl bg-gray-200 flex-grow m-2 flex flex-col text-base text-gray-900">
+        <div className="rounded-3xl bg-gray-200 m-2 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-tr-3xl rounded-tl-3xl flex">
             <button type="button" onClick={() => setActiveTab('GAME')} className={`${activeTab === 'GAME' ? 'bg-gray-300' : 'bg-gray-400'} rounded-tl-3xl flex-1 px-4 p-2`}>GAME</button>
             <button type="button" onClick={() => setActiveTab('NEW GAME')} className={`${activeTab === 'NEW GAME' ? 'bg-gray-300' : 'bg-gray-400'} flex-1 px-4 p-2`}>NEW GAME</button>
