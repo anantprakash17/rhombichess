@@ -10,10 +10,10 @@ import Board from './Board';
 import ChatWindow from './ChatWindow';
 
 export default function Game({ gameCode, initialBoard }) {
-  const [isChatVisible, setIsChatVisible] = useState(false);
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const session = useSession();
+  const [activeTab,setActiveTab] = useState('GAME');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -42,23 +42,41 @@ export default function Game({ gameCode, initialBoard }) {
     };
   }, [socket]);
 
-  const toggleChatWindow = () => {
-    setIsChatVisible(!isChatVisible);
-  };
-
   return (
-    <section className="w-full flex">
-      <div className="scale-90 ml-16">
-        <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+    <section className="w-full flex h-screen">
+      <div className="flex flex-1">
+        <div className="scale-90 ml-16">
+          <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+        </div>
+        <div className="rounded-3xl bg-gray-200 flex-grow m-2 flex flex-col text-base text-gray-900">
+          <div className="bg-gray-400 rounded-tr-3xl rounded-tl-3xl flex">
+            <button type="button" onClick={() => setActiveTab('GAME')} className={`${activeTab === 'GAME' ? 'bg-gray-300' : 'bg-gray-400'} rounded-tl-3xl flex-1 px-4 p-2`}>GAME</button>
+            <button type="button" onClick={() => setActiveTab('NEW GAME')} className={`${activeTab === 'NEW GAME' ? 'bg-gray-300' : 'bg-gray-400'} flex-1 px-4 p-2`}>NEW GAME</button>
+            <button type="button" onClick={() => setActiveTab('GAMES')} className={`${activeTab === 'GAMES' ? 'bg-gray-300' : 'bg-gray-400'} flex-1 px-4 p-2`}>GAMES</button>
+            <button type="button" onClick={() => setActiveTab('PLAYERS')} className={`${activeTab === 'PLAYERS' ? 'bg-gray-300' : 'bg-gray-400'} rounded-tr-3xl flex-1 px-4 p-2`}>PLAYERS</button>
+          </div>
+          <div className="m-2 h-1/2">
+            {activeTab === 'GAME' && (
+              <p>GAME CONTENT</p>
+            )}
+            {activeTab === 'NEW GAME' && (
+              <p>NEW GAME CONTENT</p>
+            )}
+            {activeTab === 'GAMES' && (
+              <p>GAMES CONTENT</p>
+            )}
+            {activeTab === 'PLAYERS' && (
+              <p>PLAYERS CONTENT</p>
+            )}
+          </div>
+          <div className="bg-gray-400 p-4">
+            CHAT HEADER
+          </div>
+          <div className="flex-grow overflow-y-auto">
+            <ChatWindow gameCode={gameCode} messages={messages} />
+          </div>
+        </div>
       </div>
-      <button
-        onClick={toggleChatWindow}
-        className="fixed bottom-5 right-5 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-300"
-        type="button"
-      >
-        {isChatVisible ? 'Hide Chat' : 'Show Chat'}
-      </button>
-      {isChatVisible && <ChatWindow gameCode={gameCode} toggleChatWindow={toggleChatWindow} messages={messages} />}
     </section>
   );
 }
