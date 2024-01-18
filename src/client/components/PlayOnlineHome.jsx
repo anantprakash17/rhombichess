@@ -8,14 +8,19 @@ export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
   const [showExistingPassword, setShowExistingPassword] = useState(false);
   const [gameCode, setgameCode] = useState('');
-  const [password, setPassword] = useState('');
-  const [existingGamePassword, setExistingGamePassword] = useState('');
+  const [creatingPassword, setPassword] = useState('');
+  const [joiningPassword, setJoiningPassword] = useState('');
   const [showGamePasswordField, setShowGamePasswordField] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleGameCodeChange = (event) => setgameCode(event.target.value.trim());
+  const handleGameCodeChange = (event) => {
+    setgameCode(event.target.value.trim());
+    setShowGamePasswordField(false);
+    setErrorMessage('');
+  };
 
-  const handlePasswordChange = (event) => setPassword(event.target.value.trim());
+  const handleCreatingPasswordChange = (event) => setPassword(event.target.value.trim());
+  const handleJoiningPasswordChange = (event) => setJoiningPassword(event.target.value.trim());
 
   const handleExistingGamePasswordChange = (event) => setExistingGamePassword(event.target.value.trim());
 
@@ -28,7 +33,7 @@ export default function PlayOnlineHome() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ password: password }),
+      body: JSON.stringify({ password: creatingPassword }),
     });
 
     const data = await response.json();
@@ -53,16 +58,17 @@ export default function PlayOnlineHome() {
       const data = await response.json();
       const gamePassword = data?.password;
 
-      if (gamePassword === '') {
+      if (data?.message === 'Game not found') {
+        setErrorMessage('Game not found!');
+      } else if (!gamePassword) {
         window.location.href = `/game/${gameCode}`;
-      }
-      else {
-        if (existingGamePassword === '') {
+      } else {
+        if (!joiningPassword) {
           setErrorMessage('This game requires a password.');
-        } else if (gamePassword === existingGamePassword) {
+        } else if (gamePassword === joiningPassword) {
           window.location.href = `/game/${gameCode}`;
-        } else if (gamePassword !== existingGamePassword) {
-          setErrorMessage('Incorrect game code or game password. Please try again.');
+        } else if (gamePassword !== joiningPassword) {
+          setErrorMessage('Incorrect code or password. Please try again.');
         }
         setShowGamePasswordField(true);
       }
@@ -76,15 +82,15 @@ export default function PlayOnlineHome() {
       </h1>
       <form className="space-y-6 mb-10" onSubmit={handleCreateGame}>
         <div>
-          <label htmlFor="password" className="mb-2 block font-medium">
+          <label htmlFor="creatingPassword" className="mb-2 block font-medium">
             Password (optional)
           </label>
           <div className="relative">
             <input
               className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-              id="password"
+              id="creatingPassword"
               name="password"
-              onChange = {handlePasswordChange}
+              onChange={handleCreatingPasswordChange}
               placeholder={showPassword ? 'password' : '••••••••'}
               type={showPassword ? 'text' : 'password'}
             />
@@ -145,9 +151,9 @@ export default function PlayOnlineHome() {
               <div className="relative">
                 <input
                   className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-                  id="password"
+                  id="joiningPassword"
                   name="password"
-                  onChange = {handleExistingGamePasswordChange}
+                  onChange={handleJoiningPasswordChange}
                   placeholder={showExistingPassword ? 'password' : '••••••••'}
                   type={showExistingPassword ? 'text' : 'password'}
                 />
