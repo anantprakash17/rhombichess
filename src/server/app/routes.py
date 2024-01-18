@@ -1,3 +1,4 @@
+import json
 from flask import jsonify, request
 from flask_socketio import SocketIO, join_room
 from app import app, socketio
@@ -9,7 +10,6 @@ games: dict[str, (str, ChessBoard)] = {}
 #games["123456"] = ('', ChessBoard())
 
 messages: dict[str, list] = {}
-
 
 def create_game(game_id, password):
     games[game_id] = (password, ChessBoard())
@@ -52,18 +52,24 @@ def game(game_id):
 @socketio.on("join_room")
 def handle_join_room(data):
     room = data.get("room")
-    name = data.get("name")
+    user = json.loads(data.get("user"))
     join_room(room)
 
-    system_message = f"{name} has joined the game."
-    messages[room].append(system_message)
+    system_message = f"{user.get('name')} has joined the game."
+    messages[room].append({"user_id": user.get("id"), "user_name": user.get("name"), "message": system_message, "system": True})
     socketio.emit("receive_message", messages[room], to=room)
 
 
 @socketio.on("send_message")
 def handle_send_message(data):
     room = data.get("room")
-    messages[room].append(data.get("message"))
+    user = json.loads(data.get("user"))
+    user_id = user.get('id')
+    user_name = user.get('name')
+    message_content = data.get("message")
+
+    message = {"user_id": user_id, "user_name": user_name, "message": message_content}
+    messages[room].append(message)
     socketio.emit("receive_message", messages[room], to=room)
 
 
