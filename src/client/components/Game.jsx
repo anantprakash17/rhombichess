@@ -48,7 +48,7 @@ export default function Game({ gameCode, initialBoard }) {
             <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>GAMES</button>
             <button type="button" onClick={() => setActiveTab('players')} className={`${activeTab === 'players' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tr-xl flex-1 px-4 p-2`}>PLAYERS</button>
           </div>
-          <div className="m-2 h-1/2">
+          <div className="m-2 h-1/2 flex-grow">
             {tabs[activeTab].content}
           </div>
           <div className="flex-grow overflow-y-auto rounded-b-xl max-h-[375px]">
