@@ -35,7 +35,8 @@ def game(game_id):
     if game_id not in games:
         return jsonify({"message": "Game not found"}), 404
     if request.method == "GET":
-        return jsonify({"board": games[game_id][1].get_piece_locations()})
+        game_password = games[game_id][0]
+        return jsonify({"password": games[game_id][0], "board": games[game_id][1].get_piece_locations()})
     elif request.method == "POST":
         data = request.get_json()
         if "old_pos" not in data or "new_pos" not in data:
