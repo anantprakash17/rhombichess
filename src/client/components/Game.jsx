@@ -12,7 +12,14 @@ import ChatWindow from './ChatWindow';
 export default function Game({ gameCode, initialBoard }) {
   const [socket, setSocket] = useState(null);
   const session = useSession();
-  const [activeTab, setActiveTab] = useState('GAME');
+  const [activeTab, setActiveTab] = useState('game');
+
+  const tabs = {
+    game: { label: 'GAME', content: 'GAME CONTENT' },
+    newGame: { label: 'NEW GAME', content: 'NEW GAME CONTENT' },
+    games: { label: 'GAMES', content: 'GAMES CONTENT' },
+    players: { label: 'PLAYERS', content: 'PLAYERS CONTENT' },
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -36,24 +43,13 @@ export default function Game({ gameCode, initialBoard }) {
         </div>
         <div className="rounded-xl bg-gray-200 m-4 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
-            <button type="button" onClick={() => setActiveTab('GAME')} className={`${activeTab === 'GAME' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tl-xl flex-1 px-4 p-2`}>GAME</button>
-            <button type="button" onClick={() => setActiveTab('NEW GAME')} className={`${activeTab === 'NEW GAME' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>NEW GAME</button>
-            <button type="button" onClick={() => setActiveTab('GAMES')} className={`${activeTab === 'GAMES' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>GAMES</button>
-            <button type="button" onClick={() => setActiveTab('PLAYERS')} className={`${activeTab === 'PLAYERS' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tr-xl flex-1 px-4 p-2`}>PLAYERS</button>
+            <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tl-xl flex-1 px-4 p-2`}>GAME</button>
+            <button type="button" onClick={() => setActiveTab('newGame')} className={`${activeTab === 'newGame' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>NEW GAME</button>
+            <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>GAMES</button>
+            <button type="button" onClick={() => setActiveTab('players')} className={`${activeTab === 'players' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tr-xl flex-1 px-4 p-2`}>PLAYERS</button>
           </div>
           <div className="m-2 h-1/2">
-            {activeTab === 'GAME' && (
-              <p>GAME CONTENT</p>
-            )}
-            {activeTab === 'NEW GAME' && (
-              <p>NEW GAME CONTENT</p>
-            )}
-            {activeTab === 'GAMES' && (
-              <p>GAMES CONTENT</p>
-            )}
-            {activeTab === 'PLAYERS' && (
-              <p>PLAYERS CONTENT</p>
-            )}
+            {tabs[activeTab].content}
           </div>
           <div className="flex-grow overflow-y-auto rounded-b-xl max-h-[375px]">
             <ChatWindow gameCode={gameCode} socket={socket} />
