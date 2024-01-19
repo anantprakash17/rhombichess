@@ -21,13 +21,12 @@ export default async function page({ params }) {
       'Content-Type': 'application/json',
     },
   });
-  const data = await response.json();
-  const initialBoard = data?.board;
+  const gameData = await response.json();
 
   return (
     <main className="relative flex justify-center items-center h-screen gap-3">
-      {initialBoard
-        ? <Game gameCode={gameId} initialBoard={initialBoard} />
+      {gameData?.board
+        ? <Game gameData={gameData} />
         : <PageNotFound title="Sorry, this game does not exist." message="Make sure the game URL has been entered correctly. Otherwise, this game either does not exist or has ended. Return to the homepage to start or join a different game!" />}
     </main>
   );

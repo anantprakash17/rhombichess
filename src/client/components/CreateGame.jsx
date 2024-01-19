@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
+
 'use client';
 
 import React, { useState } from 'react';
@@ -21,7 +23,10 @@ export default function CreateGame() {
       formDataObject[key] = value;
     });
 
-    console.log(formDataObject);
+    let { color } = formDataObject;
+    if (color === 'random' || !color) {
+      color = Math.random() < 0.5 ? 'white' : 'black';
+    }
 
     const url = `${baseUrl}/api/new_game`;
     const response = await fetch(url, {
@@ -32,7 +37,7 @@ export default function CreateGame() {
       body: JSON.stringify({
         user: session.data.user,
         password: formDataObject.password,
-        color: formDataObject.color,
+        color,
       }),
     });
 

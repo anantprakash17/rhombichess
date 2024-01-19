@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useSession } from 'next-auth/react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 import baseUrl from '../constants';
 
 export default function JoinGame() {
+  const session = useSession();
   const [showPassword, setShowPassword] = useState(false);
   const [gameCode, setGameCode] = useState('');
   const [password, setPassword] = useState('');
@@ -33,15 +35,30 @@ export default function JoinGame() {
       const data = await response.json();
       const gamePassword = data?.password;
 
-      if (data?.message === 'Game not found') {
-        setErrorMessage('Game not found!');
-      } else if (!gamePassword) {
-        window.location.href = `/game/${gameCode}`;
+      if (data?.error_message) {
+        setErrorMessage(data?.error_message);
+      } else if (!gamePassword || gamePassword === password) {
+        const joinGameUrl = `${baseUrl}/api/join_game/${gameCode}`;
+        const joinGameResponse = await fetch(joinGameUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user: session.data.user,
+            password: gamePassword,
+          }),
+        });
+        const joinData = await joinGameResponse.json();
+
+        if (joinData?.error_message) {
+          setErrorMessage(joinData.error_message);
+        } else {
+          window.location.href = `/game/${gameCode}`;
+        }
       } else {
         if (!password) {
           setErrorMessage('This game requires a password.');
-        } else if (gamePassword === password) {
-          window.location.href = `/game/${gameCode}`;
         } else if (gamePassword !== password) {
           setErrorMessage('Incorrect code or password. Please try again.');
         }
