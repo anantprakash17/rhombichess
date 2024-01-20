@@ -1,59 +1,72 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 
 'use client';
 
-import io from 'socket.io-client';
+import { useSession } from 'next-auth/react';
 import { React, useEffect, useState } from 'react';
-import { SendMessageButton } from './Buttons';
 
-export default function ChatWindow({ gameCode, toggleChatWindow, messages }) {
+export default function ChatWindow({ gameCode, socket }) {
   const [message, setMessage] = useState('');
-  const [room, setRoom] = useState(gameCode);
-  const [socket, setSocket] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const session = useSession();
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const newSocket = io.connect(`http://${window.location.hostname}:8080`);
-      setSocket(newSocket);
-      return () => newSocket.disconnect();
-    }
-  }, []);
+    if (!socket) return;
+    const handleMessage = (data) => {
+      setMessages(data);
+    };
 
-  const sendMessage = () => {
-    socket.emit('send_message', { message, room });
+    socket.on('receive_message', handleMessage);
+
+    return () => {
+      socket.off('receive_message', handleMessage);
+    };
+  }, [socket]);
+
+  const sendMessage = (event) => {
+    event.preventDefault();
+
+    socket.emit('send_message', { message, room: gameCode, user: JSON.stringify(session.data?.user) });
     setMessage('');
   };
 
   return (
-    <section className="border-2 fixed bottom-5 right-5 w-64 h-96 bg-white shadow-lg rounded-lg p-4 flex flex-col">
-      <div className="flex justify-end items-center p-2">
-        <button
-          onClick={toggleChatWindow}
-          className="absolute top-2 right-2 text-black pt-6 p-2 rounded-md"
-          type="button"
-        >
-          <span className="block bg-black h-0.5 w-5" />
-        </button>
-      </div>
-      <div className="flex-1 overflow-y-auto mt-2">
+    <section className="flex flex-col h-full bg-gray-400 p-2">
+      <div className="flex-1 overflow-y-auto bg-gray-200 rounded-lg mb-2 pt-2">
         {messages.map((msg, index) => (
-          <div key={`message-${index}`} className="flex items-center space-x-2 mb-2">
-            <span>
-              {msg}
-            </span>
+          <div key={`message-${index}`} className="pb-1 px-2">
+            {msg.system ? (
+              <span className="font-semibold text-red-400">
+                {msg.message}
+              </span>
+            ) : (
+              <div className="flex">
+                <span className="pr-2">
+                  {`${msg.user_name}:`}
+                </span>
+                <span>
+                  {msg.message}
+                </span>
+              </div>
+            )}
           </div>
         ))}
       </div>
-      <input
-        className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-        placeholder="Message"
-        value={message}
-        onChange={(event) => {
-          setMessage(event.target.value);
-        }}
-      />
-      <SendMessageButton onClick={sendMessage} />
+      <div className="mt-auto">
+        <form action="message" onSubmit={sendMessage}>
+          <input
+            className="w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Message"
+            id="message"
+            value={message}
+            onChange={(event) => {
+              setMessage(event.target.value);
+            }}
+          />
+        </form>
+      </div>
     </section>
   );
 }

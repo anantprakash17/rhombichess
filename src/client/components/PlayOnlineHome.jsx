@@ -7,14 +7,14 @@ import baseUrl from '../constants';
 export default function PlayOnlineHome() {
   const [showPassword, setShowPassword] = useState(false);
   const [showExistingPassword, setShowExistingPassword] = useState(false);
-  const [gameCode, setgameCode] = useState('');
+  const [gameCode, setGameCode] = useState('');
   const [creatingPassword, setPassword] = useState('');
   const [joiningPassword, setJoiningPassword] = useState('');
   const [showGamePasswordField, setShowGamePasswordField] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleGameCodeChange = (event) => {
-    setgameCode(event.target.value.trim());
+    setGameCode(event.target.value.trim());
     setShowGamePasswordField(false);
     setErrorMessage('');
   };
