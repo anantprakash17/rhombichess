@@ -5,48 +5,98 @@ from app import app, socketio
 from app.chess_board.board import ChessBoard
 import uuid
 
-games: dict[str, (str, ChessBoard)] = {}
+games: dict[str, dict] = {}
 
 #games["123456"] = ('', ChessBoard())
 
 messages: dict[str, list] = {}
 
-def create_game(game_id, password):
-    games[game_id] = (password, ChessBoard())
+def create_game(game_id, password, user, color):
+    opposite_color = "white" if color == "black" else "black"
+    
+    games[game_id] = {
+        "password": password,
+        "board": ChessBoard(),
+        "player_1": {"id": user["id"], "name": user["name"], "color": color},
+        "player_2": {"id": None, "name": None, "color": opposite_color}
+    }
     messages[game_id] = []
-
-
-@app.route("/api/home", methods=["GET"])
-def return_home():
-    return jsonify({"message": "Hello World!"})
 
 
 @app.route("/api/new_game", methods=["POST"])
 def new_game():
     data = request.get_json()
     password = data["password"]
+    color = data["color"]
+    user = data["user"]
+
     game_id = str(uuid.uuid4())[:4].upper()
-    create_game(game_id, password)
+    create_game(game_id, password, user, color)
     return jsonify({"game_id": game_id})
+
+@app.route("/api/join_game/<game_id>", methods=["POST"])
+def join_game(game_id):
+    data = request.get_json()
+    password = data["password"]
+    user = data["user"]
+    user_id = user.get("id")
+    user_name = user.get("name")
+
+    if not games[game_id]:
+        return jsonify({ "error_message": "Game not found", "status": 404 }) 
+
+    player_1_id = games[game_id]['player_1']['id']
+    player_2_id = games[game_id]['player_2']['id']
+
+    if player_1_id == user_id:
+        return jsonify({ "game_id": game_id, "message": "User is already in the game." })
+
+    if password != games[game_id]['password']:
+        error_response = {
+            "error_message": "Incorrect game password. Access denied.",
+            "status": 401,
+        }
+        return jsonify(error_response)
+
+    if player_2_id:
+        if player_2_id == user_id:
+            return jsonify({ "game_id": game_id, "message": "User is already in the game.", })
+        else:
+            error_response = {
+                "error_message": "The game is full. Cannot join.",
+                "status": 409,
+            }
+            return jsonify(error_response)
+    else:
+        games[game_id]['player_2']['id'] = user_id
+        games[game_id]['player_2']['name'] = user_name
+
+    return jsonify({"game_id": game_id, "status": 200})
 
 
 @app.route("/api/game/<game_id>", methods=["GET", "POST"])
 def game(game_id):
     if game_id not in games:
-        return jsonify({"message": "Game not found"}), 404
+        return jsonify({ "error_message": "Game not found", "status": 404 }) 
     if request.method == "GET":
-        game_password = games[game_id][0]
-        return jsonify({"password": games[game_id][0], "board": games[game_id][1].get_piece_locations()})
+        game_password = games[game_id]["password"]
+        return jsonify({
+            "game_id": game_id,
+            "password": game_password,
+            "board": games[game_id]["board"].get_piece_locations(),
+            "player_1": games[game_id]['player_1'],
+            "player_2": games[game_id]['player_2'],
+        })
     elif request.method == "POST":
         data = request.get_json()
         if "old_pos" not in data or "new_pos" not in data:
-            return jsonify({"message": "Invalid request"})
-        old_pos = int(data["old_pos"].split(",")[0]), int(data["old_pos"].split(",")[1])
-        new_pos = int(data["new_pos"].split(",")[0]), int(data["new_pos"].split(",")[1])
-        games[game_id][1].move_piece(old_pos, new_pos)
-        return jsonify({"board": games[game_id][1].get_piece_locations()})
+            return jsonify({ "error_message": "Invalid request" })
+        old_pos = tuple(map(int, data["old_pos"].split(",")))
+        new_pos = tuple(map(int, data["new_pos"].split(",")))
+        games[game_id]["board"].move_piece(old_pos, new_pos)
+        return jsonify({"board": games[game_id]["board"].get_piece_locations()})
     else:
-        return jsonify({"message": "Invalid method"})
+        return jsonify({ "error_message": "Invalid method" })
 
 
 @socketio.on("join_room")
@@ -77,5 +127,5 @@ def handle_send_message(data):
 def handle_send_move(data):
     room = data.get("room")
     socketio.emit(
-        "receive_move", games[str(data.get("game_id"))][1].get_piece_locations(), to=room
+        "receive_move", games[room]["board"].get_piece_locations(), to=room
     )

@@ -10,7 +10,7 @@ import Tile from './Tile';
 import Piece from './Piece';
 
 function Board({
-  initialBoard, gameCode, disabled, socket,
+  initialBoard, gameCode, disabled, socket, color,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [board, setBoard] = useState(initialBoard);
@@ -68,6 +68,7 @@ function Board({
       >
         {board[columnNumber][index] && (
           <Piece
+            className={`${color === 'black' ? 'rotate-180' : ''}`}
             name={board[columnNumber][index]}
             isSelected={selectedPiece && selectedPiece.columnNumber === columnNumber && selectedPiece.index === index}
           />
@@ -92,7 +93,7 @@ function Board({
   }
 
   return (
-    <div className="flex justify-center items-center">
+    <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
       {columns}
     </div>
   );

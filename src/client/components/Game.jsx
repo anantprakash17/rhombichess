@@ -9,8 +9,9 @@ import { useSession } from 'next-auth/react';
 import Board from './Board';
 import ChatWindow from './ChatWindow';
 
-export default function Game({ gameCode, initialBoard }) {
+export default function Game({ gameData }) {
   const [socket, setSocket] = useState(null);
+  const [gameCode, setGameCode] = useState(gameData?.game_id);
   const session = useSession();
   const [activeTab, setActiveTab] = useState('game');
 
@@ -35,11 +36,15 @@ export default function Game({ gameCode, initialBoard }) {
     }
   }, [socket, gameCode]);
 
+  const color = gameData.player_1.id === session.data?.user.id
+    ? gameData.player_1.color
+    : gameData.player_2.color;
+
   return (
     <section className="w-full flex h-screen">
       <div className="flex flex-1">
         <div className="scale-90 ml-16 flex-grow">
-          <Board initialBoard={initialBoard} gameCode={gameCode} socket={socket} />
+          <Board color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} />
         </div>
         <div className="rounded-xl bg-gray-200 m-4 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
