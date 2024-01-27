@@ -8,12 +8,15 @@
 import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
+import ConfirmMoveModal from './ConfirmMoveModal';
 
 function Board({
   initialBoard, gameCode, disabled, socket, color,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
+  const [sndSelectedPiece, setSndSelectedPiece] = useState(null);
   const [board, setBoard] = useState(initialBoard);
+  const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
 
   useEffect(() => {
     if (!socket || disabled) return;
@@ -48,13 +51,41 @@ function Board({
       .catch((error) => console.error(error));
   };
 
+  const handleCanceledMove = () => {
+    setConfirmMoveModalOpen(false);
+    setSelectedPiece(null);
+    setSndSelectedPiece(null);
+  };
+
+  const handleConfirmedMove = () => {
+    postMove(`${selectedPiece.columnNumber},${selectedPiece.index}`, `${sndSelectedPiece.columnNumber},${sndSelectedPiece.index}`);
+    setConfirmMoveModalOpen(false);
+    setSelectedPiece(null);
+    setSndSelectedPiece(null);
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' && confirmMoveModalOpen) {
+      handleConfirmedMove();
+    }
+  };
+
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
-      postMove(`${selectedPiece.columnNumber},${selectedPiece.index}`, `${columnNumber},${index}`);
+      setConfirmMoveModalOpen(true);
+      setSndSelectedPiece({ columnNumber, index });
     } else if (board[columnNumber][index]) {
       setSelectedPiece({ columnNumber, index });
     }
   };
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [confirmMoveModalOpen]);
 
   let flip = false;
   const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
@@ -93,8 +124,24 @@ function Board({
   }
 
   return (
-    <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
-      {columns}
+    <div>
+      <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
+        {columns}
+      </div>
+
+      <ConfirmMoveModal open={confirmMoveModalOpen} onClose={() => setConfirmMoveModalOpen(false)}>
+        <div className="mx-auto my-4 w-full">
+          <h2 className="mb-4 text-2xl font-bold tracking-tight leading-none text-gray-900 text-center">
+            Confirm move?
+          </h2>
+          <button onClick={handleCanceledMove} className="mx-2 text-2xl rounded-lg font-semibold bg-blue-400 text-white px-4 py-2 hover:bg-blue-500 focus:bg-blue-600" type="button">
+            Cancel
+          </button>
+          <button onClick={handleConfirmedMove} className="mx-2 text-2xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
+            Confirm
+          </button>
+        </div>
+      </ConfirmMoveModal>
     </div>
   );
 }
