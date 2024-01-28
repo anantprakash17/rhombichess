@@ -31,7 +31,7 @@ export function PlayLocalButton() {
 
 export function SendMessageButton({ onClick }) {
   return (
-    <button className="flex items-center bg-blue-500 mb- p-2 rounded-md" type="button" onClick={onClick}>
+    <button className="flex items-center bg-blue-500 mb- p-2 rounded-md" type="button" aria-label="Send Message" onClick={onClick}>
       <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m12 18-7 3 7-18 7 18-7-3Zm0 0v-5" />
       </svg>
