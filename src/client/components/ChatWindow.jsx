@@ -6,6 +6,7 @@
 
 import { useSession } from 'next-auth/react';
 import { React, useEffect, useState } from 'react';
+import { SendMessageButton } from './Buttons';
 
 export default function ChatWindow({ gameCode, socket }) {
   const [message, setMessage] = useState('');
@@ -54,10 +55,10 @@ export default function ChatWindow({ gameCode, socket }) {
           </div>
         ))}
       </div>
-      <div className="mt-auto">
-        <form action="message" onSubmit={sendMessage}>
+      <div className="mt-auto mb-2">
+        <form onSubmit={sendMessage} className="flex items-center">
           <input
-            className="w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+            className="w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-8 mr-2 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
             placeholder="Message"
             id="message"
             value={message}
@@ -65,6 +66,7 @@ export default function ChatWindow({ gameCode, socket }) {
               setMessage(event.target.value);
             }}
           />
+          <SendMessageButton onClick={sendMessage} />
         </form>
       </div>
     </section>
