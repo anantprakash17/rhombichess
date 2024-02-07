@@ -8,7 +8,6 @@
 import React, { useState, useEffect } from 'react';
 import Tile from './Tile';
 import Piece from './Piece';
-import ConfirmMoveModal from './ConfirmMoveModal';
 
 function Board({
   initialBoard, gameCode, disabled, socket, color,
@@ -129,21 +128,36 @@ function Board({
         {columns}
       </div>
 
-      <ConfirmMoveModal open={confirmMoveModalOpen} onClose={() => setConfirmMoveModalOpen(false)}>
-        <div className="mx-auto my-4 w-full">
-          <h2 className="mb-4 text-2xl font-bold tracking-tight leading-none text-gray-900 text-center">
+      <ConfirmMoveModal open={confirmMoveModalOpen}>
+        <div className="flex items-center justify-center w-full">
+          <div className="text-center mx-2 mt-1 text-2xl font-bold text-gray-900 flex">
             Confirm move?
-          </h2>
-          <button onClick={handleCanceledMove} className="mx-2 text-2xl rounded-lg font-semibold bg-blue-400 text-white px-4 py-2 hover:bg-blue-500 focus:bg-blue-600" type="button">
-            Cancel
-          </button>
-          <button onClick={handleConfirmedMove} className="mx-2 text-2xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
-            Confirm
-          </button>
+          </div>
+          <div className="flex">
+            <button onClick={handleCanceledMove} className="mx-1 text-xl rounded-lg font-semibold border border-gray-500 text-gray-500 px-4 py-2 hover:bg-gray-200 focus:bg-gray-900" type="button">
+              Cancel
+            </button>
+            <button onClick={handleConfirmedMove} className="mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
+              Confirm
+            </button>
+          </div>
         </div>
       </ConfirmMoveModal>
+
     </div>
   );
 }
 
 export default Board;
+
+export function ConfirmMoveModal({ open, children }) {
+  return (
+    <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
+      <div className={`fixed bg-white rounded-md shadow-xl p-3 border-2 border-gray-300 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}>
+        <div className="flex-1">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}

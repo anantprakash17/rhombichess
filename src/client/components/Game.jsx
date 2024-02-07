@@ -43,7 +43,7 @@ export default function Game({ gameData }) {
   return (
     <section className="w-full flex h-screen">
       <div className="flex flex-1">
-        <div className="scale-90 ml-16 flex-grow">
+        <div className="scale-90 flex-grow">
           <Board color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} />
         </div>
         <div className="rounded-xl bg-gray-200 m-4 flex flex-col text-base text-gray-900">
