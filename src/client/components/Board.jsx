@@ -129,12 +129,12 @@ function Board({
       </div>
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
-        <div className="flex items-center justify-center w-full">
-          <div className="text-center mx-2 mt-1 text-2xl font-bold text-gray-900 flex">
+        <div className="flex-col items-center justify-center w-full">
+          <div className="text-center mx-2 m-1 text-2xl font-bold text-gray-900">
             Confirm move?
           </div>
           <div className="flex">
-            <button onClick={handleCanceledMove} className="mx-1 text-xl rounded-lg font-semibold border border-gray-500 text-gray-500 px-4 py-2 hover:bg-gray-200 focus:bg-gray-900" type="button">
+            <button onClick={handleCanceledMove} className="mx-1 text-xl rounded-lg font-semibold border border-gray-400 text-gray-400 px-4 py-2 hover:bg-gray-200 focus:bg-gray-900" type="button">
               Cancel
             </button>
             <button onClick={handleConfirmedMove} className="mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
