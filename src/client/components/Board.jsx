@@ -13,7 +13,7 @@ function Board({
   initialBoard, gameCode, disabled, socket, color,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
-  const [sndSelectedPiece, setSndSelectedPiece] = useState(null);
+  const [selectedPieceDest, setSelectedPieceDest] = useState(null);
   const [board, setBoard] = useState(initialBoard);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
 
@@ -53,14 +53,14 @@ function Board({
   const handleCanceledMove = () => {
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
-    setSndSelectedPiece(null);
+    setSelectedPieceDest(null);
   };
 
   const handleConfirmedMove = () => {
-    postMove(`${selectedPiece.columnNumber},${selectedPiece.index}`, `${sndSelectedPiece.columnNumber},${sndSelectedPiece.index}`);
+    postMove(`${selectedPiece.columnNumber},${selectedPiece.index}`, `${selectedPieceDest.columnNumber},${selectedPieceDest.index}`);
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
-    setSndSelectedPiece(null);
+    setSelectedPieceDest(null);
   };
 
   const handleKeyPress = (event) => {
@@ -72,7 +72,7 @@ function Board({
   const handleTileClick = (columnNumber, index) => {
     if (selectedPiece) {
       setConfirmMoveModalOpen(true);
-      setSndSelectedPiece({ columnNumber, index });
+      setSelectedPieceDest({ columnNumber, index });
     } else if (board[columnNumber][index]) {
       setSelectedPiece({ columnNumber, index });
     }
