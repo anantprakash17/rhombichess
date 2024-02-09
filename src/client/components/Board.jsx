@@ -67,6 +67,9 @@ function Board({
     if (event.key === 'Enter' && confirmMoveModalOpen) {
       handleConfirmedMove();
     }
+    else if (event.key === 'Escape' && confirmMoveModalOpen) {
+      handleCanceledMove();
+    }
   };
 
   const handleTileClick = (columnNumber, index) => {
