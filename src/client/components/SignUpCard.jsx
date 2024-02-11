@@ -1,13 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 import Spinner from './Spinner';
 import Logo from './icons/Logo';
 
 export default function SignUpCard() {
-  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,12 +21,41 @@ export default function SignUpCard() {
     setPasswordsMatch(password === event.target.value);
   };
 
+  function capitalizeName(string) {
+    return string
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  }
+
   const handleSubmit = async (event) => {
+    event.preventDefault();
     if (!email || !password) {
       return;
     }
 
     setLoading(true);
+
+    const response = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: capitalizeName(name.trim()),
+        email: email.toLowerCase().trim(),
+        password,
+      }),
+    });
+
+    if (response.ok) {
+      window.location.href = '/auth/signin';
+    } else {
+      const errorData = await response.json();
+      setErrorMessage(errorData.error);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -137,7 +164,7 @@ export default function SignUpCard() {
         {loading ? (
           <div className="flex items-center justify-center">
             <Spinner />
-            Signing in...
+            Signing up...
           </div>
         ) : (
           'Sign up for RhombiChess'
