@@ -66,8 +66,7 @@ function Board({
   const handleKeyPress = (event) => {
     if (event.key === 'Enter' && confirmMoveModalOpen) {
       handleConfirmedMove();
-    }
-    else if (event.key === 'Escape' && confirmMoveModalOpen) {
+    } else if (event.key === 'Escape' && confirmMoveModalOpen) {
       handleCanceledMove();
     }
   };
@@ -156,7 +155,7 @@ export default Board;
 export function ConfirmMoveModal({ open, children }) {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
-      <div className={`fixed bg-white rounded-md shadow-xl p-3 border-2 border-gray-300 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"}`}>
+      <div className={`fixed bg-white rounded-md shadow-xl p-3 border-2 border-gray-300 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
         <div className="flex-1">
           {children}
         </div>
