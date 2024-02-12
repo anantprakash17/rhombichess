@@ -69,9 +69,9 @@ export default function SideBar({ session }) {
                       </button>
                     </li>
                     <li>
-                      <a href="#a" className="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group  text-white hover:bg-gray-700">
+                      <Link href="/auth/signup" className="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group  text-white hover:bg-gray-700">
                         Sign Up
-                      </a>
+                      </Link>
                     </li>
                     <li>
                       <a href="#a" className="flex items-center p-2 pl-11 w-full text-base font-normal rounded-lg transition duration-75 group  text-white hover:bg-gray-700">
