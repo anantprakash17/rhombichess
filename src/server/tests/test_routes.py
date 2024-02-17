@@ -2,7 +2,6 @@ from flask.testing import FlaskClient
 import pytest
 from app import app
 import time
-import concurrent.futures
 
 @pytest.fixture
 def client():
