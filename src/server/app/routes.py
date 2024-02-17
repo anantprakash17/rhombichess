@@ -44,7 +44,7 @@ def join_game(game_id):
 
     if game_id not in games:
         return jsonify({"error_message": "Game not found", "status": 404}), 404
-    
+
     if password != games[game_id]["password"]:
         error_response = {
             "error_message": "Incorrect game password. Access denied.",
