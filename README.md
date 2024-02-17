@@ -34,6 +34,13 @@ source src/backend/venv/bin/activate
 ```
 This will switch you to the virtual environment, and install all the required dependencies. To exit the virtual environment, simply run `deactivate`.
 
+To start the backend, run the following command:
+```bash
+python3 src/server/server.py
+```
+
+This will start the backend on port 5000. To view the backend, navigate to `localhost:8080` in your browser.
+
 ### Frontend
 The frontend for this project is based on React. To get started, you will need to have `npm` installed. To install all the required dependencies, run the following command:
 ```bash
@@ -41,9 +48,27 @@ make setup-frontend
 ```
 This will install all the required dependencies. To start the frontend, run the following command:
 ```bash
-npm run start
+npm run dev
 ```
 This will start the frontend on port 3000. To view the frontend, navigate to `localhost:3000` in your browser.
+
+
+## Testing
+### Backend
+To run the tests for the backend, run the following command:
+```bash
+python3 -m pytest src/server/tests -v
+```
+
+For stress tests, run the following command:
+```bash
+python3 -m locust -f src/server/tests/locustfile.py
+```
+
+This will start a locust server on `localhost:8089`. To view the locust server, navigate to `localhost:8089` in your browser.
+
+Use locust to test the backend by entering the number of users and the spawn rate, then click start.
+
 
 ### Cleanup
 To clean up the project, run the following command:
