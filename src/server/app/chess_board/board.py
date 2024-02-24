@@ -1,77 +1,7 @@
 import copy
-from math import pi
-from operator import indexOf
-from chess_pieces import PieceType
+import re
 
-
-class ChessPiece:
-    def __init__(self, name: PieceType, color: int) -> None:
-        """
-        Initializes a chess piece
-        Args:
-            name (PieceType): name of piece
-            color (int): color of the piece
-        """
-        self.name = name
-        self.color = color
-
-    def get_piece(self) -> str:
-        """
-        Get the name and color of the piece
-        Returns:
-            str: {name}-{color}
-        """
-        return f"{self.name.value}-{'black' if self.color == 0 else 'white'}"
-
-
-class ChessTile:
-    def __init__(self, piece, color, orientation) -> None:
-        """
-        Initializes a chess tile
-        Args:
-            piece (ChessPiece): piece on the tile
-            color (int): color of the tile
-            orientation (int): orientation of the tile
-        """
-        self.piece: ChessPiece = piece
-        self.color = color
-        self.orientation = orientation
-
-    def get_piece(self) -> str:
-        """
-        Get the piece on the tile
-        Returns:
-            str: piece on the tile
-        """
-        return self.piece
-
-    def get_color(self) -> int:
-        """
-        Get the color of the tile
-        Returns:
-            int: color of the tile
-        """
-        return self.color
-
-    def get_orientation(self) -> int:
-        """
-        Get the orientation of the tile
-        Returns:
-            int: orientation of the tile
-        """
-        return self.orientation
-
-    def __str__(self):
-        return f"Piece: {self.piece}, Color: {self.color}, Orientation: {self.orientation}"
-
-    def __repr__(self) -> str:
-        if not self.piece:
-            return "bl"
-        if self.piece.name == PieceType.DIAMOND:
-            return "di"
-        if self.piece.name == PieceType.PADDING:
-            return "pa"
-        return f"Piece: {self.piece.get_piece()}"
+from chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 
 class ChessBoard:
@@ -110,6 +40,7 @@ class ChessBoard:
                 board[i] = self.create_tile_column(color_list[i], 1, padding)
                 min_horiz += 2
         board = board + [self.create_tile_column([1, 2, 0], 0, 0)] + copy.deepcopy(board[::-1])
+        board[8].append(ChessTile(None, None, None, TileType.PADDING))
 
         self.board = board
 
@@ -121,6 +52,16 @@ class ChessBoard:
         """
         return self.board
 
+    def print_board(self) -> None:
+        """
+        Print the chess board
+        """
+        # use get_piece_locations to get the board as a list of strings
+        board = self.get_piece_locations()
+        for row in board:
+            print(" ".join(row))
+
+
     def get_piece_locations(self) -> list[list[str]]:
         """
         Get the chess board
@@ -131,7 +72,7 @@ class ChessBoard:
         for column in self.board:
             string_board.append([])
             for tile in column:
-                if (tile.piece and not tile.piece.color == None) or not tile.piece:
+                if tile.type == TileType.NORMAL:
                     if not tile.piece:
                         string_board[-1].append("")
                         continue
@@ -146,36 +87,39 @@ class ChessBoard:
             colors (list): list of colors to assign to column
             size (int): size
             orientation (int): orientation of the column
+            padding (int): padding to add to the column
         """
-        chesspadding = [ChessTile(ChessPiece(PieceType.PADDING, None), None, None) for _ in range(padding)]
         column = []
-        flag = False
+        flag = True
         color = 0
         if orientation == 0:
+            padding -= 1 if padding >= 1 else 0
+            chesspadding = [ChessTile(None, None, None, TileType.PADDING) for _ in range(padding)]
             for _ in range(20 - (padding * 2)):
                 if not flag:
-                    column.append(ChessTile(None, colors[color % 3], 0))
+                    column.append(ChessTile(None, colors[color % 3], 0, TileType.NORMAL))
                     color += 1
                 else:
-                    column.append(ChessTile(ChessPiece(PieceType.DIAMOND, None), None, None))
+                    column.append(ChessTile(None, None, None, TileType.DIAMOND))
                 flag = not flag
             column = (
-                copy.deepcopy(chesspadding[:-1])
-                + [ChessTile(ChessPiece(PieceType.DIAMOND, None), None, None)]
+                copy.deepcopy(chesspadding)
                 + column
                 + copy.deepcopy(chesspadding)
             )
         else:
+            chesspadding = [ChessTile(None, None, None, TileType.PADDING) for _ in range(padding)]
             column = [
                 ChessTile(
                     None,
                     colors[i % 3],
                     (orientation * (-1) ** i) if orientation == 1 else orientation,
+                    TileType.NORMAL,
                 )
                 for i in range(20 - (padding * 2))
             ]
             column = copy.deepcopy(chesspadding) + column + copy.deepcopy(chesspadding)
-        return column + ([ChessTile(ChessPiece(PieceType.PADDING, None), None, None)] if padding != 0 else [])
+        return column + ([ChessTile(None, None, None, TileType.PADDING)] if padding != 0 else [])
 
     def add_default_pieces(self) -> None:
         """
