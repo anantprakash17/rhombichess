@@ -48,16 +48,19 @@ class ChessPiece(ABC):
         """
         return f"{self.name.value}-{'black' if self.color == 0 else 'white'}"
 
+    """
+    TODO: MAKE SURE TO ADD THE ABSTRACT METHOD TO THE ChessPiece CLASS
+    """
     # @abstractmethod
-    # def calculate_valid_moves(self, position: tuple[int, int]):
-    #     """
-    #     Calculate valid moves for the chess piece from the given position
-    #     Args:
-    #         position: The current position of the piece on the board
-    #     Returns:
-    #         A list of valid moves
-    #     """
-    #     pass
+    def calculate_valid_moves(self, position: tuple[int, int]):
+        """
+        Calculate valid moves for the chess piece from the given position
+        Args:
+            position: The current position of the piece on the board
+        Returns:
+            A list of valid moves
+        """
+        pass
 
 
 class ChessTile:
