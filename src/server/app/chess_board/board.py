@@ -1,4 +1,5 @@
 import copy
+from turtle import st
 from app.chess_board.chess_pieces import Rook
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
@@ -61,7 +62,6 @@ class ChessBoard:
             print(" ".join(row))
         return self.board
 
-
     def get_piece_locations(self) -> list[list[str]]:
         """
         Get the chess board
@@ -102,11 +102,7 @@ class ChessBoard:
                 else:
                     column.append(ChessTile(None, None, None, TileType.DIAMOND))
                 flag = not flag
-            column = (
-                copy.deepcopy(chesspadding)
-                + column
-                + copy.deepcopy(chesspadding)
-            )
+            column = copy.deepcopy(chesspadding) + column + copy.deepcopy(chesspadding)
         else:
             chesspadding = [ChessTile(None, None, None, TileType.PADDING) for _ in range(padding)]
             column = [
