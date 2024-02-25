@@ -1,4 +1,5 @@
 import copy
+from turtle import st
 from app.chess_board.chess_pieces import Rook
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
@@ -61,7 +62,6 @@ class ChessBoard:
             print(" ".join(row))
         return self.board
 
-
     def get_piece_locations(self) -> list[list[str]]:
         """
         Get the chess board
@@ -102,11 +102,7 @@ class ChessBoard:
                 else:
                     column.append(ChessTile(None, None, None, TileType.DIAMOND))
                 flag = not flag
-            column = (
-                copy.deepcopy(chesspadding)
-                + column
-                + copy.deepcopy(chesspadding)
-            )
+            column = copy.deepcopy(chesspadding) + column + copy.deepcopy(chesspadding)
         else:
             chesspadding = [ChessTile(None, None, None, TileType.PADDING) for _ in range(padding)]
             column = [
@@ -290,8 +286,24 @@ class ChessBoard:
             start (tuple): starting position
             end (tuple): ending position
         """
+        start_offset = self.calculate_offset(start[1], start[0])
+        start = (start[0], start[1] + start_offset)
+        end_offset = self.calculate_offset(end[1], end[0])
+        end = (end[0], end[1] + end_offset)
         # check to make sure there is no piece at the end
         if self.board[end[0]][end[1]].piece:
             return
         self.board[end[0]][end[1]].piece = self.board[start[0]][start[1]].piece
         self.board[start[0]][start[1]].piece = ""
+
+    def calculate_offset(self, position: int, column: ChessTile):
+        """
+        Calculate the offset for the piece after accounting for padding and diamond tiles
+        """
+        padding = 0
+        for i in range(len(self.board[column])):
+            tile_type = self.board[column][i].type
+            if tile_type != TileType.PADDING:
+                break
+            padding += 1
+        return padding + (position + 1) if column % 2 == 0 else padding
