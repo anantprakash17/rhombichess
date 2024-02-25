@@ -1,4 +1,4 @@
-from chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 
 class Rook(ChessPiece):

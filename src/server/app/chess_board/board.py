@@ -1,6 +1,6 @@
 import copy
-from chess_pieces import Rook
-from chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from app.chess_board.chess_pieces import Rook
+from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 
 class ChessBoard:
