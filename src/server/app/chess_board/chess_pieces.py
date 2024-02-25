@@ -26,55 +26,57 @@ class Rook(ChessPiece):
         valid_moves = []
         x, y = position
         # Check for valid moves in the vertical direction
-        # Check below the current position
-        for i in range(y + 1, len(board[x])):
-            tile = board[x][i]
-            if tile.type == TileType.DIAMOND:
-                continue
-            if not tile.is_empty() or tile.type == TileType.PADDING:
-                break
-            valid_moves.append((x, i))
-        # Check above the current position
-        for i in range(y - 1, -1, -1):
-            tile = board[x][i]
-            if tile.type == TileType.DIAMOND:
-                continue
-            if not tile.is_empty() or tile.type == TileType.PADDING:
-                break
-            valid_moves.append((x, i))
+        # Check upwards from the current position
+        valid_moves.extend(self.vertical(x, y, board, True))
+        # Check downwards from the current position
+        valid_moves.extend(self.vertical(x, y, board, False))
 
         # Check for valid moves in the horizontal direction
         # Check to the right of the current position
-        for i in range(x - 1, -1, -1):
-            tile = board[i][y]
-            if not tile.is_empty() or tile.type == TileType.PADDING:
-                break
-            if tile.type == TileType.DIAMOND:
-                y += 1
-                valid_moves.append((i, y))
-                continue
-            elif tile.type == TileType.NORMAL and board[i][y - 1].type == TileType.DIAMOND:
-                valid_moves.append((i, y))
-                y -= 1
-                continue
-            elif tile.type == TileType.NORMAL:
-                valid_moves.append((i, y))
-                continue
+        valid_moves.extend(self.horizontal(x, y, board, True))
         # Check to the left of the current position
-        for i in range(x + 1, len(board)):
-            tile = board[i][y]
+        valid_moves.extend(self.horizontal(x, y, board, False))
+
+        return valid_moves
+
+    def vertical(self, x: int, y: int, board: list[list[ChessTile]], up: bool) -> list[tuple[int, int]]:
+        valid_moves = []
+        move = range(y - 1, -1, -1) if up else range(y + 1, len(board[x]))
+        for i in move:
+            tile = board[x][i]
+            # Skip the diamond tiles
+            if tile.type == TileType.DIAMOND:
+                continue
+            # If the tile is not empty or a padding tile, break the loop
             if not tile.is_empty() or tile.type == TileType.PADDING:
                 break
-            if tile.type == TileType.DIAMOND:
-                y -= 1
-                valid_moves.append((i, y))
-                continue
-            elif tile.type == TileType.NORMAL and board[i][y + 1].type == TileType.DIAMOND:
-                valid_moves.append((i, y))
-                y += 1
-                continue
-            elif tile.type == TileType.NORMAL:
-                valid_moves.append((i, y))
-                continue
+            valid_moves.append((x, i))
+        return valid_moves
 
+    def horizontal(self, x: int, y: int, board: list[list[ChessTile]], right: bool) -> list[tuple[int, int]]:
+        valid_moves = []
+        move = range(x - 1, -1, -1) if right else range(x + 1, len(board))
+        for i in move:
+            tile = board[i][y]
+            # If the tile is not empty or a padding tile, break the loop
+            if not tile.is_empty() or tile.type == TileType.PADDING:
+                break
+
+            # If the tile is a diamond, check the tile above or below it
+            if tile.type == TileType.DIAMOND:
+                y += 1 if right else -1
+                if board[i][y].is_empty():
+                    valid_moves.append((i, y))
+
+            # Here we check if the tile is a normal tile and the next tile is a diamond
+            elif tile.type == TileType.NORMAL:
+                next_tile = board[i][y - 1] if right else board[i][y + 1]
+                # If the next tile is a diamond, we need to offset the y value
+                if next_tile.type == TileType.DIAMOND:
+                    y += 1 if right else -1
+                    if board[i][y].is_empty():
+                        valid_moves.append((i, y))
+
+            else:  # tile is normal
+                valid_moves.append((i, y))
         return valid_moves
