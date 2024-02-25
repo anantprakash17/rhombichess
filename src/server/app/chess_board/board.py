@@ -234,10 +234,10 @@ class ChessBoard:
 
         # add rooks
         self.board[5][2].piece = Rook(0)
-        self.board[5][17].piece = ChessPiece(PieceType.ROOK, 1)
+        self.board[5][17].piece = Rook(1)
 
-        self.board[11][2].piece = ChessPiece(PieceType.ROOK, 0)
-        self.board[11][17].piece = ChessPiece(PieceType.ROOK, 1)
+        self.board[11][2].piece = Rook(0)
+        self.board[11][17].piece = Rook(1)
 
         # add machines
         self.board[7][3].piece = ChessPiece(PieceType.MACHINE, 0)
