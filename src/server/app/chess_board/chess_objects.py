@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from enum import Enum
 
@@ -84,6 +86,18 @@ class ChessTile:
             bool: True if the tile is empty, False otherwise
         """
         return self.piece is None
+
+    def calculate_offset(self, position: int, column: ChessTile):
+        """
+        Calculate the offset for the piece after accounting for padding and diamond tiles
+        """
+        for i in range(position, len(column)):
+            if column[i].type == TileType.PADDING or column[i].type == TileType.DIAMOND:
+                if i < position:
+                    position -=1
+                else:
+                    position +=1
+        return position
 
     def __str__(self):
         return f"Piece: {self.piece}, Color: {self.color}, Orientation: {self.orientation}"
