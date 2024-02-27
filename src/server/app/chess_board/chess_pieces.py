@@ -80,3 +80,69 @@ class Rook(ChessPiece):
             else:  # tile is normal
                 valid_moves.append((i, y))
         return valid_moves
+
+
+class Machine(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a machine piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.MACHINE, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the machine piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves 1 or 2 rhombuses like a Rook but may leap to the second rhombus.
+        """
+        valid_moves = []
+        x, y = position
+        tile = board[x][y]
+        potential_moves = []
+        if tile.orientation == 0:
+            potential_moves = [
+                (x + 1, y),
+                (x - 1, y),
+                (x + 1, y - 1),
+                (x - 1, y - 1),
+                (x + 2, y + 1),
+                (x - 2, y + 1),
+                (x + 2, y - 1),
+                (x - 2, y - 1),
+            ]
+        elif tile.orientation == 1:
+            potential_moves = [
+                (x, y + 1),
+                (x, y - 1),
+                (x, y + 2),
+                (x, y - 2),
+                (x - 1, y + 1),
+                (x + 1, y),
+                (x - 2, y + 1),
+                (x + 2, y - 1),
+            ]
+        else:
+            potential_moves = [
+                (x, y + 1),
+                (x, y - 1),
+                (x, y + 2),
+                (x, y - 2),
+                (x - 1, y),
+                (x + 1, y + 1),
+                (x - 2, y - 1),
+                (x + 2, y + 1),
+            ]
+        for move in potential_moves:
+            tile = board[move[0]][move[1]]
+            if not tile.is_empty() or tile.type == TileType.PADDING:
+                continue
+            valid_moves.append(move)
+        return valid_moves
