@@ -1,9 +1,10 @@
 import json
-from flask import jsonify, request
-from flask_socketio import SocketIO, join_room
+import uuid
+
 from app import app, socketio
 from app.chess_board.board import ChessBoard
-import uuid
+from flask import jsonify, request
+from flask_socketio import SocketIO, join_room
 
 games: dict[str, dict] = {}
 
@@ -83,6 +84,15 @@ def join_game(game_id):
 def game(game_id):
     if game_id not in games:
         return jsonify({"error_message": "Game not found", "status": 404}), 404
+
+    # Offset valid moves for each column to match frontend board representation
+    valid_moves = {}
+    for key, value in games[game_id]["board"].valid_moves.items():
+        if value:
+            offset = games[game_id]["board"].calculate_offset(key)
+            valid_moves[(key[0], key[1] - offset)] = [
+                (move[0], move[1] - games[game_id]["board"].calculate_offset(move)) for move in value
+            ]
     if request.method == "GET":
         game_password = games[game_id]["password"]
         return jsonify(
@@ -90,6 +100,7 @@ def game(game_id):
                 "game_id": game_id,
                 "password": game_password,
                 "board": games[game_id]["board"].get_piece_locations(),
+                "valid_moves": str(valid_moves),
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
             }
@@ -101,7 +112,7 @@ def game(game_id):
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
-        return jsonify({"board": games[game_id]["board"].get_piece_locations()})
+        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": str(valid_moves)})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
 
