@@ -1,6 +1,6 @@
 import copy
 from turtle import st
-from app.chess_board.chess_pieces import Rook
+from app.chess_board.chess_pieces import Machine, Rook
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 
@@ -11,6 +11,9 @@ class ChessBoard:
         """
         self.create_board()
         self.add_default_pieces()
+        self.valid_moves = {}
+        self.update_valid_moves(0)
+        self.update_valid_moves(1)
 
     def create_board(self) -> None:
         """
@@ -41,6 +44,13 @@ class ChessBoard:
                 min_horiz += 2
         board = board + [self.create_tile_column([1, 2, 0], 0, 0)] + copy.deepcopy(board[::-1])
         board[8].append(ChessTile(None, None, None, TileType.PADDING))
+
+        # Flip the orientation of the tiles after the middle column
+        for i in range(9, 17):
+            for j in range(len(board[i])):
+                tile = board[i][j]
+                if tile.orientation in [-1, 1]:
+                    tile.orientation = -1 if tile.orientation == 1 else 1
 
         self.board = board
 
@@ -240,11 +250,11 @@ class ChessBoard:
         self.board[11][17].piece = Rook(1)
 
         # add machines
-        self.board[7][3].piece = ChessPiece(PieceType.MACHINE, 0)
-        self.board[7][16].piece = ChessPiece(PieceType.MACHINE, 1)
+        self.board[7][3].piece = Machine(0)
+        self.board[7][16].piece = Machine(1)
 
-        self.board[9][3].piece = ChessPiece(PieceType.MACHINE, 0)
-        self.board[9][16].piece = ChessPiece(PieceType.MACHINE, 1)
+        self.board[9][3].piece = Machine(0)
+        self.board[9][16].piece = Machine(1)
 
         # add dogs
         self.board[3][4].piece = ChessPiece(PieceType.DOG, 0)
@@ -279,31 +289,52 @@ class ChessBoard:
         self.board[7][1].piece = ChessPiece(PieceType.KING, 0)
         self.board[7][18].piece = ChessPiece(PieceType.KING, 1)
 
-    def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> None:
+    def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
         Moves a piece from start to end
         Args:
             start (tuple): starting position
             end (tuple): ending position
         """
-        start_offset = self.calculate_offset(start[1], start[0])
+        start_offset = self.calculate_offset(start)
         start = (start[0], start[1] + start_offset)
-        end_offset = self.calculate_offset(end[1], end[0])
+        end_offset = self.calculate_offset(end)
         end = (end[0], end[1] + end_offset)
-        # check to make sure there is no piece at the end
-        if self.board[end[0]][end[1]].piece:
-            return
-        self.board[end[0]][end[1]].piece = self.board[start[0]][start[1]].piece
-        self.board[start[0]][start[1]].piece = ""
 
-    def calculate_offset(self, position: int, column: ChessTile):
+        # ensure the move is valid
+        piece_moves = self.valid_moves.get(start)
+        if piece_moves is None or end not in piece_moves:
+            return False
+
+        self.board[end[0]][end[1]].piece = self.board[start[0]][start[1]].piece
+        self.board[start[0]][start[1]].piece = None
+
+        color = self.board[end[0]][end[1]].piece.color
+
+        self.update_valid_moves(color)
+        return True
+
+    def calculate_offset(self, coord: tuple[int,int]):
         """
         Calculate the offset for the piece after accounting for padding and diamond tiles
         """
         padding = 0
+        position = coord[1]
+        column = coord[0]
         for i in range(len(self.board[column])):
             tile_type = self.board[column][i].type
             if tile_type != TileType.PADDING:
                 break
             padding += 1
         return padding + (position + 1) if column % 2 == 0 else padding
+
+    def update_valid_moves(self, color: int):
+        """
+        Update the valid moves for each piece on the board.
+        """
+        self.valid_moves.clear()  # Clear the current valid moves
+        for x in range(len(self.board)):
+            for y in range(len(self.board[x])):
+                tile = self.board[x][y]
+                if not tile.is_empty() and tile.piece and tile.piece.color == color:
+                    self.valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
