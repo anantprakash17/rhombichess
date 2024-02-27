@@ -52,7 +52,7 @@ class ChessPiece(ABC):
     TODO: MAKE SURE TO ADD THE ABSTRACT METHOD TO THE ChessPiece CLASS
     """
     # @abstractmethod
-    def calculate_valid_moves(self, position: tuple[int, int]):
+    def calculate_valid_moves(self, position: tuple[int, int], board) -> list[tuple[int, int]]:
         """
         Calculate valid moves for the chess piece from the given position
         Args:
