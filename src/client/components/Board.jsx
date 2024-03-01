@@ -10,18 +10,21 @@ import Tile from './Tile';
 import Piece from './Piece';
 
 function Board({
-  initialBoard, gameCode, disabled, socket, color,
+  initialBoard, gameCode, disabled, socket, color, initialValidMoves,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [selectedPieceDest, setSelectedPieceDest] = useState(null);
   const [board, setBoard] = useState(initialBoard);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
-
+  const [possibleMoves, setPossibleMoves] = useState([]);
+  const [validMoves, setValidMoves] = useState(initialValidMoves);
+  console.log(initialValidMoves);
   useEffect(() => {
     if (!socket || disabled) return;
 
     const handleReceiveMove = (data) => {
-      setBoard(data);
+      setBoard(data.board);
+      setValidMoves(data.valid_moves);
     };
 
     socket.on('receive_move', handleReceiveMove);
@@ -54,6 +57,7 @@ function Board({
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
     setSelectedPieceDest(null);
+    setPossibleMoves([]);
   };
 
   const handleConfirmedMove = () => {
@@ -61,6 +65,7 @@ function Board({
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
     setSelectedPieceDest(null);
+    setPossibleMoves([]);
   };
 
   const handleKeyPress = (event) => {
@@ -68,6 +73,9 @@ function Board({
       handleConfirmedMove();
     } else if (event.key === 'Escape' && confirmMoveModalOpen) {
       handleCanceledMove();
+    } else if (event.key === 'Escape') {
+      setSelectedPiece(null);
+      setPossibleMoves([]);
     }
   };
 
@@ -75,10 +83,15 @@ function Board({
     if (selectedPiece) {
       setConfirmMoveModalOpen(true);
       setSelectedPieceDest({ columnNumber, index });
+      setPossibleMoves([]);
     } else if (board[columnNumber][index]) {
       setSelectedPiece({ columnNumber, index });
+      const moves = validMoves[`${columnNumber},${index}`] || [];
+      setPossibleMoves(moves);
     }
   };
+
+  const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -97,6 +110,7 @@ function Board({
         colour={(index + columnHeight) % 3}
         onClick={() => handleTileClick(columnNumber, index)}
         disabled={disabled}
+        highlight={isPossibleMove(columnNumber, index)}
       >
         {board[columnNumber][index] && (
           <Piece

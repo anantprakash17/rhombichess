@@ -302,9 +302,9 @@ class ChessBoard:
         end = (end[0], end[1] + end_offset)
 
         # ensure the move is valid
-        piece_moves = self.valid_moves.get(start)
-        if piece_moves is None or end not in piece_moves:
-            return False
+        # piece_moves = self.valid_moves.get(start)
+        # if piece_moves is None or end not in piece_moves:
+        #     return False
 
         self.board[end[0]][end[1]].piece = self.board[start[0]][start[1]].piece
         self.board[start[0]][start[1]].piece = None
