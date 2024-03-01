@@ -5,12 +5,13 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { React, useEffect, useState } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import { SendMessageButton } from './Buttons';
 
 export default function ChatWindow({ gameCode, socket }) {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const lastMessageRef = useRef(null);
   const session = useSession();
 
   useEffect(() => {
@@ -33,17 +34,23 @@ export default function ChatWindow({ gameCode, socket }) {
     setMessage('');
   };
 
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   return (
-    <section className="flex flex-col h-full bg-gray-400 p-2">
-      <div className="flex-1 overflow-y-auto bg-gray-200 rounded-lg mb-2 pt-2">
+    <section className="flex flex-col h-full bg-gray-700 p-2 text-lg">
+      <div className="flex-1 overflow-y-auto bg-gray-600 rounded-lg mb-2 pt-2">
         {messages.map((msg, index) => (
-          <div key={`message-${index}`} className="pb-1 px-2">
+          <div key={`message-${index}`} className="pb-1 px-2" ref={index === messages.length - 1 ? lastMessageRef : null}>
             {msg.system ? (
-              <span className="font-semibold text-red-400">
+              <span className="font-semibold text-green-300">
                 {msg.message}
               </span>
             ) : (
-              <div className="flex">
+              <div className="flex text-white">
                 <span className="pr-2">
                   {`${msg.user_name}:`}
                 </span>
@@ -55,10 +62,10 @@ export default function ChatWindow({ gameCode, socket }) {
           </div>
         ))}
       </div>
-      <div className="mt-auto mb-2">
+      <div>
         <form onSubmit={sendMessage} className="flex items-center">
           <input
-            className="w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-8 mr-2 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+            className="w-full rounded-lg border-slate-700 text-white bg-gray-600 p-2.5 pr-8 mr-2 placeholder:text-gray-400 border-2 focus:border-blue-500 focus:ring-blue-500 outline-none"
             placeholder="Message"
             id="message"
             value={message}
