@@ -18,7 +18,7 @@ function Board({
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [validMoves, setValidMoves] = useState(initialValidMoves);
-  console.log(initialValidMoves);
+  console.log(validMoves);
   useEffect(() => {
     if (!socket || disabled) return;
 

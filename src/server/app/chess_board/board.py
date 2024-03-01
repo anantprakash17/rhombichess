@@ -336,5 +336,5 @@ class ChessBoard:
         for x in range(len(self.board)):
             for y in range(len(self.board[x])):
                 tile = self.board[x][y]
-                if not tile.is_empty() and tile.piece and tile.piece.color == color:
+                if not tile.is_empty() and tile.piece:
                     self.valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
