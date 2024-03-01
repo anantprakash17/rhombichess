@@ -11,7 +11,20 @@ games: dict[str, dict] = {}
 messages: dict[str, list] = {}
 
 
-def create_game(game_id, password, user, color, local = False):
+def generate_valid_moves(game_id):
+    valid_moves = {}
+    for key, value in games[game_id]["board"].valid_moves.items():
+        if value:
+            offset = games[game_id]["board"].calculate_offset(key)
+            key_str = f"{key[0]},{key[1] - offset}"
+            valid_moves[key_str] = [
+                f"{move[0]},{move[1] - games[game_id]['board'].calculate_offset(move)}"
+                for move in value
+            ]
+    return valid_moves
+
+
+def create_game(game_id, password, user, color):
     opposite_color = "white" if color == "black" else "black"
 
     player2 = {"id": None, "name": None, "color": opposite_color}
@@ -89,14 +102,8 @@ def game(game_id):
     if game_id not in games:
         return jsonify({"error_message": "Game not found", "status": 404}), 404
 
-    # Offset valid moves for each column to match frontend board representation
-    valid_moves = {}
-    for key, value in games[game_id]["board"].valid_moves.items():
-        if value:
-            offset = games[game_id]["board"].calculate_offset(key)
-            valid_moves[(key[0], key[1] - offset)] = [
-                (move[0], move[1] - games[game_id]["board"].calculate_offset(move)) for move in value
-            ]
+    valid_moves = generate_valid_moves(game_id)
+
     if request.method == "GET":
         game_password = games[game_id]["password"]
         return jsonify(
@@ -104,7 +111,7 @@ def game(game_id):
                 "game_id": game_id,
                 "password": game_password,
                 "board": games[game_id]["board"].get_piece_locations(),
-                "valid_moves": str(valid_moves),
+                "valid_moves": valid_moves,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
             }
@@ -116,7 +123,7 @@ def game(game_id):
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
-        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": str(valid_moves)})
+        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
 
@@ -155,4 +162,12 @@ def handle_send_message(data):
 @socketio.on("send_move")
 def handle_send_move(data):
     room = data.get("room")
-    socketio.emit("receive_move", games[room]["board"].get_piece_locations(), to=room)
+    valid_moves = generate_valid_moves(room)
+    
+    response_data = {
+        "board": games[room]["board"].get_piece_locations(),
+        "valid_moves": valid_moves,
+    }
+    
+    socketio.emit("receive_move", response_data, to=room)
+
