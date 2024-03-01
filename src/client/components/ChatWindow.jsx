@@ -5,7 +5,9 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { React, useEffect, useState, useRef } from 'react';
+import {
+  React, useEffect, useState, useRef,
+} from 'react';
 import { SendMessageButton } from './Buttons';
 
 export default function ChatWindow({ gameCode, socket }) {

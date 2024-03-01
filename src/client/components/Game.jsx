@@ -47,7 +47,7 @@ export default function Game({ gameData }) {
         <div className="scale-90 flex-grow">
           <Board color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} />
         </div>
-        <div className="shadow-lg relative rounded-xl bg-gray-500 m-4 flex flex-col text-base text-gray-900">
+        <div className="shadow-lg w-[450px] relative rounded-xl bg-gray-500 m-4 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
             <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tl-xl flex-1 p-4`}>GAME</button>
             <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-700' : 'bg-gray-600'} flex-1 p-4`}>GAMES</button>
