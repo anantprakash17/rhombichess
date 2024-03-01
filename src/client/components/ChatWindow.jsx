@@ -5,7 +5,9 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import { React, useEffect, useState, useRef } from 'react';
+import {
+  React, useEffect, useState, useRef,
+} from 'react';
 import { SendMessageButton } from './Buttons';
 
 export default function ChatWindow({ gameCode, socket }) {
@@ -41,7 +43,7 @@ export default function ChatWindow({ gameCode, socket }) {
   }, [messages]);
 
   return (
-    <section className="flex flex-col h-full bg-gray-700 p-2 text-lg">
+    <section className="flex flex-col bg-gray-700 p-2 text-lg h-[375px]">
       <div className="flex-1 overflow-y-auto bg-gray-600 rounded-lg mb-2 pt-2">
         {messages.map((msg, index) => (
           <div key={`message-${index}`} className="pb-1 px-2" ref={index === messages.length - 1 ? lastMessageRef : null}>

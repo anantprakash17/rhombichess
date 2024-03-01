@@ -11,7 +11,7 @@ export default function GameStatsTab({ gameCode, gamePassword }) {
 
   return (
     <section className="m-2 h-1/2 flex-grow">
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-between">
         <button
           onClick={() => copyToClipboard('CODE', gameCode)}
           className="flex items-center bg-gray-300 px-2 py-1 rounded"
