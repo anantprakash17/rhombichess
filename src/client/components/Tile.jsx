@@ -30,7 +30,7 @@ function Tile({
   }
 
   return (
-    <button onClick={onClick} disabled={disabled} type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none select-none">
+    <button onClick={onClick} disabled={disabled} type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none select-none focus:outline-0">
       <div className="absolute inset-0 flex flex-col justify-center items-center">
         {children}
       </div>
