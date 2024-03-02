@@ -14,7 +14,7 @@ def create_game(game_id, password, user, color, local = False):
     opposite_color = "white" if color == "black" else "black"
 
     player2 = {"id": None, "name": None, "color": opposite_color}
-    if local: player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color},
+    if local: player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color}
 
     games[game_id] = {
         "password": password,
