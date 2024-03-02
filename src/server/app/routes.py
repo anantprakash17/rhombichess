@@ -10,14 +10,17 @@ games: dict[str, dict] = {}
 messages: dict[str, list] = {}
 
 
-def create_game(game_id, password, user, color):
+def create_game(game_id, password, user, color, local = False):
     opposite_color = "white" if color == "black" else "black"
+
+    player2 = {"id": None, "name": None, "color": opposite_color}
+    if local: player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color},
 
     games[game_id] = {
         "password": password,
         "board": ChessBoard(),
-        "player_1": {"id": user["id"], "name": user["name"], "color": color},
-        "player_2": {"id": None, "name": None, "color": opposite_color},
+        "player_1": {"id": user["id"], "name": "Player #1", "color": color},
+        "player_2": player2,
     }
     messages[game_id] = []
 
@@ -25,12 +28,13 @@ def create_game(game_id, password, user, color):
 @app.route("/api/new_game", methods=["POST"])
 def new_game():
     data = request.get_json()
-    password = data["password"]
-    color = data["color"]
     user = data["user"]
+    color = data["color"]
+    local = data.get("local", "")
+    password = data.get("password", "")
 
     game_id = str(uuid.uuid4())[:4].upper()
-    create_game(game_id, password, user, color)
+    create_game(game_id, password, user, color, local)
     return jsonify({"game_id": game_id})
 
 
