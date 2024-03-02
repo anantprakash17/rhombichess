@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export function SignOutButton() {
   return (
@@ -12,12 +14,17 @@ export function SignOutButton() {
 }
 
 export function PlayOnlineButton() {
+  const router = useRouter();
+
+  const goToPlayOnline = () => {
+    router.push('/play/online');
+  };
   return (
-    <a href="/play/online">
-      <button className="text-2xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
-        Play Online
-      </button>
-    </a>
+    //<Link href="/play/online" passHref>
+    <button onClick={goToPlayOnline} className="text-2xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
+      Play Online
+    </button>
+    //</Link>
   );
 }
 
