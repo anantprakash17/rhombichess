@@ -113,7 +113,7 @@ export default function SideBar({ session }) {
           </ul>
         </div>
         <div className="text-gray-500 hidden absolute bottom-2 left-0 justify-center p-4 space-x-4 w-full lg:flex bg-gray-800 z-20 border-r border-gray-700">
-          RhombiChess© 2023
+          {`RhombiChess © ${new Date().getFullYear()}`}
         </div>
       </aside>
     </>

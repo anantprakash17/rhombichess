@@ -15,6 +15,7 @@ export default function Game({ gameData }) {
   const [gameCode, setGameCode] = useState(gameData?.game_id);
   const session = useSession();
   const [activeTab, setActiveTab] = useState('game');
+  const localGame = gameData.player_1.id === gameData.player_2.id || false;
 
   const tabs = {
     game: { label: 'GAME', content: <GameStatsTab gameCode={gameCode} gamePassword={gameData?.password} /> },
@@ -47,12 +48,11 @@ export default function Game({ gameData }) {
         <div className="scale-90 flex-grow">
           <Board color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} />
         </div>
-        <div className="relative rounded-xl bg-gray-200 m-4 flex flex-col text-base text-gray-900">
+        <div className="shadow-lg w-[450px] relative rounded-xl bg-gray-500 m-4 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
-            <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tl-xl flex-1 px-4 p-2`}>GAME</button>
-            <button type="button" onClick={() => setActiveTab('newGame')} className={`${activeTab === 'newGame' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>NEW GAME</button>
-            <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-500' : 'bg-gray-400'} flex-1 px-4 p-2`}>GAMES</button>
-            <button type="button" onClick={() => setActiveTab('players')} className={`${activeTab === 'players' ? 'bg-gray-500' : 'bg-gray-400'} rounded-tr-xl flex-1 px-4 p-2`}>PLAYERS</button>
+            <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tl-xl flex-1 p-4`}>GAME</button>
+            <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-700' : 'bg-gray-600'} flex-1 p-4`}>GAMES</button>
+            <button type="button" onClick={() => setActiveTab('players')} className={`${activeTab === 'players' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tr-xl flex-1 p-4`}>PLAYERS</button>
           </div>
           <div className="m-2 flex-grow">
             {tabs[activeTab].content}
