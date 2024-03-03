@@ -78,11 +78,11 @@ export default function GameStatsTab({ gameData }) {
       <div className="flex mt-24 w-full text-2xl font-bold">
         <div className="ml-8 flex-1 flex flex-col items-center justify-center">
           <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
-          <Timer timerDuration={gameData?.timer_duration_p1} />
+          <Timer timerDuration={gameData?.timer_duration_p1} timerRunning={true} />
         </div>
         <div className="mr-8 flex-1 flex flex-col items-center justify-center">
-          <Image src={`/pieces/pawn-${gameData?.player_1?.color === 'black' ? ('white') : ('black')}.png`} alt="pawn2" width={80} height={60} />
-          <Timer timerDuration={gameData?.timer_duration_p2} />
+          <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
+          <Timer timerDuration={gameData?.timer_duration_p2} timerRunning={false} />
         </div>
       </div>
     </section>
