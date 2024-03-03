@@ -114,7 +114,7 @@ function Board({
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [confirmMoveModalOpen]);
-  console.log(validMoves);
+
   const generateBoardUI = () => board.slice().reverse().map((column, displayColumnIndex) => {
     const columnIndex = board.length - 1 - displayColumnIndex;
     const normalCells = column.filter((cell) => cell.type === 'NORMAL');
