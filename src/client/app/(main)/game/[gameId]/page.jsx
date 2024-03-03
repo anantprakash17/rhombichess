@@ -22,7 +22,7 @@ export default async function page({ params }) {
     },
   });
   const gameData = await response.json();
-
+  console.log(gameData);
   return (
     <main className="relative flex justify-center items-center h-screen gap-3">
       {gameData?.board
