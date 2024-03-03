@@ -72,23 +72,19 @@ class ChessBoard:
             print(" ".join(row))
         return self.board
 
-    def get_piece_locations(self) -> list[list[str]]:
+    def get_piece_locations(self) -> dict[tuple[int,int], dict[str, str]]:
         """
-        Get the chess board
+        Get the chess board as a dictionary of piece locations
         Returns:
-            list[list[chess_tile]]: chess board
+            dict[tuple[int,int], dict[str, str]]: chess board
         """
-        string_board = []
-        for column in self.board:
-            string_board.append([])
-            for tile in column:
-                if tile.type == TileType.NORMAL:
-                    if not tile.piece:
-                        string_board[-1].append("")
-                        continue
-                    piece = tile.piece.get_piece()
-                    string_board[-1].append(piece)
-        return string_board
+        dict_board = {}
+        for x in range(len(self.board)):
+            for y in range(len(self.board[x])):
+                tile = self.board[x][y]
+                dict_board[str((x, y))] = {"piece": f"{tile.piece.get_piece()}" if tile.piece else "", "type": f"{tile.type.name}"}
+        return dict_board
+            
 
     def create_tile_column(self, colors: list[int], orientation: int, padding: int) -> list[ChessTile]:
         """
@@ -296,10 +292,6 @@ class ChessBoard:
             start (tuple): starting position
             end (tuple): ending position
         """
-        start_offset = self.calculate_offset(start)
-        start = (start[0], start[1] + start_offset)
-        end_offset = self.calculate_offset(end)
-        end = (end[0], end[1] + end_offset)
 
         # ensure the move is valid
         # piece_moves = self.valid_moves.get(start)
@@ -313,20 +305,6 @@ class ChessBoard:
 
         self.update_valid_moves(color)
         return True
-
-    def calculate_offset(self, coord: tuple[int,int]):
-        """
-        Calculate the offset for the piece after accounting for padding and diamond tiles
-        """
-        padding = 0
-        position = coord[1]
-        column = coord[0]
-        for i in range(len(self.board[column])):
-            tile_type = self.board[column][i].type
-            if tile_type != TileType.PADDING:
-                break
-            padding += 1
-        return padding + (position + 1) if column % 2 == 0 else padding
 
     def update_valid_moves(self, color: int):
         """

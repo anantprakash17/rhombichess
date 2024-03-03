@@ -13,15 +13,7 @@ messages: dict[str, list] = {}
 
 def generate_valid_moves(game_id):
     valid_moves = {}
-    for key, value in games[game_id]["board"].valid_moves.items():
-        if value:
-            offset = games[game_id]["board"].calculate_offset(key)
-            key_str = f"{key[0]},{key[1] - offset}"
-            valid_moves[key_str] = [
-                f"{move[0]},{move[1] - games[game_id]['board'].calculate_offset(move)}"
-                for move in value
-            ]
-    return valid_moves
+    return {str(k): v for k, v in games[game_id]["board"].valid_moves.items() if v != []}
 
 
 def create_game(game_id, password, user, color):
@@ -97,9 +89,7 @@ def join_game(game_id):
 def game(game_id):
     if game_id not in games:
         return jsonify({"error_message": "Game not found", "status": 404}), 404
-
     valid_moves = generate_valid_moves(game_id)
-
     if request.method == "GET":
         game_password = games[game_id]["password"]
         return jsonify(
@@ -158,11 +148,10 @@ def handle_send_message(data):
 @socketio.on("send_move")
 def handle_send_move(data):
     room = data.get("room")
-    valid_moves = generate_valid_moves(room)
     
     response_data = {
         "board": games[room]["board"].get_piece_locations(),
-        "valid_moves": valid_moves,
+        "valid_moves": generate_valid_moves(room),
     }
     
     socketio.emit("receive_move", response_data, to=room)
