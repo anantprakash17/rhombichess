@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
+import Timer from './Timer';
 
-export default function GameStatsTab({ gameCode, gamePassword }) {
+export default function GameStatsTab({ gameData }) {
   const [copiedField, setCopiedField] = useState(null);
 
   const copyToClipboard = async (fieldType, field) => {
@@ -13,12 +15,12 @@ export default function GameStatsTab({ gameCode, gamePassword }) {
     <section className="m-2 h-1/2 flex-grow">
       <div className="flex gap-4 justify-between">
         <button
-          onClick={() => copyToClipboard('CODE', gameCode)}
+          onClick={() => copyToClipboard('CODE', gameData?.game_id)}
           className="flex items-center bg-gray-300 px-2 py-1 rounded"
           type="button"
         >
           <span>
-            {`Game Code: ${gameCode}`}
+            {`Game Code: ${gameData?.game_id}`}
           </span>
           {copiedField === 'CODE' ? (
             <svg className="w-6 h-6 text-gray-700 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -30,14 +32,14 @@ export default function GameStatsTab({ gameCode, gamePassword }) {
             </svg>
           )}
         </button>
-        {gamePassword && (
+        {gameData?.game_password && (
           <button
-            onClick={() => copyToClipboard('PASSWORD', gamePassword)}
+            onClick={() => copyToClipboard('PASSWORD', gameData?.game_password)}
             className="flex items-center bg-gray-300 px-2 py-1 rounded"
             type="button"
           >
             <span>
-              {`Game Password: ${gamePassword}`}
+              {`Game Password: ${gameData?.game_password}`}
             </span>
             {copiedField === 'PASSWORD' ? (
               <svg className="w-6 h-6 text-gray-700 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -73,8 +75,15 @@ export default function GameStatsTab({ gameCode, gamePassword }) {
           </span>
         </div>
       </div>
-      <div className="flex mt-24 w-full justify-center text-3xl">
-        TIMER GOES HERE
+      <div className="flex mt-24 w-full text-2xl font-bold">
+        <div className="ml-8 flex-1 flex flex-col items-center justify-center">
+          <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
+          <Timer timerDuration={gameData?.timer_duration_p1} />
+        </div>
+        <div className="mr-8 flex-1 flex flex-col items-center justify-center">
+          <Image src={`/pieces/pawn-${gameData?.player_1?.color === 'black' ? ('white') : ('black')}.png`} alt="pawn2" width={80} height={60} />
+          <Timer timerDuration={gameData?.timer_duration_p2} />
+        </div>
       </div>
     </section>
   );

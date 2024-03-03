@@ -10,7 +10,7 @@ games: dict[str, dict] = {}
 messages: dict[str, list] = {}
 
 
-def create_game(game_id, password, user, color, local = False):
+def create_game(game_id, password, user, color, timer_duration, local = False):
     opposite_color = "white" if color == "black" else "black"
 
     player2 = {"id": None, "name": None, "color": opposite_color}
@@ -21,6 +21,8 @@ def create_game(game_id, password, user, color, local = False):
         "board": ChessBoard(),
         "player_1": {"id": user["id"], "name": "Player #1", "color": color},
         "player_2": player2,
+        "timer_duration_p1": timer_duration,
+        "timer_duration_p2": timer_duration,
     }
     messages[game_id] = []
 
@@ -32,9 +34,10 @@ def new_game():
     color = data["color"]
     local = data.get("local", "")
     password = data.get("password", "")
+    timer_duration = data.get("timer_duration", "")
 
     game_id = str(uuid.uuid4())[:4].upper()
-    create_game(game_id, password, user, color, local)
+    create_game(game_id, password, user, color, timer_duration, local)
     return jsonify({"game_id": game_id})
 
 
@@ -96,6 +99,8 @@ def game(game_id):
                 "board": games[game_id]["board"].get_piece_locations(),
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
+                "timer_duration_p1": games[game_id]["timer_duration_p1"],
+                "timer_duration_p2": games[game_id]["timer_duration_p2"],
             }
         )
     elif request.method == "POST":
