@@ -37,6 +37,10 @@ def create_game(game_id, password, user, color):
     messages[game_id] = []
 
 
+@app.route("/api/initial_board", methods=["GET"])
+def initial_board():
+    return jsonify({ "board": ChessBoard().get_piece_locations() })
+
 @app.route("/api/new_game", methods=["POST"])
 def new_game():
     data = request.get_json()
