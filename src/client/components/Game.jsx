@@ -15,6 +15,7 @@ export default function Game({ gameData }) {
   const [gameCode, setGameCode] = useState(gameData?.game_id);
   const session = useSession();
   const [activeTab, setActiveTab] = useState('game');
+  const localGame = gameData.player_1.id === gameData.player_2.id || false;
 
   const tabs = {
     game: { label: 'GAME', content: <GameStatsTab gameCode={gameCode} gamePassword={gameData?.password} /> },

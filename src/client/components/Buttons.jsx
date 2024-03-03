@@ -23,9 +23,11 @@ export function PlayOnlineButton() {
 
 export function PlayLocalButton() {
   return (
-    <button className="text-2xl rounded-lg font-semibold bg-blue-400 text-white px-4 py-2 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={() => {}}>
-      Play Local
-    </button>
+    <a href="/play/local">
+      <button className="text-2xl rounded-lg font-semibold bg-blue-400 text-white px-4 py-2 hover:bg-blue-500 focus:bg-blue-600" type="button" onClick={() => {}}>
+        Play Local
+      </button>
+    </a>
   );
 }
 
