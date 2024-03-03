@@ -4,6 +4,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useRouter } from 'next/navigation';
+import { SessionProvider } from 'next-auth/react';
 import SignInCard from '../components/SignInCard';
 
 export const validUsername = 'mbazinagrolinger@gmail.com';
@@ -20,14 +21,41 @@ useRouter.mockImplementation(() => ({
   refresh: jest.fn(),
 }));
 
-global.fetch = jest.fn(() => Promise.resolve({
-  json: () => Promise.resolve({}),
-}));
 
-describe('Sign In', () => {
-  it('Sign In - Successful sign in', async () => {
-    render(<SignInCard />);
+describe('SignInCard Component', () => {
+  beforeEach(() => {
+    render(
+      <SessionProvider session={{}}>
+        <SignInCard />
+      </SessionProvider>,
+    );
+  });
 
+  it('renders without crashing', () => {
+    const emailField = screen.getByPlaceholderText('name@company.com');
+    const passwordField = screen.getByPlaceholderText('••••••••');
+    const signInButton = screen.getByText('Sign in to your account');
+
+    expect(emailField).toBeVisible();
+    expect(passwordField).toBeVisible();
+    expect(signInButton).toBeVisible();
+  });
+
+  it('updates Email on input change', () => {
+    const emailInput = screen.getByRole('textbox', { name: /Email/i });
+    fireEvent.change(emailInput, { target: { value: 'name@company.com' } });
+
+    expect(emailInput.value).toBe('name@company.com');
+  });
+
+  it('updates Password on input change', () => {
+    const passwordInput = screen.getAllByPlaceholderText('••••••••')[0];
+    fireEvent.change(passwordInput, { target: { value: 'password' } });
+
+    expect(passwordInput.value).toBe('password');
+  });
+
+  it('successful sign in', async () => {
     const emailInput = screen.getByPlaceholderText('name@company.com');
     const passwordInput = screen.getByPlaceholderText('••••••••');
     const submitButton = screen.getByText('Sign in to your account');
@@ -50,9 +78,7 @@ describe('Sign In', () => {
     });
   });
 
-  it('Sign in - Wrong username and wrong password', async () => {
-    render(<SignInCard />);
-
+  it('unsuccessful sign in with wrong username and wrong password', async () => {
     const emailInput = screen.getByPlaceholderText('name@company.com');
     const passwordInput = screen.getByPlaceholderText('••••••••');
     const submitButton = screen.getByText('Sign in to your account');
@@ -81,9 +107,7 @@ describe('Sign In', () => {
     });
   });
 
-  it('Sign in - Right username and wrong password', async () => {
-    render(<SignInCard />);
-
+  it('unsuccessful sign in with right username and wrong password', async () => {
     const emailInput = screen.getByPlaceholderText('name@company.com');
     const passwordInput = screen.getByPlaceholderText('••••••••');
     const submitButton = screen.getByText('Sign in to your account');
@@ -110,9 +134,7 @@ describe('Sign In', () => {
     });
   });
 
-  it('Sign in - Wrong username and right password', async () => {
-    render(<SignInCard />);
-
+  it('unsuccessful sign in with wrong username and right password', async () => {
     const emailInput = screen.getByPlaceholderText('name@company.com');
     const passwordInput = screen.getByPlaceholderText('••••••••');
     const submitButton = screen.getByText('Sign in to your account');
