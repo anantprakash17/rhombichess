@@ -13,7 +13,13 @@ messages: dict[str, list] = {}
 
 def generate_valid_moves(game_id):
     valid_moves = {}
-    return {str(k): v for k, v in games[game_id]["board"].valid_moves.items() if v != []}
+    for key, value in games[game_id]["board"].valid_moves.items():
+        if value:
+            key_str = f"{key[0]},{key[1]}"
+            valid_moves[key_str] = [
+                f"{move[0]},{move[1]}" for move in value
+            ]
+    return valid_moves
 
 
 def create_game(game_id, password, user, color):
