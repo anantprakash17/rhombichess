@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { SessionProvider } from 'next-auth/react';
 import PlayOnlineHome from '../components/PlayOnlineHome';
 
 describe('PlayOnlineHome Component', () => {
@@ -9,7 +10,15 @@ describe('PlayOnlineHome Component', () => {
     delete window.location;
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
 
-    render(<PlayOnlineHome />);
+    render(
+      <SessionProvider session={{}}>
+        <PlayOnlineHome />
+      </SessionProvider>,
+    );
+
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ game_id: '4ZP6A' }),
+    }));
   });
 
   it('renders without crashing', () => {
@@ -39,13 +48,15 @@ describe('PlayOnlineHome Component', () => {
     expect(window.location.href).toBe('');
   });
 
-  it('navigates on join game with valid game code', () => {
+  it('navigates on join game with valid game code', async () => {
     const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
     fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
 
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
 
-    expect(window.location.href).toBe('/game/4ZP6A');
+    await waitFor(() => {
+      expect(window.location.href).toBe('/game/4ZP6A');
+    });
   });
 });

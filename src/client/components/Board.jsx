@@ -166,12 +166,12 @@ function Board({
       </div>
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
-        <div className="flex-col items-center justify-center w-full">
-          <div className="text-center mx-2 m-1 text-2xl font-bold text-gray-900">
+        <div className="flex-col items-center justify-center w-full bg-slate-600">
+          <div className="text-center mx-2 m-1 mb-2 text-2xl font-bold text-white">
             Confirm move?
           </div>
           <div className="flex">
-            <button onClick={handleCanceledMove} className="mx-1 text-xl rounded-lg font-semibold border border-gray-400 text-gray-400 px-4 py-2 hover:bg-gray-200 focus:bg-gray-900" type="button">
+            <button onClick={handleCanceledMove} className="mx-1 text-xl rounded-lg font-semibold border border-gray-100 text-gray-100 px-4 py-2 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300" type="button">
               Cancel
             </button>
             <button onClick={handleConfirmedMove} className="mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
@@ -190,7 +190,7 @@ export default Board;
 export function ConfirmMoveModal({ open, children }) {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
-      <div className={`fixed bg-white rounded-md shadow-xl p-3 border-2 border-gray-300 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
+      <div className={`fixed bg-slate-600 rounded-md shadow-lg p-3 border-2 border-gray-700 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
         <div className="flex-1">
           {children}
         </div>
