@@ -36,6 +36,10 @@ class Rook(ChessPiece):
         valid_moves.extend(self.horizontal(x, y, board, True))
         # Check to the left of the current position
         valid_moves.extend(self.horizontal(x, y, board, False))
+        # Check if piece is on diamond tile and add valid moves from the diamond tile
+        if board[x][y].orientation == 0:
+            valid_moves.extend(self.horizontal(x, y - 1, board, True))
+            valid_moves.extend(self.horizontal(x, y - 1, board, False))
 
         return valid_moves
 
@@ -44,11 +48,8 @@ class Rook(ChessPiece):
         move = range(y - 1, -1, -1) if up else range(y + 1, len(board[x]))
         for i in move:
             tile = board[x][i]
-            # Skip the diamond tiles
-            if tile.type == TileType.DIAMOND:
-                continue
-            # If the tile is not empty or a padding tile, break the loop
-            if not tile.is_empty() or tile.type == TileType.PADDING:
+            # If the tile is not empty or a padding tile or on diamond tiles, break the loop
+            if not tile.is_empty() or tile.type == TileType.PADDING or tile.orientation == 0:
                 break
             valid_moves.append((x, i))
         return valid_moves
@@ -64,21 +65,21 @@ class Rook(ChessPiece):
 
             # If the tile is a diamond, check the tile above or below it
             if tile.type == TileType.DIAMOND:
-                y += 1 if right else -1
+                y += 1
                 if board[i][y].is_empty():
                     valid_moves.append((i, y))
-
-            # Here we check if the tile is a normal tile and the next tile is a diamond
-            elif tile.type == TileType.NORMAL:
-                next_tile = board[i][y - 1] if right else board[i][y + 1]
-                # If the next tile is a diamond, we need to offset the y value
-                if next_tile.type == TileType.DIAMOND:
-                    y += 1 if right else -1
-                    if board[i][y].is_empty():
-                        valid_moves.append((i, y))
-
-            else:  # tile is normal
+                else:
+                    break
+            elif tile.orientation == 0:
+                if board[i][y].is_empty():
+                    valid_moves.append((i, y))
+                    y -= 1
+                else:
+                    break
+            elif board[i][y].is_empty():  # tile is normal
                 valid_moves.append((i, y))
+            else:
+                break
         return valid_moves
 
 
