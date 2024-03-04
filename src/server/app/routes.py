@@ -1,13 +1,25 @@
 import json
-from flask import jsonify, request
-from flask_socketio import SocketIO, join_room
+import uuid
+
 from app import app, socketio
 from app.chess_board.board import ChessBoard
-import uuid
+from flask import jsonify, request
+from flask_socketio import SocketIO, join_room
 
 games: dict[str, dict] = {}
 
 messages: dict[str, list] = {}
+
+
+def generate_valid_moves(game_id):
+    valid_moves = {}
+    for key, value in games[game_id]["board"].valid_moves.items():
+        if value:
+            key_str = f"{key[0]},{key[1]}"
+            valid_moves[key_str] = [
+                f"{move[0]},{move[1]}" for move in value
+            ]
+    return valid_moves
 
 
 def create_game(game_id, password, user, color, local = False):
@@ -24,6 +36,10 @@ def create_game(game_id, password, user, color, local = False):
     }
     messages[game_id] = []
 
+
+@app.route("/api/initial_board", methods=["GET"])
+def initial_board():
+    return jsonify({ "board": ChessBoard().get_piece_locations() })
 
 @app.route("/api/new_game", methods=["POST"])
 def new_game():
@@ -87,6 +103,7 @@ def join_game(game_id):
 def game(game_id):
     if game_id not in games:
         return jsonify({"error_message": "Game not found", "status": 404}), 404
+    valid_moves = generate_valid_moves(game_id)
     if request.method == "GET":
         game_password = games[game_id]["password"]
         return jsonify(
@@ -94,6 +111,7 @@ def game(game_id):
                 "game_id": game_id,
                 "password": game_password,
                 "board": games[game_id]["board"].get_piece_locations(),
+                "valid_moves": valid_moves,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
             }
@@ -105,7 +123,7 @@ def game(game_id):
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
-        return jsonify({"board": games[game_id]["board"].get_piece_locations()})
+        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
 
@@ -144,4 +162,11 @@ def handle_send_message(data):
 @socketio.on("send_move")
 def handle_send_move(data):
     room = data.get("room")
-    socketio.emit("receive_move", games[room]["board"].get_piece_locations(), to=room)
+    
+    response_data = {
+        "board": games[room]["board"].get_piece_locations(),
+        "valid_moves": generate_valid_moves(room),
+    }
+    
+    socketio.emit("receive_move", response_data, to=room)
+
