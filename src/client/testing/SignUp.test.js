@@ -35,28 +35,28 @@ describe('SignUpCard Component', () => {
     expect(signUpButton).toBeVisible();
   });
 
-  it('updates Full Name on input change', () => {
+  it('updates full name on input change', () => {
     const fullNameInput = screen.getByRole('textbox', { name: /Full Name/i });
     fireEvent.change(fullNameInput, { target: { value: 'John Doe' } });
 
     expect(fullNameInput.value).toBe('John Doe');
   });
 
-  it('updates Email on input change', () => {
+  it('updates email on input change', () => {
     const emailInput = screen.getByRole('textbox', { name: /Email/i });
     fireEvent.change(emailInput, { target: { value: 'name@company.com' } });
 
     expect(emailInput.value).toBe('name@company.com');
   });
 
-  it('updates Password on input change', () => {
+  it('updates password on input change', () => {
     const passwordInput = screen.getAllByPlaceholderText('••••••••')[0];
     fireEvent.change(passwordInput, { target: { value: 'password' } });
 
     expect(passwordInput.value).toBe('password');
   });
 
-  it('updates Confirm Password on input change', () => {
+  it('updates confirm password on input change', () => {
     const confirmPasswordInput = screen.getAllByPlaceholderText('••••••••')[1];
     fireEvent.change(confirmPasswordInput, { target: { value: 'password' } });
 
