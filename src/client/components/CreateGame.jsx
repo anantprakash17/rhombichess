@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 import baseUrl from '../constants';
@@ -10,6 +10,11 @@ import baseUrl from '../constants';
 export default function CreateGame() {
   const [showPassword, setShowPassword] = useState(false);
   const session = useSession();
+  const [selectedColor, setSelectedColor] = useState('random');
+
+  const handleColorChange = (event) => {
+    setSelectedColor(event.target.value);
+  };
 
   const handleCreateGame = async (event) => {
     event.preventDefault();
@@ -61,7 +66,7 @@ export default function CreateGame() {
           </p>
           <ul className="flex gap-2">
             <li>
-              <input type="radio" id="random" name="color" value="random" className="hidden peer" required defaultChecked />
+              <input type="radio" id="random" name="color" value="random" className="hidden peer" required checked={selectedColor === 'random'} onChange={handleColorChange} />
               <label htmlFor="random" className="inline-flex items-center justify-between py-2 px-3 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white hover:text-gray-500 hover:bg-gray-100">
                 <div className="block">
                   <div className="w-full font-semibold">Random</div>
@@ -69,7 +74,7 @@ export default function CreateGame() {
               </label>
             </li>
             <li>
-              <input type="radio" id="black" name="color" value="black" className="hidden peer" required />
+              <input type="radio" id="black" name="color" value="black" className="hidden peer" required checked={selectedColor === 'black'} onChange={handleColorChange} />
               <label htmlFor="black" className="inline-flex items-center justify-between py-2 px-3 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white hover:text-gray-500 hover:bg-gray-100">
                 <div className="block">
                   <div className="w-full font-semibold">Black</div>
@@ -77,7 +82,7 @@ export default function CreateGame() {
               </label>
             </li>
             <li>
-              <input type="radio" id="white" name="color" value="white" className="hidden peer" required />
+              <input type="radio" id="white" name="color" value="white" className="hidden peer" required checked={selectedColor === 'white'} onChange={handleColorChange} />
               <label htmlFor="white" className="inline-flex items-center justify-between py-2 px-3 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white hover:text-gray-500 hover:bg-gray-100">
                 <div className="block">
                   <div className="w-full font-semibold">White</div>
