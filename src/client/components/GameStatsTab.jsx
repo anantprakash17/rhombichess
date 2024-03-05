@@ -4,7 +4,6 @@ import Timer from './Timer';
 
 export default function GameStatsTab({ gameData }) {
 
-  console.log(gameData?.timer_duration_p1);
   const [copiedField, setCopiedField] = useState(null);
 
   const copyToClipboard = async (fieldType, field) => {
