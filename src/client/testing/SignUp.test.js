@@ -72,6 +72,16 @@ describe('SignUpCard Component', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /Sign up for RhombiChess/i }));
 
+    expect(global.fetch).toHaveBeenCalledWith('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'John Doe',
+        email: 'name@company.com',
+        password: 'password',
+      }),
+    });
+
     await waitFor(() => {
       expect(window.location.href).toContain('/auth/signin');
     });
