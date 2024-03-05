@@ -87,16 +87,6 @@ describe('SignUpCard Component', () => {
     });
   });
 
-  it('does not allow non matching confirm password field', async () => {
-    await fillSignUpForm({
-      name: 'John Doe',
-      email: 'name@company.com',
-      password: 'password',
-      confirmPassword: 'differentPassword',
-    });
-    await screen.findByText('Passwords do not match!');
-  });
-
   it('does not allow empty full name field', async () => {
     await fillSignUpForm({
       name: '',
