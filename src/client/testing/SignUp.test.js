@@ -97,7 +97,7 @@ describe('SignUpCard Component', () => {
     await screen.findByText('Passwords do not match!');
   });
 
-  it('does not allow empty Full Name field', async () => {
+  it('does not allow empty full name field', async () => {
     await fillSignUpForm({
       name: '',
       email: 'name@company.com',
@@ -108,7 +108,7 @@ describe('SignUpCard Component', () => {
     expect(screen.getByLabelText('Full Name').validity.valueMissing).toBe(true);
   });
 
-  it('does not allow empty or malformed Email field', async () => {
+  it('does not allow empty or malformed email field', async () => {
     await fillSignUpForm({
       name: 'John Doe',
       email: '',
@@ -135,7 +135,7 @@ describe('SignUpCard Component', () => {
     expect(screen.getByLabelText('Email').validity.valid).toBe(false);
   });
 
-  it('does not allow empty or malformed Password field', async () => {
+  it('does not allow empty or malformed password field', async () => {
     await fillSignUpForm({
       name: 'John Doe',
       email: 'name@company.com',
