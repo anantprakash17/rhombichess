@@ -14,7 +14,7 @@ export function SignOutButton() {
 
 export function PlayOnlineButton() {
   return (
-    <Link href="/play/online" passHref>
+    <Link href="/play/online">
       <button className="text-2xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
         Play Online
       </button>

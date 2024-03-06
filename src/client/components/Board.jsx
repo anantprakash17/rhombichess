@@ -161,7 +161,6 @@ function Board({
   return (
     <div>
       <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
-        {/* {columns} */}
         {generateBoardUI()}
       </div>
 
