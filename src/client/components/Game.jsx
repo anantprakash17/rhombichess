@@ -17,10 +17,8 @@ export default function Game({ gameData }) {
   const [activeTab, setActiveTab] = useState('game');
   const localGame = gameData.player_1.id === gameData.player_2.id || false;
 
-  console.log(gameData?.player_1?.color);
-
   const tabs = {
-    game: { label: 'GAME', content: <GameStatsTab gameData={gameData} /> },
+    game: { label: 'GAME', content: <GameStatsTab gameData={gameData} socket={socket} /> },
     newGame: { label: 'NEW GAME', content: 'NEW GAME CONTENT' },
     games: { label: 'GAMES', content: 'GAMES CONTENT' },
     players: { label: 'PLAYERS', content: 'PLAYERS CONTENT' },

@@ -29,7 +29,7 @@ export default function CreateLocalGame() {
     const minutes = formDataObject.minutes || '0';
     const seconds = formDataObject.seconds || '0';
 
-    const timerDuration = `${minutes}:${seconds}`;
+    const timerDuration = parseInt(minutes, 10) * 60 + parseInt(seconds, 10);
 
     const url = `${baseUrl}/api/new_game`;
     const response = await fetch(url, {

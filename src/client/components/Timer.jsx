@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 export default function Timer({ timerDuration, timerRunning }) {
-
-  const [min, sec] = timerDuration.split(':').map(Number);
-  const totalSeconds = min * 60 + sec;
+  const totalSeconds = timerDuration;
 
   const [timeLeft, setTimeLeft] = useState(totalSeconds);
   const [isTimerRunning, setTimerRunning] = useState(timerRunning);
@@ -17,7 +15,7 @@ export default function Timer({ timerDuration, timerRunning }) {
       setTimeLeft((prevTime) => prevTime - 1);
     }, 1000);
     return () => clearInterval(interval);
-  }, [isTimerRunning, timeLeft]);
+  }, [timeLeft]);
 
   const displayMin = Math.floor(timeLeft / 60);
   const displaySec = timeLeft % 60;
