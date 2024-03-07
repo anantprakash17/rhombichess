@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 export function SignOutButton() {
   return (
@@ -13,11 +14,11 @@ export function SignOutButton() {
 
 export function PlayOnlineButton() {
   return (
-    <a href="/play/online">
+    <Link href="/play/online">
       <button className="text-2xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
         Play Online
       </button>
-    </a>
+    </Link>
   );
 }
 

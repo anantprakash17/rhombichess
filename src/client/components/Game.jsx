@@ -46,7 +46,7 @@ export default function Game({ gameData }) {
     <section className="w-full flex h-screen">
       <div className="flex flex-1">
         <div className="scale-90 flex-grow">
-          <Board color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} />
+          <Board color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} initialValidMoves={gameData.valid_moves} />
         </div>
         <div className="shadow-lg w-[450px] relative rounded-xl bg-gray-500 m-4 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">

@@ -1,13 +1,18 @@
 import React from 'react';
 
 function Tile({
-  children, orientation, colour, onClick, disabled,
+  children, orientation, colour, onClick, disabled = false, highlight = false,
 }) {
   let tile;
 
   const colours = ['#FDE047', '#67E8F9', '#F472B6'];
 
-  const tileStyle = disabled ? '' : 'group-hover:fill-gray-800 pointer-events-auto';
+  let tileStyle = 'group-hover:fill-gray-700 pointer-events-auto';
+  if (disabled) {
+    tileStyle = '';
+  } else if (highlight) {
+    tileStyle = 'group-hover:fill-gray-700 pointer-events-auto';
+  }
 
   if (orientation === 0) {
     tile = (
@@ -33,6 +38,7 @@ function Tile({
     <button onClick={onClick} disabled={disabled} type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none select-none focus:outline-0">
       <div className="absolute inset-0 flex flex-col justify-center items-center">
         {children}
+        <div hidden={!highlight} className="w-[25px] h-[25px] shadow-lg border-gray-700 border-4 rounded-full bg-white absolute" />
       </div>
       <div>
         {tile}

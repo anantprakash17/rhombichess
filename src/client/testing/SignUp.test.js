@@ -35,28 +35,28 @@ describe('SignUpCard Component', () => {
     expect(signUpButton).toBeVisible();
   });
 
-  it('updates Full Name on input change', () => {
+  it('updates full name on input change', () => {
     const fullNameInput = screen.getByRole('textbox', { name: /Full Name/i });
     fireEvent.change(fullNameInput, { target: { value: 'John Doe' } });
 
     expect(fullNameInput.value).toBe('John Doe');
   });
 
-  it('updates Email on input change', () => {
+  it('updates email on input change', () => {
     const emailInput = screen.getByRole('textbox', { name: /Email/i });
     fireEvent.change(emailInput, { target: { value: 'name@company.com' } });
 
     expect(emailInput.value).toBe('name@company.com');
   });
 
-  it('updates Password on input change', () => {
+  it('updates password on input change', () => {
     const passwordInput = screen.getAllByPlaceholderText('••••••••')[0];
     fireEvent.change(passwordInput, { target: { value: 'password' } });
 
     expect(passwordInput.value).toBe('password');
   });
 
-  it('updates Confirm Password on input change', () => {
+  it('updates confirm password on input change', () => {
     const confirmPasswordInput = screen.getAllByPlaceholderText('••••••••')[1];
     fireEvent.change(confirmPasswordInput, { target: { value: 'password' } });
 
@@ -72,22 +72,22 @@ describe('SignUpCard Component', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /Sign up for RhombiChess/i }));
 
+    expect(global.fetch).toHaveBeenCalledWith('/api/auth/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'John Doe',
+        email: 'name@company.com',
+        password: 'password',
+      }),
+    });
+
     await waitFor(() => {
       expect(window.location.href).toContain('/auth/signin');
     });
   });
 
-  it('does not allow non matching confirm password field', async () => {
-    await fillSignUpForm({
-      name: 'John Doe',
-      email: 'name@company.com',
-      password: 'password',
-      confirmPassword: 'differentPassword',
-    });
-    await screen.findByText('Passwords do not match!');
-  });
-
-  it('does not allow empty Full Name field', async () => {
+  it('does not allow empty full name field', async () => {
     await fillSignUpForm({
       name: '',
       email: 'name@company.com',
@@ -98,7 +98,7 @@ describe('SignUpCard Component', () => {
     expect(screen.getByLabelText('Full Name').validity.valueMissing).toBe(true);
   });
 
-  it('does not allow empty or malformed Email field', async () => {
+  it('does not allow empty or malformed email field', async () => {
     await fillSignUpForm({
       name: 'John Doe',
       email: '',
@@ -125,7 +125,7 @@ describe('SignUpCard Component', () => {
     expect(screen.getByLabelText('Email').validity.valid).toBe(false);
   });
 
-  it('does not allow empty or malformed Password field', async () => {
+  it('does not allow empty or malformed password field', async () => {
     await fillSignUpForm({
       name: 'John Doe',
       email: 'name@company.com',

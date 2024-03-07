@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
-import { SessionProvider, useSession } from 'next-auth/react';
+import {render, fireEvent, screen,} from '@testing-library/react';
+import { SessionProvider } from 'next-auth/react';
 import PlayOnlineHome from '../components/PlayOnlineHome';
 
 global.fetch = jest.fn();

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
@@ -10,18 +11,34 @@ import Tile from './Tile';
 import Piece from './Piece';
 
 function Board({
-  initialBoard, gameCode, disabled, socket, color,
+  initialBoard, gameCode, disabled, socket, color, initialValidMoves,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [selectedPieceDest, setSelectedPieceDest] = useState(null);
-  const [board, setBoard] = useState(initialBoard);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
+  const [possibleMoves, setPossibleMoves] = useState([]);
+  const [validMoves, setValidMoves] = useState(initialValidMoves);
+
+  const parseBoardData = (data) => {
+    const parsedBoard = [];
+    Object.keys(data).forEach((key) => {
+      const [x, y] = key.match(/\d+/g).map(Number);
+      if (!parsedBoard[x]) {
+        parsedBoard[x] = [];
+      }
+      parsedBoard[x][y] = data[key];
+    });
+    return parsedBoard;
+  };
+
+  const [board, setBoard] = useState(parseBoardData(initialBoard));
 
   useEffect(() => {
     if (!socket || disabled) return;
 
     const handleReceiveMove = (data) => {
-      setBoard(data);
+      setBoard(parseBoardData(data.board));
+      setValidMoves(data.valid_moves);
     };
 
     socket.on('receive_move', handleReceiveMove);
@@ -43,7 +60,7 @@ function Board({
     })
       .then((response) => response.json())
       .then((data) => {
-        setBoard(data.board);
+        setBoard(parseBoardData(data.board));
         setSelectedPiece(null);
         socket.emit('send_move', { room: gameCode, game_id: gameCode });
       })
@@ -54,6 +71,7 @@ function Board({
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
     setSelectedPieceDest(null);
+    setPossibleMoves([]);
   };
 
   const handleConfirmedMove = () => {
@@ -61,6 +79,7 @@ function Board({
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
     setSelectedPieceDest(null);
+    setPossibleMoves([]);
   };
 
   const handleKeyPress = (event) => {
@@ -68,6 +87,9 @@ function Board({
       handleConfirmedMove();
     } else if (event.key === 'Escape' && confirmMoveModalOpen) {
       handleCanceledMove();
+    } else if (event.key === 'Escape') {
+      setSelectedPiece(null);
+      setPossibleMoves([]);
     }
   };
 
@@ -75,10 +97,15 @@ function Board({
     if (selectedPiece) {
       setConfirmMoveModalOpen(true);
       setSelectedPieceDest({ columnNumber, index });
+      setPossibleMoves([]);
     } else if (board[columnNumber][index]) {
       setSelectedPiece({ columnNumber, index });
+      const moves = validMoves[`${columnNumber},${index}`] || [];
+      setPossibleMoves(moves);
     }
   };
+
+  const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
@@ -88,46 +115,53 @@ function Board({
     };
   }, [confirmMoveModalOpen]);
 
-  let flip = false;
-  const generateColumn = ({ columnNumber, columnHeight, isSecondColumn }) => (
-    Array.from({ length: columnHeight }, (_, index) => (
-      <Tile
-        key={`${columnNumber}: ${index}`}
-        orientation={isSecondColumn ? (flip ? (index % 2 !== 0 ? 2 : 0) : (index % 2 === 0 ? 2 : 0)) : 1}
-        colour={(index + columnHeight) % 3}
-        onClick={() => handleTileClick(columnNumber, index)}
-        disabled={disabled}
-      >
-        {board[columnNumber][index] && (
-          <Piece
-            className={`${color === 'black' ? 'rotate-180' : ''}`}
-            name={board[columnNumber][index]}
-            isSelected={selectedPiece && selectedPiece.columnNumber === columnNumber && selectedPiece.index === index}
-          />
-        )}
-      </Tile>
-    )));
+  const generateBoardUI = () => board.slice().reverse().map((column, displayColumnIndex) => {
+    const columnIndex = board.length - 1 - displayColumnIndex;
+    const normalCells = column.filter((cell) => cell.type === 'NORMAL');
 
-  const columns = [];
-  let vertical = false;
+    return (
+      <div key={`column-${columnIndex}`} className={`column-${columnIndex} flex flex-col justify-center items-center ml-[-1.9rem]`}>
+        {column.map((cell, cellIndex) => {
+          if (cell.type !== 'NORMAL') { return null; }
 
-  for (let columnIndex = 0; columnIndex < board.length; columnIndex++) {
-    const column = board[columnIndex];
-    columns.push(
-      <div key={`column-${columnIndex}`} className="flex flex-col justify-center items-center ml-[-1.9rem]">
-        {generateColumn({ columnNumber: columnIndex, columnHeight: column.length, isSecondColumn: vertical })}
-      </div>,
+          const normalCellIndex = normalCells.findIndex((normalCell) => normalCell === cell);
+          const isDiamond = (displayColumnIndex + 1) % 2 !== 0;
+          const flip = displayColumnIndex >= 7;
+          let orientation;
+
+          if (isDiamond) {
+            orientation = 1;
+          } else if ([3, 9, 13].includes(displayColumnIndex)) {
+            orientation = flip ? (cellIndex % 2 === 0 ? 2 : 0) : (cellIndex % 2 !== 0 ? 2 : 0);
+          } else { orientation = flip ? (cellIndex % 2 !== 0 ? 2 : 0) : (cellIndex % 2 === 0 ? 2 : 0); }
+
+          return (
+            <Tile
+              key={`${columnIndex}-${cellIndex}`}
+              orientation={orientation}
+              colour={(normalCellIndex + normalCells.length) % 3}
+              onClick={() => handleTileClick(columnIndex, cellIndex)}
+              disabled={disabled}
+              highlight={isPossibleMove(columnIndex, cellIndex)}
+            >
+              {cell.piece && (
+              <Piece
+                className={`${color === 'black' ? 'rotate-180' : ''}`}
+                name={cell.piece}
+                isSelected={selectedPiece && selectedPiece.columnNumber === columnIndex && selectedPiece.index === cellIndex}
+              />
+              )}
+            </Tile>
+          );
+        })}
+      </div>
     );
-    vertical = !vertical;
-    if (columnIndex === 7) {
-      flip = true;
-    }
-  }
+  });
 
   return (
     <div>
       <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
-        {columns}
+        {generateBoardUI()}
       </div>
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
