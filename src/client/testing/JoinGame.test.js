@@ -1,0 +1,94 @@
+/* eslint-disable react/jsx-filename-extension */
+import React from 'react';
+import '@testing-library/jest-dom';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { SessionProvider, useSession } from 'next-auth/react';
+import JoinGame from '../components/JoinGame';
+
+global.fetch = jest.fn();
+
+describe('JoinGame Component', () => {
+
+  jest.mock('next-auth/react', () => ({
+    useSession: jest.fn(),
+  }));
+
+  beforeEach(() => {
+    delete window.location;
+    window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
+
+    render(
+      <SessionProvider session={{}}>
+        <JoinGame />
+      </SessionProvider>,
+    );
+  });
+
+  it('does not navigate on join game with empty game code', () => {
+    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+    fireEvent.click(joinGameButton);
+
+    expect(window.location.href).toBe('');
+  });
+
+  it('navigates on join game with valid game code', async () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ game_id: '4ZP64' }), 
+    }));
+
+    const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
+
+    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+    fireEvent.click(joinGameButton);
+
+    await waitFor(() => {
+      expect(window.location.href).toBe('/game/4ZP6A');
+    });
+  });
+
+  it('displays the password field for a game with a password', async () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ password: 'password' }), 
+    }));
+  
+    const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
+  
+    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+    fireEvent.click(joinGameButton);
+
+    await waitFor(() => {
+      const requiresPasswordError = screen.getByText(/This game requires a password./i);
+      const gamePasswordField = screen.getByRole('textbox', { name: /Game Password/i });
+
+      expect(gamePasswordField).toBeVisible();
+      expect(requiresPasswordError).toBeVisible();
+    });
+  });
+
+  it('navigates on join game with valid game code and game password', async () => {
+
+    global.fetch
+      .mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve({ game_id: '4ZP6A', password: 'password' }) }))
+      .mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve({ game_id: '4ZP6A' }) }));
+
+    const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeField, { target: { value: '4ZP6A' } });
+
+    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+    fireEvent.click(joinGameButton);
+
+    await waitFor(() => { screen.getByRole('textbox', { name: /Game Password/i }); });
+
+    const gamePasswordField = screen.getByRole('textbox', { name: /Game Password/i });
+    fireEvent.change(gamePasswordField, { target: { value: 'password' } });
+    
+    fireEvent.click(joinGameButton);
+
+    await waitFor(() => {
+      expect(window.location.href).toContain('/game/4ZP6A');
+    });
+  });
+
+});
