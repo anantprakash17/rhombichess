@@ -1,8 +1,10 @@
 import copy
 
-from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook
+#from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
+#from app.chess_board.chess_pieces import Machine, Rook THIS IS TEMP SO THAT I CAN DO TESTING LOCALLY
 
+from chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from chess_pieces import Machine, Rook
 
 class ChessBoard:
     def __init__(self):
@@ -316,3 +318,8 @@ class ChessBoard:
                 tile = self.board[x][y]
                 if not tile.is_empty() and tile.piece:
                     self.valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
+
+
+x = ChessBoard()
+
+print(x.get_board()[1][7])
