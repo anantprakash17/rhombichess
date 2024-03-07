@@ -18,7 +18,7 @@ export default function Game({ gameData }) {
   const localGame = gameData.player_1.id === gameData.player_2.id || false;
 
   const tabs = {
-    game: { label: 'GAME', content: <GameStatsTab gameCode={gameCode} gamePassword={gameData?.password} /> },
+    game: { label: 'GAME', content: <GameStatsTab gameData={gameData} socket={socket} /> },
     newGame: { label: 'NEW GAME', content: 'NEW GAME CONTENT' },
     games: { label: 'GAMES', content: 'GAMES CONTENT' },
     players: { label: 'PLAYERS', content: 'PLAYERS CONTENT' },

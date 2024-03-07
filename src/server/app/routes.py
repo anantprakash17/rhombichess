@@ -1,10 +1,12 @@
 import json
 import uuid
+import time
 
 from app import app, socketio
 from app.chess_board.board import ChessBoard
 from flask import jsonify, request
 from flask_socketio import SocketIO, join_room
+from threading import Thread
 
 games: dict[str, dict] = {}
 
@@ -22,19 +24,24 @@ def generate_valid_moves(game_id):
     return valid_moves
 
 
-def create_game(game_id, password, user, color, local = False):
+def create_game(game_id, password, user, color, timer_duration, local = False):
     opposite_color = "white" if color == "black" else "black"
 
-    player2 = {"id": None, "name": None, "color": opposite_color}
-    if local: player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color}
+    timer_running_p1 = True if color == "white" else False
+    timer_running_p2 = True if color == "black" else False
+
+    player2 = {"id": None, "name": None, "color": opposite_color, "timer_duration": timer_duration, "timer_running": timer_running_p2}
+    if local: player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color, "timer_duration": timer_duration, "timer_running": timer_running_p2}
 
     games[game_id] = {
         "password": password,
         "board": ChessBoard(),
-        "player_1": {"id": user["id"], "name": "Player #1", "color": color},
+        "player_1": {"id": user["id"], "name": "Player #1", "color": color, "timer_duration": timer_duration, "timer_running": timer_running_p1},
         "player_2": player2,
     }
     messages[game_id] = []
+    start_timer(game_id, "player_1")
+    start_timer(game_id, "player_2")
 
 
 @app.route("/api/initial_board", methods=["GET"])
@@ -48,9 +55,10 @@ def new_game():
     color = data["color"]
     local = data.get("local", "")
     password = data.get("password", "")
+    timer_duration = data.get("timer_duration", "")
 
     game_id = str(uuid.uuid4())[:4].upper()
-    create_game(game_id, password, user, color, local)
+    create_game(game_id, password, user, color, timer_duration, local)
     return jsonify({"game_id": game_id})
 
 
@@ -98,7 +106,7 @@ def join_game(game_id):
 
     return jsonify({"game_id": game_id, "status": 200})
 
-
+@socketio.on("timer_update")
 @app.route("/api/game/<game_id>", methods=["GET", "POST"])
 def game(game_id):
     if game_id not in games:
@@ -123,9 +131,30 @@ def game(game_id):
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
+        games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
+        games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
+        response_data = {
+            'game_id': game_id,
+            'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
+            'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
+            'timer_running_p1': games[game_id]["player_1"]["timer_running"],
+            'timer_running_p2': games[game_id]["player_2"]["timer_running"]
+        }
+        socketio.emit('timer_update', response_data,  to=data.get("room"))
         return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
+    
+@socketio.on("timer_update")
+def timer(game_id, player_key):
+    while True:
+        if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
+            time.sleep(1)
+            games[game_id][player_key]["timer_duration"] -= 1
+
+def start_timer(game_id, player_key):
+    thread = Thread(target=timer, args=(game_id, player_key))
+    thread.start()
 
 
 @socketio.on("join_room")
