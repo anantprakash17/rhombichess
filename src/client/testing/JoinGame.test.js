@@ -2,7 +2,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
-import { SessionProvider, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import JoinGame from '../components/JoinGame';
 
 jest.mock('next-auth/react');
@@ -88,21 +88,21 @@ describe('JoinGame Component', () => {
     });
   });
 
-//   it('navigates on join game with valid game code and incorrect game password', async () => {
-//     global.fetch = jest.fn(() => Promise.resolve({
-//       json: () => Promise.resolve({ error: 'Game not found' }), 
-//     }));
+  it('navigates on join game with valid game code and incorrect game password', async () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ error_message: 'Game not found' }), 
+    }));
 
-//     const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
-//     fireEvent.change(gameCodeField, { target: { value: '4ZP6' } });
+    const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeField, { target: { value: '4ZP6' } });
 
-//     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
-//     fireEvent.click(joinGameButton);
+    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+    fireEvent.click(joinGameButton);
 
-//     expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledTimes(1);
 
-//     await screen.findByText('Game not found');
-//   });
+    await screen.findByText('Game not found');
+  });
 
   it('navigates on join game with valid game code and incorrect game password', async () => {
     global.fetch = jest.fn(() => Promise.resolve({
