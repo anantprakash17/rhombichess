@@ -5,23 +5,20 @@ import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import { SessionProvider, useSession } from 'next-auth/react';
 import JoinGame from '../components/JoinGame';
 
+jest.mock('next-auth/react');
+
 global.fetch = jest.fn();
 
 describe('JoinGame Component', () => {
-
-  jest.mock('next-auth/react', () => ({
-    useSession: jest.fn(),
-  }));
 
   beforeEach(() => {
     delete window.location;
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
 
-    render(
-      <SessionProvider session={{}}>
-        <JoinGame />
-      </SessionProvider>,
-    );
+    fetch.mockClear();
+
+    useSession.mockReturnValue({ data: { user: { name: 'Test User' } }, status: 'authenticated' });
+    render(<JoinGame />);
   });
 
   it('does not navigate on join game with empty game code', () => {
@@ -31,7 +28,7 @@ describe('JoinGame Component', () => {
     expect(window.location.href).toBe('');
   });
 
-  it('navigates on join game with valid game code', async () => {
+  it('navigates on join game with valid game code for game without a password', async () => {
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve({ game_id: '4ZP64' }), 
     }));
@@ -68,10 +65,9 @@ describe('JoinGame Component', () => {
   });
 
   it('navigates on join game with valid game code and game password', async () => {
-
-    global.fetch
-      .mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve({ game_id: '4ZP6A', password: 'password' }) }))
-      .mockImplementationOnce(() => Promise.resolve({ json: () => Promise.resolve({ game_id: '4ZP6A' }) }));
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ game_id: '4ZP6A', password: 'password' }), 
+    }));
 
     const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
     fireEvent.change(gameCodeField, { target: { value: '4ZP6A' } });
@@ -79,16 +75,55 @@ describe('JoinGame Component', () => {
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
 
-    await waitFor(() => { screen.getByRole('textbox', { name: /Game Password/i }); });
+    await waitFor(() => { screen.getByPlaceholderText('••••••••'); });
+    const passwordField = screen.getByPlaceholderText('••••••••');
+    fireEvent.change(passwordField, { target: { value: 'password' } });
 
-    const gamePasswordField = screen.getByRole('textbox', { name: /Game Password/i });
-    fireEvent.change(gamePasswordField, { target: { value: 'password' } });
-    
     fireEvent.click(joinGameButton);
+
+    expect(fetch).toHaveBeenCalledTimes(2);
 
     await waitFor(() => {
       expect(window.location.href).toContain('/game/4ZP6A');
     });
+  });
+
+//   it('navigates on join game with valid game code and incorrect game password', async () => {
+//     global.fetch = jest.fn(() => Promise.resolve({
+//       json: () => Promise.resolve({ error: 'Game not found' }), 
+//     }));
+
+//     const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
+//     fireEvent.change(gameCodeField, { target: { value: '4ZP6' } });
+
+//     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+//     fireEvent.click(joinGameButton);
+
+//     expect(fetch).toHaveBeenCalledTimes(1);
+
+//     await screen.findByText('Game not found');
+//   });
+
+  it('navigates on join game with valid game code and incorrect game password', async () => {
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ game_id: '4ZP6A', password: 'password' }), 
+    }));
+
+    const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
+    fireEvent.change(gameCodeField, { target: { value: '4ZP6A' } });
+
+    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
+    fireEvent.click(joinGameButton);
+
+    await waitFor(() => { screen.getByPlaceholderText('••••••••'); });
+    const passwordField = screen.getByPlaceholderText('••••••••');
+    fireEvent.change(passwordField, { target: { value: 'differentPassword' } });
+
+    fireEvent.click(joinGameButton);
+
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    await screen.findByText('Incorrect code or password. Please try again.');
   });
 
 });

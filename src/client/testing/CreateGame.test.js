@@ -17,24 +17,11 @@ describe('CreateGame Component', () => {
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
 
     fetch.mockClear();
-  });
-
-  it('prevents form submission for an unauthenticated user', async () => {
-    useSession.mockReturnValue({ data: null, status: 'unauthenticated' });
-
+    useSession.mockReturnValue({ data: { user: { name: 'Test User' } }, status: 'authenticated' });
     render(<CreateGame />);
-    const submitButton = screen.getByRole('button', { name: /Create Game/i });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(fetch).not.toHaveBeenCalled();
-    });
   });
 
   it('create game with no password and random color (selected by default)', async () => {
-    useSession.mockReturnValue({ data: { user: { name: 'Test User' } }, status: 'authenticated' });
-
-    render(<CreateGame />);
     const createGameButton = screen.getByRole('button', { name: /Create Game/i });
     fireEvent.click(createGameButton);
 
@@ -51,9 +38,6 @@ describe('CreateGame Component', () => {
   });
 
   it('create game with password and selected color white', async () => {
-    useSession.mockReturnValue({ data: { user: { name: 'Test User' } }, status: 'authenticated' });
-
-    render(<CreateGame />);
     const whiteOption = screen.getByLabelText('White');
     fireEvent.click(whiteOption);
     const passwordField = screen.getByPlaceholderText('••••••••');
@@ -82,9 +66,6 @@ describe('CreateGame Component', () => {
   });
 
   it('create game with password and selected color black', async () => {
-    useSession.mockReturnValue({ data: { user: { name: 'Test User' } }, status: 'authenticated' });
-
-    render(<CreateGame />);
     const whiteOption = screen.getByLabelText('Black');
     fireEvent.click(whiteOption);
     const passwordField = screen.getByPlaceholderText('••••••••');

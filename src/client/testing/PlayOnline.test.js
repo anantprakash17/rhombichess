@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, fireEvent, screen,} from '@testing-library/react';
-import { SessionProvider } from 'next-auth/react';
+import {render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { SessionProvider, useSession } from 'next-auth/react';
 import PlayOnlineHome from '../components/PlayOnlineHome';
+import CreateGame from '../components/CreateGame';
 
 global.fetch = jest.fn();
 
@@ -50,6 +51,18 @@ describe('PlayOnlineHome Component', () => {
     fireEvent.click(toggleButton);
 
     expect(passwordField).toHaveAttribute('type', 'text');
+  });
+
+  it('prevents form submission for an unauthenticated user', async () => {
+    useSession.mockReturnValue({ data: null, status: 'unauthenticated' });
+
+    render(<CreateGame />);
+    const submitButton = screen.getByRole('button', { name: /Create Game/i });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      expect(fetch).not.toHaveBeenCalled();
+    });
   });
 
   //JoinGame specific tests
