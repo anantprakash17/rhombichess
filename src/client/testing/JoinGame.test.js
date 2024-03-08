@@ -29,7 +29,7 @@ describe('JoinGame Component', () => {
 
   it('navigates on join game with valid game code for game without a password', async () => {
     global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve({ game_id: '4ZP64' }), 
+      json: () => Promise.resolve({ game_id: '4ZP6A' }), 
     }));
 
     const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
@@ -39,9 +39,17 @@ describe('JoinGame Component', () => {
     fireEvent.click(joinGameButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+      expect(fetch).toHaveBeenNthCalledWith(1, expect.stringContaining('/api/game/4ZP6A'), {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
+      });
+
+      expect(fetch).toHaveBeenNthCalledWith(2, expect.stringContaining('/api/join_game/4ZP6A'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user: { name: 'Test User' },
+        })
       });
     });
 
@@ -62,7 +70,7 @@ describe('JoinGame Component', () => {
     fireEvent.click(joinGameButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/game/4ZP6A'), {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -89,7 +97,7 @@ describe('JoinGame Component', () => {
     fireEvent.click(joinGameButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+      expect(fetch).toHaveBeenNthCalledWith(1, expect.stringContaining('/api/game/4ZP6A'), {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -101,7 +109,21 @@ describe('JoinGame Component', () => {
 
     fireEvent.click(joinGameButton);
 
-    expect(fetch).toHaveBeenCalledTimes(2);
+    await waitFor(() => {
+      expect(fetch).toHaveBeenNthCalledWith(2, expect.stringContaining('/api/game/4ZP6A'), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      expect(fetch).toHaveBeenNthCalledWith(3, expect.stringContaining('/api/join_game/4ZP6A'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          user: { name: 'Test User' },
+          password: 'password',
+        })
+      });
+    });
 
     await waitFor(() => {
       expect(window.location.href).toContain('/game/4ZP6A');
@@ -120,7 +142,7 @@ describe('JoinGame Component', () => {
     fireEvent.click(joinGameButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/game/4ZP6'), {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -141,7 +163,7 @@ describe('JoinGame Component', () => {
     fireEvent.click(joinGameButton);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+      expect(fetch).toHaveBeenNthCalledWith(1, expect.stringContaining('/api/game/4ZP6A'), {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -153,7 +175,12 @@ describe('JoinGame Component', () => {
 
     fireEvent.click(joinGameButton);
 
-    expect(fetch).toHaveBeenCalledTimes(2);
+    await waitFor(() => {
+      expect(fetch).toHaveBeenNthCalledWith(2, expect.stringContaining('/api/game/4ZP6A'), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
 
     await screen.findByText('Incorrect code or password. Please try again.');
   });

@@ -46,7 +46,7 @@ describe('CreateGame Component', () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        expect.any(String),
+        expect.stringContaining('api/new_game'),
         expect.objectContaining({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -54,8 +54,9 @@ describe('CreateGame Component', () => {
             user: { name: 'Test User' },
             password: 'password',
             color: 'white',
+            timer_duration: 0,
           }),
-        })
+        }),
       );
     });
 
@@ -74,7 +75,7 @@ describe('CreateGame Component', () => {
 
     await waitFor(() => {
       expect(fetch).toHaveBeenCalledWith(
-        expect.any(String),
+        expect.stringContaining('api/new_game'),
         expect.objectContaining({
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -82,6 +83,7 @@ describe('CreateGame Component', () => {
             user: { name: 'Test User' },
             password: 'password',
             color: 'black',
+            timer_duration: 0,
           }),
         })
       );
