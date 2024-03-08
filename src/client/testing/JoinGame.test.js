@@ -40,6 +40,13 @@ describe('JoinGame Component', () => {
     fireEvent.click(joinGameButton);
 
     await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
+
+    await waitFor(() => {
       expect(window.location.href).toBe('/game/4ZP6A');
     });
   });
@@ -54,6 +61,13 @@ describe('JoinGame Component', () => {
   
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
 
     await waitFor(() => {
       const requiresPasswordError = screen.getByText(/This game requires a password./i);
@@ -74,6 +88,13 @@ describe('JoinGame Component', () => {
 
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
 
     await waitFor(() => { screen.getByPlaceholderText('••••••••'); });
     const passwordField = screen.getByPlaceholderText('••••••••');
@@ -99,7 +120,12 @@ describe('JoinGame Component', () => {
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
 
-    expect(fetch).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
 
     await screen.findByText('Game not found');
   });
@@ -114,6 +140,13 @@ describe('JoinGame Component', () => {
 
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
+
+    await waitFor(() => {
+      expect(fetch).toHaveBeenCalledWith(expect.any(String), {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    });
 
     await waitFor(() => { screen.getByPlaceholderText('••••••••'); });
     const passwordField = screen.getByPlaceholderText('••••••••');
