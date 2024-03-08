@@ -211,8 +211,7 @@ export function ConfirmMoveModal({ open, children }) {
 export function GameOverModal({ open, winner, onClose }) {
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
-      <div className="modal-backdrop absolute inset-0" />
-      <div className="modal-content relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
+      <div className="relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
         <button onClick={onClose} className="absolute top-0 right-0 p-2 mr-2 text-white text-2xl hover:text-gray-300" type="button">
           &times;
         </button>
