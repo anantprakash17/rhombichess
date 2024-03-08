@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import '@testing-library/jest-dom';
-import {render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 import { useSession } from 'next-auth/react';
 import PlayOnlineHome from '../components/PlayOnlineHome';
 
@@ -10,7 +10,6 @@ global.fetch = jest.fn();
 jest.mock('next-auth/react');
 
 describe('PlayOnlineHome Component', () => {
-
   beforeEach(() => {
     delete window.location;
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
@@ -20,7 +19,7 @@ describe('PlayOnlineHome Component', () => {
     render(<PlayOnlineHome />);
   });
 
-  //CreateGame specific tests
+  // CreateGame specific tests
   it('create game section renders without crashing', () => {
     const createGameHeader = screen.getByText(/Create a New Game/i);
 
@@ -48,7 +47,7 @@ describe('PlayOnlineHome Component', () => {
     expect(passwordField).toHaveAttribute('type', 'text');
   });
 
-  //JoinGame specific tests
+  // JoinGame specific tests
   it('join game section renders without crashing', () => {
     const joinGameHeader = screen.getByText(/Join an Existing Game/i);
 

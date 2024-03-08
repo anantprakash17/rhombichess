@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { useSession } from 'next-auth/react';
 import '@testing-library/jest-dom';
 import CreateGame from '../components/CreateGame';
-import { useSession } from 'next-auth/react';
 
 jest.mock('next-auth/react');
 
@@ -11,7 +11,6 @@ global.fetch = jest.fn(() => Promise.resolve({
 }));
 
 describe('CreateGame Component', () => {
-  
   beforeEach(() => {
     delete window.location;
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };

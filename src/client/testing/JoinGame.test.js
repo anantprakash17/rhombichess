@@ -10,7 +10,6 @@ jest.mock('next-auth/react');
 global.fetch = jest.fn();
 
 describe('JoinGame Component', () => {
-
   beforeEach(() => {
     delete window.location;
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
@@ -55,10 +54,10 @@ describe('JoinGame Component', () => {
     global.fetch = jest.fn(() => Promise.resolve({
       json: () => Promise.resolve({ password: 'password' }), 
     }));
-  
+
     const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
     fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
-  
+
     const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
     fireEvent.click(joinGameButton);
 
@@ -111,7 +110,7 @@ describe('JoinGame Component', () => {
 
   it('navigates on join game with valid game code and incorrect game password', async () => {
     global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve({ error_message: 'Game not found' }), 
+      json: () => Promise.resolve({ error_message: 'Game not found' }),
     }));
 
     const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
@@ -132,7 +131,7 @@ describe('JoinGame Component', () => {
 
   it('navigates on join game with valid game code and incorrect game password', async () => {
     global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve({ game_id: '4ZP6A', password: 'password' }), 
+      json: () => Promise.resolve({ game_id: '4ZP6A', password: 'password' }),
     }));
 
     const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
@@ -158,5 +157,4 @@ describe('JoinGame Component', () => {
 
     await screen.findByText('Incorrect code or password. Please try again.');
   });
-
 });
