@@ -26,6 +26,11 @@ export default function CreateLocalGame() {
       color = Math.random() < 0.5 ? 'white' : 'black';
     }
 
+    const minutes = formDataObject.minutes || '0';
+    const seconds = formDataObject.seconds || '0';
+
+    const timerDuration = parseInt(minutes, 10) * 60 + parseInt(seconds, 10);
+
     const url = `${baseUrl}/api/new_game`;
     const response = await fetch(url, {
       method: 'POST',
@@ -36,6 +41,7 @@ export default function CreateLocalGame() {
         local: true,
         user: session.data.user,
         color,
+        timer_duration: timerDuration,
       }),
     });
 
@@ -83,6 +89,28 @@ export default function CreateLocalGame() {
               </label>
             </li>
           </ul>
+        </div>
+        <div>
+          <label htmlFor="timer" className="mb-2 block font-medium">
+            Timer Duration
+          </label>
+          <div className="flex gap-2">
+            <input
+              className="block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+              id="minutes"
+              name="minutes"
+              placeholder="Minutes"
+              min="0"
+            />
+            <input
+              className="block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+              id="seconds"
+              name="seconds"
+              placeholder="Seconds"
+              min="0"
+              max="59"
+            />
+          </div>
         </div>
         <p className="py-2">Other Options...</p>
         <div>
