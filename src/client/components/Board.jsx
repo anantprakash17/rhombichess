@@ -98,7 +98,7 @@ function Board({
       setConfirmMoveModalOpen(true);
       setSelectedPieceDest({ columnNumber, index });
       setPossibleMoves([]);
-    } else if (board[columnNumber][index]) {
+    } else if (board[columnNumber][index].piece !== '') {
       setSelectedPiece({ columnNumber, index });
       const moves = validMoves[`${columnNumber},${index}`] || [];
       setPossibleMoves(moves);
