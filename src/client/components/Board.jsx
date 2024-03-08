@@ -11,13 +11,15 @@ import Tile from './Tile';
 import Piece from './Piece';
 
 function Board({
-  initialBoard, gameCode, disabled, socket, color, initialValidMoves,
+  initialBoard, gameCode, disabled, socket, initialColor, initialValidMoves, initialTurn, local,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
   const [selectedPieceDest, setSelectedPieceDest] = useState(null);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [validMoves, setValidMoves] = useState(initialValidMoves);
+  const [color, setColor] = useState(initialColor);
+  const [turn, setTurn] = useState(initialTurn);
 
   const parseBoardData = (data) => {
     const parsedBoard = [];
@@ -39,6 +41,10 @@ function Board({
     const handleReceiveMove = (data) => {
       setBoard(parseBoardData(data.board));
       setValidMoves(data.valid_moves);
+      setTurn(data.turn);
+      if (local) {
+        setColor(data.turn);
+      }
     };
 
     socket.on('receive_move', handleReceiveMove);
@@ -62,6 +68,10 @@ function Board({
       .then((data) => {
         setBoard(parseBoardData(data.board));
         setSelectedPiece(null);
+        setTurn(data.turn);
+        if (local) {
+          setColor(data.turn);
+        }
         socket.emit('send_move', { room: gameCode, game_id: gameCode });
       })
       .catch((error) => console.error(error));
@@ -94,6 +104,7 @@ function Board({
   };
 
   const handleTileClick = (columnNumber, index) => {
+    if (turn !== color) { return; }
     if (selectedPiece) {
       setConfirmMoveModalOpen(true);
       setSelectedPieceDest({ columnNumber, index });
@@ -105,8 +116,6 @@ function Board({
     }
   };
 
-  const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
-
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
 
@@ -114,6 +123,10 @@ function Board({
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [confirmMoveModalOpen]);
+
+  const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
+
+  const disableTile = (piece) => disabled || (piece !== '' && !piece.includes(color));
 
   const generateBoardUI = () => board.slice().reverse().map((column, displayColumnIndex) => {
     const columnIndex = board.length - 1 - displayColumnIndex;
@@ -141,12 +154,12 @@ function Board({
               orientation={orientation}
               colour={(normalCellIndex + normalCells.length) % 3}
               onClick={() => handleTileClick(columnIndex, cellIndex)}
-              disabled={disabled}
+              disabled={disableTile(cell.piece)}
               highlight={isPossibleMove(columnIndex, cellIndex)}
             >
               {cell.piece && (
               <Piece
-                className={`${color === 'black' ? 'rotate-180' : ''}`}
+                className={`${color === 'black' && !local ? 'rotate-180' : ''}`}
                 name={cell.piece}
                 isSelected={selectedPiece && selectedPiece.columnNumber === columnIndex && selectedPiece.index === cellIndex}
               />
@@ -160,7 +173,7 @@ function Board({
 
   return (
     <div>
-      <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
+      <div className={`flex justify-center items-center ${color === 'black' && !local ? 'rotate-180' : ''}`}>
         {generateBoardUI()}
       </div>
 
@@ -173,13 +186,13 @@ function Board({
             <button onClick={handleCanceledMove} className="relative pb-4 mx-1 text-xl rounded-lg font-semibold border border-gray-100 text-gray-100 px-4 py-2 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300" type="button">
               Cancel
               <svg width="20" height="20" className="absolute bottom-0 right-2 w-6 h-6 text-gray-100" viewBox="0 0 24 24" fill="currentColor" x="26" y="26" role="img" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 7h6v2H3v2h4v2H3v2h4v2H1V7m10 0h4v2h-4v2h2a2 2 0 0 1 2 2v2c0 1.11-.89 2-2 2H9v-2h4v-2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2m8 0h2a2 2 0 0 1 2 2v1h-2V9h-2v6h2v-1h2v1c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2Z"/>
+                <path d="M1 7h6v2H3v2h4v2H3v2h4v2H1V7m10 0h4v2h-4v2h2a2 2 0 0 1 2 2v2c0 1.11-.89 2-2 2H9v-2h4v-2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2m8 0h2a2 2 0 0 1 2 2v1h-2V9h-2v6h2v-1h2v1c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2Z" />
               </svg>
             </button>
             <button onClick={handleConfirmedMove} className="relative pb-4 mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
               Confirm
               <svg width="50px" height="50px" className="absolute bottom-0 right-2 w-6 h-6 text-gray-100" viewBox="0 0 24 24" fill="currentColor" x="231" y="231" role="img" xmlns="http://www.w3.org/2000/svg">
-                <path fill="currentColor" d="M19 7v4H5.83l3.58-3.59L8 6l-6 6l6 6l1.41-1.42L5.83 13H21V7h-2Z"/>
+                <path fill="currentColor" d="M19 7v4H5.83l3.58-3.59L8 6l-6 6l6 6l1.41-1.42L5.83 13H21V7h-2Z" />
               </svg>
             </button>
           </div>
