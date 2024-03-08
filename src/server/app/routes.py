@@ -30,7 +30,7 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
     player1 = {"id": user["id"], "name": user['name'], "color": color, "timer_duration": timer_duration, "timer_running": False}
     player2 = {"id": None, "name": None, "color": opposite_color, "timer_duration": timer_duration, "timer_running": False}
     
-    timed_game = False if timer_duration == 0 else True
+    timed_game = timer_duration != 0
 
     if local:
         player1 = {"id": user["id"], "name": "Player #1", "color": color, "timer_duration": timer_duration, "timer_running": color == 'white'}
@@ -45,7 +45,7 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
     }
     messages[game_id] = []
 
-    if (timer_duration != 0):
+    if (timed_game):
         start_timer(game_id, "player_1")
         start_timer(game_id, "player_2")
 
@@ -140,6 +140,7 @@ def game(game_id):
                 "valid_moves": valid_moves,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
+                "timed_game": games[game_id]["timed_game"],
             }
         )
     elif request.method == "POST":
