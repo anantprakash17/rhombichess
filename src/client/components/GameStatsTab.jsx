@@ -99,22 +99,37 @@ export default function GameStatsTab({ gameData, socket }) {
         </div>
       </div>
       <div className="flex mt-24 w-full text-2xl font-bold">
-        <div className="ml-8 flex-1 flex flex-col items-center justify-center">
-          <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
-          <Timer
-            key={`${timeLeftP1}, ${timerRunningP1}`}
-            timerDuration={timeLeftP1}
-            timerRunning={timerRunningP1}
-          />
-        </div>
-        <div className="mr-8 flex-1 flex flex-col items-center justify-center">
-          <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
-          <Timer
-            key={`${timeLeftP2}, ${timerRunningP2}`}
-            timerDuration={timeLeftP2}
-            timerRunning={timerRunningP2}
-          />
-        </div>
+        {gameData.timed_game ? (
+          <>
+            <div className="ml-8 flex-1 flex flex-col items-center justify-center">
+              <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
+              <Timer
+                key={`${timeLeftP1}, ${timerRunningP1}`}
+                timerDuration={timeLeftP1}
+                timerRunning={timerRunningP1}
+                timedGame={gameData.timed_game}
+              />
+            </div>
+            <div className="mr-8 flex-1 flex flex-col items-center justify-center">
+              <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
+              <Timer
+                key={`${timeLeftP2}, ${timerRunningP2}`}
+                timerDuration={timeLeftP2}
+                timerRunning={timerRunningP2}
+                timedGame={gameData.timed_game}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="w-full flex flex-col justify-center items-center">
+            <p className="text-gray-800">
+              No Time Limit
+            </p>
+            <p className="text-xl font-medium mt-1 text-gray-700">
+              The game ends on checkmate.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
