@@ -172,7 +172,7 @@ function Board({
         {generateBoardUI()}
       </div>
 
-      <GameOverModal open={winnerModalOpen} winner={gameWinner} onClose={handleCloseGameOverModal}/>
+      <GameOverModal open={winnerModalOpen} winner={gameWinner} onClose={handleCloseGameOverModal} />
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
         <div className="flex-col items-center justify-center w-full bg-slate-600">
@@ -217,7 +217,7 @@ export function GameOverModal({ open, winner, onClose }) {
         </button>
         <Logo />
         <h2 className="text-center mx-2 m-1 mb-2 text-3xl font-bold text-white">
-          {winner.charAt(0).toUpperCase() + winner.slice(1).toLowerCase()} Won!
+          {`${winner.charAt(0).toUpperCase() + winner.slice(1).toLowerCase()} Won!`}
         </h2>
         <Link href="/">
           <button className="w-full mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
@@ -228,4 +228,3 @@ export function GameOverModal({ open, winner, onClose }) {
     </div>
   );
 }
-
