@@ -2,7 +2,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { ClosedEye, OpenEye } from './icons/EyeIcons';
 import baseUrl from '../constants';
@@ -37,7 +37,6 @@ export default function CreateGame() {
     const seconds = formDataObject.seconds || '0';
 
     const timerDuration = parseInt(minutes, 10) * 60 + parseInt(seconds, 10);
-
 
     const url = `${baseUrl}/api/new_game`;
     const response = await fetch(url, {

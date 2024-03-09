@@ -106,7 +106,7 @@ function Board({
       setConfirmMoveModalOpen(true);
       setSelectedPieceDest({ columnNumber, index });
       setPossibleMoves([]);
-    } else if (board[columnNumber][index]) {
+    } else if (board[columnNumber][index].piece !== '') {
       setSelectedPiece({ columnNumber, index });
       const moves = validMoves[`${columnNumber},${index}`] || [];
       setPossibleMoves(moves);
@@ -180,11 +180,17 @@ function Board({
             Confirm move?
           </div>
           <div className="flex">
-            <button onClick={handleCanceledMove} className="mx-1 text-xl rounded-lg font-semibold border border-gray-100 text-gray-100 px-4 py-2 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300" type="button">
+            <button onClick={handleCanceledMove} className="relative pb-4 mx-1 text-xl rounded-lg font-semibold border border-gray-100 text-gray-100 px-4 py-2 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300" type="button">
               Cancel
+              <svg width="20" height="20" className="absolute bottom-0 right-2 w-6 h-6 text-gray-100" viewBox="0 0 24 24" fill="currentColor" x="26" y="26" role="img" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 7h6v2H3v2h4v2H3v2h4v2H1V7m10 0h4v2h-4v2h2a2 2 0 0 1 2 2v2c0 1.11-.89 2-2 2H9v-2h4v-2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2m8 0h2a2 2 0 0 1 2 2v1h-2V9h-2v6h2v-1h2v1c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2Z"/>
+              </svg>
             </button>
-            <button onClick={handleConfirmedMove} className="mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
+            <button onClick={handleConfirmedMove} className="relative pb-4 mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
               Confirm
+              <svg width="50px" height="50px" className="absolute bottom-0 right-2 w-6 h-6 text-gray-100" viewBox="0 0 24 24" fill="currentColor" x="231" y="231" role="img" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M19 7v4H5.83l3.58-3.59L8 6l-6 6l6 6l1.41-1.42L5.83 13H21V7h-2Z"/>
+              </svg>
             </button>
           </div>
         </div>

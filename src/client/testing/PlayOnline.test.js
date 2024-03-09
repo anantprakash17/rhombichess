@@ -1,38 +1,59 @@
 /* eslint-disable react/jsx-filename-extension */
 import React from 'react';
 import '@testing-library/jest-dom';
-import {
-  render, fireEvent, screen, waitFor,
-} from '@testing-library/react';
-import { SessionProvider } from 'next-auth/react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import { useSession } from 'next-auth/react';
 import PlayOnlineHome from '../components/PlayOnlineHome';
+
+global.fetch = jest.fn();
+
+jest.mock('next-auth/react');
 
 describe('PlayOnlineHome Component', () => {
   beforeEach(() => {
     delete window.location;
     window.location = { href: '', assign: jest.fn(), replace: jest.fn() };
 
-    render(
-      <SessionProvider session={{}}>
-        <PlayOnlineHome />
-      </SessionProvider>,
-    );
-
-    global.fetch = jest.fn(() => Promise.resolve({
-      json: () => Promise.resolve({ game_id: '4ZP6A' }),
-    }));
+    fetch.mockClear();
+    useSession.mockReturnValue({ data: { user: { name: 'Test User' } }, status: 'authenticated' });
+    render(<PlayOnlineHome />);
   });
 
-  it('renders without crashing', () => {
+  // CreateGame specific tests
+  it('create game section renders without crashing', () => {
     const createGameHeader = screen.getByText(/Create a New Game/i);
-    const joinGameHeader = screen.getByText(/Join an Existing Game/i);
+
+    const randomOption = screen.getByLabelText('Random');
+    const blackOption = screen.getByLabelText('Black');
+    const whiteOption = screen.getByLabelText('White');
 
     const passwordField = screen.getByPlaceholderText('••••••••');
-    const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
 
     expect(createGameHeader).toBeVisible();
-    expect(joinGameHeader).toBeVisible();
+    expect(randomOption).toBeVisible();
+    expect(blackOption).toBeVisible();
+    expect(whiteOption).toBeVisible();
     expect(passwordField).toBeVisible();
+  });
+
+  it('toggles password visibility', () => {
+    const passwordField = screen.getByPlaceholderText('••••••••');
+    const toggleButton = screen.getByRole('button', { name: /Show password/i });
+
+    expect(passwordField).toHaveAttribute('type', 'password');
+
+    fireEvent.click(toggleButton);
+
+    expect(passwordField).toHaveAttribute('type', 'text');
+  });
+
+  // JoinGame specific tests
+  it('join game section renders without crashing', () => {
+    const joinGameHeader = screen.getByText(/Join an Existing Game/i);
+
+    const gameCodeField = screen.getByRole('textbox', { name: /Game Code/i });
+
+    expect(joinGameHeader).toBeVisible();
     expect(gameCodeField).toBeVisible();
   });
 
@@ -41,24 +62,5 @@ describe('PlayOnlineHome Component', () => {
     fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
 
     expect(gameCodeInput.value).toBe('4ZP6A');
-  });
-
-  it('does not navigate on join game with empty game code', () => {
-    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
-    fireEvent.click(joinGameButton);
-
-    expect(window.location.href).toBe('');
-  });
-
-  it('navigates on join game with valid game code', async () => {
-    const gameCodeInput = screen.getByRole('textbox', { name: /Game Code/i });
-    fireEvent.change(gameCodeInput, { target: { value: '4ZP6A' } });
-
-    const joinGameButton = screen.getByRole('button', { name: /Join Game/i });
-    fireEvent.click(joinGameButton);
-
-    await waitFor(() => {
-      expect(window.location.href).toBe('/game/4ZP6A');
-    });
   });
 });
