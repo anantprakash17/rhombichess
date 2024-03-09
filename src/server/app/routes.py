@@ -30,6 +30,8 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
     player1 = {"id": user["id"], "name": user['name'], "color": color, "timer_duration": timer_duration, "timer_running": False}
     player2 = {"id": None, "name": None, "color": opposite_color, "timer_duration": timer_duration, "timer_running": False}
     
+    timed_game = timer_duration != 0
+
     if local:
         player1 = {"id": user["id"], "name": "Player #1", "color": color, "timer_duration": timer_duration, "timer_running": color == 'white'}
         player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color, "timer_duration": timer_duration, "timer_running": opposite_color == 'white'}
@@ -39,11 +41,13 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
         "board": ChessBoard(),
         "player_1": player1,
         "player_2": player2,
+        "timed_game": timed_game,
     }
     messages[game_id] = []
 
-    start_timer(game_id, "player_1")
-    start_timer(game_id, "player_2")
+    if (timed_game):
+        start_timer(game_id, "player_1")
+        start_timer(game_id, "player_2")
 
 @app.route("/api/initial_board", methods=["GET"])
 def initial_board():
@@ -136,6 +140,7 @@ def game(game_id):
                 "valid_moves": valid_moves,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
+                "timed_game": games[game_id]["timed_game"],
             }
         )
     elif request.method == "POST":
@@ -162,10 +167,11 @@ def game(game_id):
 
 @socketio.on("timer_update")
 def timer(game_id, player_key):
-    while games[game_id]['player_1']["timer_duration"] > 0 and games[game_id]['player_2']["timer_duration"] > 0:
-        if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
-            time.sleep(1)
-            games[game_id][player_key]["timer_duration"] -= 1
+    if games[game_id]['timed_game']:
+        while games[game_id]['player_1']["timer_duration"] > 0 and games[game_id]['player_2']["timer_duration"] > 0:
+            if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
+                time.sleep(1)
+                games[game_id][player_key]["timer_duration"] -= 1
 
 
 def start_timer(game_id, player_key):
