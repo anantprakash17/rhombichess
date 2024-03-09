@@ -13,15 +13,14 @@ import Piece from './Piece';
 import Logo from './icons/Logo';
 
 function Board({
-  initialBoard, gameCode, disabled, socket, color, initialValidMoves,
+  initialBoard, gameCode, disabled, socket, color, initialValidMoves, gameData,
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
+  const [winner, setWinner] = useState(gameData?.winner ? gameData[gameData?.winner] : null);
   const [selectedPieceDest, setSelectedPieceDest] = useState(null);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [validMoves, setValidMoves] = useState(initialValidMoves);
-  const [winnerModalOpen, setWinnerModalOpen] = useState(true);
-  const [gameWinner, setGameWinner] = useState('white');
 
   const parseBoardData = (data) => {
     const parsedBoard = [];
@@ -45,10 +44,16 @@ function Board({
       setValidMoves(data.valid_moves);
     };
 
+    const handleGameEnd = (data) => {
+      setWinner(gameData[data.winner]);
+    };
+
     socket.on('receive_move', handleReceiveMove);
+    socket.on('game_end', handleGameEnd);
 
     return () => {
       socket.off('receive_move', handleReceiveMove);
+      socket.off('game_end', handleGameEnd);
     };
   }, [socket]);
 
@@ -84,10 +89,6 @@ function Board({
     setSelectedPiece(null);
     setSelectedPieceDest(null);
     setPossibleMoves([]);
-  };
-
-  const handleCloseGameOverModal = () => {
-    setWinnerModalOpen(false);
   };
 
   const handleKeyPress = (event) => {
@@ -149,7 +150,7 @@ function Board({
               orientation={orientation}
               colour={(normalCellIndex + normalCells.length) % 3}
               onClick={() => handleTileClick(columnIndex, cellIndex)}
-              disabled={disabled}
+              disabled={disabled || winner !== null}
               highlight={isPossibleMove(columnIndex, cellIndex)}
             >
               {cell.piece && (
@@ -171,8 +172,6 @@ function Board({
       <div className={`flex justify-center items-center ${color === 'black' ? 'rotate-180' : ''}`}>
         {generateBoardUI()}
       </div>
-
-      <GameOverModal open={winnerModalOpen} winner={gameWinner} onClose={handleCloseGameOverModal} />
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
         <div className="flex-col items-center justify-center w-full bg-slate-600">
@@ -196,6 +195,13 @@ function Board({
         </div>
       </ConfirmMoveModal>
 
+      {winner && (
+        <GameOverModal
+          open={winner !== null}
+          winner={winner}
+          onClose={() => {}}
+        />
+      )}
     </div>
   );
 }
@@ -222,9 +228,12 @@ export function GameOverModal({ open, winner, onClose }) {
           &times;
         </button>
         <Logo />
-        <h2 className="text-center mx-2 m-1 mb-2 text-3xl font-bold text-white">
-          {`${winner.charAt(0).toUpperCase() + winner.slice(1).toLowerCase()} Won!`}
+        <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
+          {`${winner.color.charAt(0).toUpperCase() + winner.color.slice(1).toLowerCase()} Won!`}
         </h2>
+        <p className="text-center mx-2 mt-0 mb-3 text-lg font-semibold text-gray-300">
+          {`${winner.name}`}
+        </p>
         <Link href="/">
           <button className="w-full mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
             Play Again
