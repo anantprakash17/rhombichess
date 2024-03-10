@@ -1,8 +1,5 @@
 import copy
 
-#from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-#from app.chess_board.chess_pieces import Machine, Rook THIS IS TEMP SO THAT I CAN DO TESTING LOCALLY
-
 from chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from chess_pieces import Machine, Rook
 
