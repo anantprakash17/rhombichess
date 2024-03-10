@@ -233,11 +233,8 @@ export function GameOverModal({ open, winner, onClose }) {
         <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
           {`${winner.color.charAt(0).toUpperCase() + winner.color.slice(1).toLowerCase()} Won!`}
         </h2>
-        <p className="text-center mx-2 mt-0 mb-3 text-lg font-semibold text-gray-300">
-          {`${winner.name}`}
-        </p>
         <Link href="/">
-          <button className="w-full mx-1 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
+          <button className="w-full mx-1 mt-5 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
             Play Again
           </button>
         </Link>
