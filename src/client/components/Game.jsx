@@ -9,7 +9,6 @@ import io from 'socket.io-client';
 import { useSession } from 'next-auth/react';
 import Board from './Board';
 import ChatWindow from './ChatWindow';
-import { GameOverModal } from './Board';
 import GameStatsTab from './GameStatsTab';
 
 export default function Game({ gameData }) {
@@ -39,15 +38,19 @@ export default function Game({ gameData }) {
     }
   }, [socket, gameCode]);
 
-  const color = gameData.player_1.id === session.data?.user.id
+  let color = gameData.player_1.id === session.data?.user.id
     ? gameData.player_1.color
     : gameData.player_2.color;
+
+  if (gameData.local) {
+    color = gameData.turn;
+  }
 
   return (
     <section className="w-full flex h-screen">
       <div className="flex flex-1">
         <div className="scale-90 flex-grow">
-          <Board gameData={gameData} color={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} initialValidMoves={gameData.valid_moves} />
+          <Board gameData={gameData} local={gameData.local} initialTurn={gameData.turn} initialColor={color} initialBoard={gameData.board} gameCode={gameCode} socket={socket} initialValidMoves={gameData.valid_moves} />
         </div>
         <div className="shadow-lg w-[450px] relative rounded-xl bg-gray-500 m-4 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
