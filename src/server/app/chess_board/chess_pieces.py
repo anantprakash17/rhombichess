@@ -1,6 +1,77 @@
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 
+class King(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a king piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.KING, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the king piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves one tile in any direction if permitted by other constraints
+        """
+        valid_moves = []
+        x, y = position
+        tile = board[x][y]
+        if tile.orientation == 0:
+            potential_moves = [
+                (x, y + 2),
+                (x, y - 2),
+                (x - 1, y),
+                (x + 1, y),
+                (x + 1, y - 1),
+                (x - 1, y - 1),
+                (x + 1, y + 2),
+                (x - 1, y - 2),
+                (x + 1, y + 1),
+                (x - 1, y - 1)
+            ]
+        elif tile.orientation == 1:
+            potential_moves = [
+				(x, y + 1),
+				(x, y - 1),
+				(x + 2, y),
+				(x - 2, y),
+				(x - 1, y),
+				(x - 1, y - 1),
+				(x - 2, y - 1),
+				(x - 1, y + 1),
+				(x + 1, y + 1),
+				(x + 1, y + 2)
+			]
+        else:
+            potential_moves = [
+                (x + 2, y - 1),
+                (x + 1, y - 1),
+                (x, y - 1),
+                (x + 2, y),
+                (x - 1, y),
+                (x - 2, y),
+                (x + 1, y + 1),
+                (x, y + 1),
+                (x - 1, y + 2),
+                (x - 2, y + 1)
+            ]
+        for move in potential_moves:
+            tile = board[move[0]][move[1]]
+            if not tile.is_empty() or tile.type == TileType.PADDING:
+                continue
+            valid_moves.append(move)
+        return valid_moves
+
+
 class Rook(ChessPiece):
     def __init__(self, color: int) -> None:
         """

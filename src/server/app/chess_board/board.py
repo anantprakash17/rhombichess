@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook
+from app.chess_board.chess_pieces import Machine, Rook, King
 
 
 class ChessBoard:
