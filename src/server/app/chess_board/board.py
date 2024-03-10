@@ -1,7 +1,6 @@
 import copy
-import re
-
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from app.chess_board.chess_pieces import Machine, Rook, King
 
 
 class ChessBoard:
@@ -60,6 +59,7 @@ class ChessBoard:
         board = self.get_piece_locations()
         for row in board:
             print(" ".join(row))
+        return self.board
 
 
     def get_piece_locations(self) -> list[list[str]]:
@@ -237,7 +237,7 @@ class ChessBoard:
         self.board[9][15].piece = ChessPiece(PieceType.KNIGHT, 1)
 
         # add rooks
-        self.board[5][2].piece = ChessPiece(PieceType.ROOK, 0)
+        self.board[5][2].piece = Rook(0)
         self.board[5][17].piece = ChessPiece(PieceType.ROOK, 1)
 
         self.board[11][2].piece = ChessPiece(PieceType.ROOK, 0)
