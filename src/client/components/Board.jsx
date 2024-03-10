@@ -21,7 +21,7 @@ function Board({
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [validMoves, setValidMoves] = useState(initialValidMoves);
-  const [winnerModalOpen, setWinnerModalOpen] = useState(false);
+  const [winnerModalOpen, setWinnerModalOpen] = useState(!!gameData?.winner);
 
   const parseBoardData = (data) => {
     const parsedBoard = [];
@@ -199,7 +199,7 @@ function Board({
 
       {winner && (
         <GameOverModal
-          open={ winnerModalOpen }
+          open={winnerModalOpen && winner !== null}
           winner={winner}
           onClose={() => { setWinnerModalOpen(false); }}
         />
