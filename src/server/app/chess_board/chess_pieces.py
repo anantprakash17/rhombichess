@@ -1,46 +1,5 @@
-from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-
-#I jest
-class Jester(ChessPiece):
-	def __init__(self, color: int) -> None:
-		"""
-		Initializes a jester piece
-		Args:
-			color (int): color of the piece
-		"""
-		super().__init__(PieceType.JESTER, color)
-	def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
-		"""
-		Calculate valid moves for the jester piece from the given position
-		Args:
-			position: The current position of the piece on the board
-			board: The chess board in its current state
-		Returns:
-			A list of valid moves
-		"""
-		"""
-		Rule: Moves in 1 of 4 directions, 1 or more steps in a straight line across a vertex of its rhombus. It does not leap
-		"""
-		valid_moves = []
-		x, y = position
-		valid_moves.extend(self.left())
-		valid_moves.extend(self.right())
-		valid_moves.extend(self.up())
-		valid_moves.extend(self.down())
-		return valid_moves
-		
-	def left(self):
-		return
-
-	def right(self):
-		return
-	
-	def up(self):
-		return
-
-	def down(self):
-		return
-
+#from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 class King(ChessPiece):
     def __init__(self, color: int) -> None:
@@ -141,7 +100,7 @@ class Rook(ChessPiece):
         x, y = position
         # Check for valid moves in the vertical direction
         # Check upwards from the current position
-       valid_moves.extend(self.vertical(x, y, board, True))
+        valid_moves.extend(self.vertical(x, y, board, True))
         # Check downwards from the current position
         valid_moves.extend(self.vertical(x, y, board, False))
 
