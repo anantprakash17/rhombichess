@@ -42,6 +42,8 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
         "player_1": player1,
         "player_2": player2,
         "timed_game": timed_game,
+        "local": local,
+        "turn": 'white',
     }
     messages[game_id] = []
 
@@ -141,6 +143,8 @@ def game(game_id):
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
                 "timed_game": games[game_id]["timed_game"],
+                "local": games[game_id]["local"],
+                "turn": games[game_id]["turn"],
             }
         )
     elif request.method == "POST":
@@ -150,6 +154,7 @@ def game(game_id):
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
+        games[game_id]["turn"] = 'white' if games[game_id]["turn"] == 'black' else 'black'
         games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
         games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
         response_data = {
@@ -160,7 +165,7 @@ def game(game_id):
             'timer_running_p2': games[game_id]["player_2"]["timer_running"]
         }
         socketio.emit('timer_update', response_data,  to=data.get("room"))
-        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves})
+        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves, "turn": games[game_id]["turn"]})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
     
@@ -217,6 +222,7 @@ def handle_send_move(data):
     response_data = {
         "board": games[room]["board"].get_piece_locations(),
         "valid_moves": generate_valid_moves(room),
+        "turn": games[room]["turn"],
     }
     
     socketio.emit("receive_move", response_data, to=room)
