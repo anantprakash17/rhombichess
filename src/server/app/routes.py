@@ -171,7 +171,7 @@ def timer(game_id, player_key):
             time.sleep(1)
             games[game_id][player_key]["timer_duration"] -= 1
 
-    winner = 'player_1' if games[game_id]['player_1']["timer_duration"] <= 0 else 'player_2'
+    winner = 'player_2' if games[game_id]['player_1']["timer_duration"] <= 0 else 'player_1'
     games[game_id]["winner"] = winner
 
     socketio.emit('game_end', { 'winner': winner }, to=game_id)
