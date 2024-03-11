@@ -282,8 +282,8 @@ class ChessBoard:
         self.board[9][18].piece = ChessPiece(PieceType.QUEEN, 1)
 
         # add king
-        self.board[7][1].piece = King(0)
-        self.board[7][18].piece = King(1)
+        self.board[7][1].piece = ChessPiece(PieceType.KING, 0)
+        self.board[7][18].piece = ChessPiece(PieceType.KING, 1)
 
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
