@@ -7,17 +7,21 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Tile from './Tile';
 import Piece from './Piece';
+import Logo from './icons/Logo';
 
 function Board({
-  initialBoard, gameCode, disabled, socket, initialColor, initialValidMoves, initialTurn, local,
+  initialBoard, gameCode, disabled, socket, initialColor, initialValidMoves, initialTurn, local, gameData
 }) {
   const [selectedPiece, setSelectedPiece] = useState(null);
+  const [winner, setWinner] = useState(gameData?.winner ? gameData[gameData?.winner] : null);
   const [selectedPieceDest, setSelectedPieceDest] = useState(null);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [validMoves, setValidMoves] = useState(initialValidMoves);
+  const [winnerModalOpen, setWinnerModalOpen] = useState(!!gameData?.winner);
   const [color, setColor] = useState(initialColor);
   const [turn, setTurn] = useState(initialTurn);
 
@@ -47,10 +51,17 @@ function Board({
       }
     };
 
+    const handleGameEnd = (data) => {
+      setWinner(gameData[data.winner]);
+      setWinnerModalOpen(true);
+    };
+
     socket.on('receive_move', handleReceiveMove);
+    socket.on('game_end', handleGameEnd);
 
     return () => {
       socket.off('receive_move', handleReceiveMove);
+      socket.off('game_end', handleGameEnd);
     };
   }, [socket]);
 
@@ -126,7 +137,7 @@ function Board({
 
   const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
-  const disableTile = (piece) => disabled || (piece !== '' && !piece.includes(color));
+  const disableTile = (piece) => disabled || winner !== null || (piece !== '' && !piece.includes(color));
 
   const generateBoardUI = () => board.slice().reverse().map((column, displayColumnIndex) => {
     const columnIndex = board.length - 1 - displayColumnIndex;
@@ -199,6 +210,13 @@ function Board({
         </div>
       </ConfirmMoveModal>
 
+      {winner && (
+        <GameOverModal
+          open={winnerModalOpen && winner !== null}
+          winner={winner}
+          onClose={() => { setWinnerModalOpen(false); }}
+        />
+      )}
     </div>
   );
 }
@@ -212,6 +230,27 @@ export function ConfirmMoveModal({ open, children }) {
         <div className="flex-1">
           {children}
         </div>
+      </div>
+    </div>
+  );
+}
+
+export function GameOverModal({ open, winner, onClose }) {
+  return (
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
+      <div className="relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
+        <button onClick={onClose} className="absolute top-0 right-0 p-2 mr-2 text-white text-2xl hover:text-gray-300" type="button">
+          &times;
+        </button>
+        <Logo />
+        <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
+          {`${winner.color.charAt(0).toUpperCase() + winner.color.slice(1).toLowerCase()} Won!`}
+        </h2>
+        <Link href="/">
+          <button className="w-full mx-1 mt-5 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
+            Play Again
+          </button>
+        </Link>
       </div>
     </div>
   );
