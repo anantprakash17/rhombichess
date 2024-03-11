@@ -41,7 +41,10 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
         "board": ChessBoard(),
         "player_1": player1,
         "player_2": player2,
+        "winner": None,
         "timed_game": timed_game,
+        "local": local,
+        "turn": 'white',
     }
     messages[game_id] = []
 
@@ -114,6 +117,7 @@ def join_game(game_id):
         games[game_id]["player_2"]["timer_running"] = games[game_id]["player_2"]['color'] == 'white'
         response_data = {
             'game_id': game_id,
+            'winner': games[game_id]["winner"],
             'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
             'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
             'timer_running_p1': games[game_id]["player_1"]["timer_running"],
@@ -140,7 +144,10 @@ def game(game_id):
                 "valid_moves": valid_moves,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
+                'winner': games[game_id]["winner"],
                 "timed_game": games[game_id]["timed_game"],
+                "local": games[game_id]["local"],
+                "turn": games[game_id]["turn"],
             }
         )
     elif request.method == "POST":
@@ -150,17 +157,19 @@ def game(game_id):
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
+        games[game_id]["turn"] = 'white' if games[game_id]["turn"] == 'black' else 'black'
         games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
         games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
         response_data = {
             'game_id': game_id,
+            'winner': games[game_id]["winner"],
             'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
             'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
             'timer_running_p1': games[game_id]["player_1"]["timer_running"],
             'timer_running_p2': games[game_id]["player_2"]["timer_running"]
         }
-        socketio.emit('timer_update', response_data,  to=data.get("room"))
-        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves})
+        socketio.emit('timer_update', response_data, to=data.get("room"))
+        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves, "turn": games[game_id]["turn"]})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
     
@@ -172,6 +181,11 @@ def timer(game_id, player_key):
             if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
                 time.sleep(1)
                 games[game_id][player_key]["timer_duration"] -= 1
+
+    winner = 'player_2' if games[game_id]['player_1']["timer_duration"] <= 0 else 'player_1'
+    games[game_id]["winner"] = winner
+
+    socketio.emit('game_end', { 'winner': winner }, to=game_id)
 
 
 def start_timer(game_id, player_key):
@@ -217,6 +231,7 @@ def handle_send_move(data):
     response_data = {
         "board": games[room]["board"].get_piece_locations(),
         "valid_moves": generate_valid_moves(room),
+        "turn": games[room]["turn"],
     }
     
     socketio.emit("receive_move", response_data, to=room)
