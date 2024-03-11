@@ -413,3 +413,88 @@ class Shield(ChessPiece):
                 continue
             valid_moves.append(move)
         return valid_moves
+
+
+class Cat(ChessPiece):
+
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a cat piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.CAT, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the cat piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves 2 rhombuses (not 1) like a Queen but may leap.
+        The move across a wide-angle vertex is to 1 rhombus only.
+        All 3 Cats may escape the initial setup on their first move.
+        """
+        valid_moves = []
+        x, y = position
+        tile = board[x][y]
+        potential_moves = []
+        if tile.orientation == 0:
+            potential_moves = [
+                (x + 2, y - 1),
+                (x + 2, y - 3),
+                (x - 2, y - 1),
+                (x - 2, y - 3),
+                (x, y - 4),
+                (x + 2, y + 1),
+                (x + 2, y + 3),
+                (x - 2, y + 1),
+                (x - 2, y + 3),
+                (x, y + 4),
+                (x - 4, y),
+                (x + 4, y),
+            ]
+        elif tile.orientation == 1:
+            potential_moves = [
+                (x + 2, y - 1),
+                (x + 4, y + 2),
+                (x, y - 2),
+                (x - 4, y - 2),
+                (x - 2, y - 3),
+                (x - 2, y + 1),
+                (x - 4, y),
+                (x, y + 2),
+                (x + 4, y),
+                (x - 2, y + 3),
+                (x + 2, y + 3),
+                (x + 2, y - 3),
+            ]
+        else:
+            potential_moves = [
+                (x + 2, y + 1),
+                (x - 4, y + 2),
+                (x + 4, y - 2),
+                (x, y - 2),
+                (x, y + 2),
+                (x - 2, y - 1),
+                (x - 4, y),
+                (x - 2, y + 3),
+                (x + 4, y),
+                (x + 2, y + 3),
+                (x - 2, y - 3),
+                (x + 2, y - 3),
+            ]
+        for move in potential_moves:
+            if move[0] < 0 or move[0] >= len(board):
+                continue
+            if move[1] < 0 or move[1] >= len(board[move[0]]):
+                continue
+            tile = board[move[0]][move[1]]
+            if not tile.is_empty() or tile.type == TileType.PADDING:
+                continue
+            valid_moves.append(move)
+        return valid_moves
