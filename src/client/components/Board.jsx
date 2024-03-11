@@ -13,17 +13,15 @@ import Piece from './Piece';
 import Logo from './icons/Logo';
 
 function Board({
-  initialBoard, gameCode, disabled, socket, initialColor, initialValidMoves, initialTurn, local, gameData
+  initialGameData, gameCode, disabled, socket, initialColor,
 }) {
+  const [gameData, setGameData] = useState(initialGameData);
   const [selectedPiece, setSelectedPiece] = useState(null);
-  const [winner, setWinner] = useState(gameData?.winner ? gameData[gameData?.winner] : null);
   const [selectedPieceDest, setSelectedPieceDest] = useState(null);
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
-  const [validMoves, setValidMoves] = useState(initialValidMoves);
-  const [winnerModalOpen, setWinnerModalOpen] = useState(!!gameData?.winner);
+  const [winnerModalOpen, setWinnerModalOpen] = useState(!!initialGameData?.winner);
   const [color, setColor] = useState(initialColor);
-  const [turn, setTurn] = useState(initialTurn);
 
   const parseBoardData = (data) => {
     const parsedBoard = [];
@@ -37,31 +35,26 @@ function Board({
     return parsedBoard;
   };
 
-  const [board, setBoard] = useState(parseBoardData(initialBoard));
+  const [board, setBoard] = useState(parseBoardData(initialGameData.board));
 
   useEffect(() => {
     if (!socket || disabled) return;
 
-    const handleReceiveMove = (data) => {
+    const handleGameData = (data) => {
+      setGameData(data);
       setBoard(parseBoardData(data.board));
-      setValidMoves(data.valid_moves);
-      setTurn(data.turn);
-      if (local) {
+
+      if (gameData.local) {
         setColor(data.turn);
+      } if (data.winner) {
+        setWinnerModalOpen(true);
       }
     };
 
-    const handleGameEnd = (data) => {
-      setWinner(gameData[data.winner]);
-      setWinnerModalOpen(true);
-    };
-
-    socket.on('receive_move', handleReceiveMove);
-    socket.on('game_end', handleGameEnd);
+    socket.on('game_data', handleGameData);
 
     return () => {
-      socket.off('receive_move', handleReceiveMove);
-      socket.off('game_end', handleGameEnd);
+      socket.off('game_data', handleGameData);
     };
   }, [socket]);
 
@@ -74,18 +67,7 @@ function Board({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ old_pos: oldPosition, new_pos: newPosition }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setBoard(parseBoardData(data.board));
-        setSelectedPiece(null);
-        setTurn(data.turn);
-        if (local) {
-          setColor(data.turn);
-        }
-        socket.emit('send_move', { room: gameCode, game_id: gameCode });
-      })
-      .catch((error) => console.error(error));
+    });
   };
 
   const handleCanceledMove = () => {
@@ -115,14 +97,14 @@ function Board({
   };
 
   const handleTileClick = (columnNumber, index) => {
-    if (turn !== color) { return; }
+    if (gameData.turn !== color) { return; }
     if (selectedPiece) {
       setConfirmMoveModalOpen(true);
       setSelectedPieceDest({ columnNumber, index });
       setPossibleMoves([]);
     } else if (board[columnNumber][index].piece !== '') {
       setSelectedPiece({ columnNumber, index });
-      const moves = validMoves[`${columnNumber},${index}`] || [];
+      const moves = gameData.valid_moves[`${columnNumber},${index}`] || [];
       setPossibleMoves(moves);
     }
   };
@@ -137,7 +119,7 @@ function Board({
 
   const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
-  const disableTile = (piece) => disabled || winner !== null || (piece !== '' && !piece.includes(color));
+  const disableTile = (piece) => disabled || gameData.winner || (piece !== '' && !piece.includes(color));
 
   const generateBoardUI = () => board.slice().reverse().map((column, displayColumnIndex) => {
     const columnIndex = board.length - 1 - displayColumnIndex;
@@ -170,7 +152,7 @@ function Board({
             >
               {cell.piece && (
               <Piece
-                className={`${color === 'black' && !local ? 'rotate-180' : ''}`}
+                className={`${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}
                 name={cell.piece}
                 isSelected={selectedPiece && selectedPiece.columnNumber === columnIndex && selectedPiece.index === cellIndex}
               />
@@ -184,7 +166,7 @@ function Board({
 
   return (
     <div>
-      <div className={`flex justify-center items-center ${color === 'black' && !local ? 'rotate-180' : ''}`}>
+      <div className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}>
         {generateBoardUI()}
       </div>
 
@@ -210,10 +192,10 @@ function Board({
         </div>
       </ConfirmMoveModal>
 
-      {winner && (
+      {gameData.winner && (
         <GameOverModal
-          open={winnerModalOpen && winner !== null}
-          winner={winner}
+          open={winnerModalOpen && gameData.winner !== null}
+          winner={gameData[gameData.winner]}
           onClose={() => { setWinnerModalOpen(false); }}
         />
       )}
@@ -246,6 +228,9 @@ export function GameOverModal({ open, winner, onClose }) {
         <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
           {`${winner.color.charAt(0).toUpperCase() + winner.color.slice(1).toLowerCase()} Won!`}
         </h2>
+        <p className="mt-1 text-xl text-gray-300">
+          {winner.name}
+        </p>
         <Link href="/">
           <button className="w-full mx-1 mt-5 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
             Play Again
