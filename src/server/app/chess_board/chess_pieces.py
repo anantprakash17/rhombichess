@@ -22,49 +22,52 @@ class King(ChessPiece):
         """
         Rule: Moves one tile in any direction if permitted by other constraints
         """
+
         valid_moves = []
         x, y = position
         tile = board[x][y]
         if tile.orientation == 0:
             potential_moves = [
-                (x, y + 2),
                 (x, y - 2),
-                (x - 1, y),
-                (x + 1, y),
+                (x, y + 2),
+                (x + 1, y - 2),
+                (x - 1, y - 2),
                 (x + 1, y - 1),
                 (x - 1, y - 1),
-                (x + 1, y + 2),
-                (x - 1, y - 2),
-                (x + 1, y + 1),
-                (x - 1, y - 1)
+                (x + 1, y),
+                (x - 1, y),
+                (x - 1, y + 1),
+                (x + 1, y + 1)
             ]
         elif tile.orientation == 1:
             potential_moves = [
-				(x, y + 1),
-				(x, y - 1),
-				(x + 2, y),
-				(x - 2, y),
-				(x - 1, y),
-				(x - 1, y - 1),
-				(x - 2, y - 1),
-				(x - 1, y + 1),
-				(x + 1, y + 1),
-				(x + 1, y + 2)
+		        (x, y - 1),
+                (x + 1, y + 2),
+                (x - 1, y - 1),
+                (x - 2, y - 1),
+                (x + 2, y),
+                (x + 1, y),
+                (x - 2, y),
+                (x + 2, y + 1),
+                (x, y + 1),
+                (x - 1, y + 1)
 			]
         else:
             potential_moves = [
-                (x + 2, y - 1),
-                (x + 1, y - 1),
                 (x, y - 1),
-                (x + 2, y),
-                (x - 1, y),
-                (x - 2, y),
                 (x + 1, y + 1),
+                (x + 1, y - 1),
+                (x + 2, y),
+                (x + 2, y - 1),
                 (x, y + 1),
                 (x - 1, y + 2),
+                (x - 1, y),
+                (x - 2, y),
                 (x - 2, y + 1)
             ]
         for move in potential_moves:
+            if move[1] >= len(board[move[0]]) or move[1] < 0:
+                continue
             tile = board[move[0]][move[1]]
             if not tile.is_empty() or tile.type == TileType.PADDING:
                 continue
