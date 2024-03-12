@@ -245,17 +245,16 @@ class Bishop(ChessPiece):
         Rule: Moves in 1 of 4 directions, 1 or more steps in a straight line along rhombuses with a common vertex and colour. 
         It does not leap.
         """
-        potential_moves = list(self.down(position, board) + self.up(position, board))
         color = board[position[0]][position[1]].color
+        potential_moves = self.down(position, board) + self.up(position, board)
         valid_moves = []
-        for direction in potential_moves:
-            for move in direction:
-                if move[0] < 0 or move[0] > len(board) - 1 or move[1] < 0 or move[1] > len(board[move[0]]) - 1:
-                    break
-                if not board[move[0]][move[1]].is_empty():
-                    break
-                # if board[move[0]][move[1]].color == color:
-                valid_moves.append(move)
+        for x, y in potential_moves:
+            if x < 0 or x > len(board) - 1 or y < 0 or y > len(board[x]) - 1:
+                break
+            if not board[x][y].is_empty():
+                break
+            # if board[move[0]][move[1]].color == color:
+            valid_moves.append((x, y))
         print(valid_moves)
         return valid_moves
 
@@ -263,48 +262,46 @@ class Bishop(ChessPiece):
         x, y = position
         potential_moves_right = []
         potential_moves_left = []
-        for i in range(x - 1, 0, -1):
-            if y >= len(board[i]) - 1:
+        for i in range(x - 1, -1, -1):
+            if y > len(board[i]) - 2:
+                if board[i][y].is_empty():
+                    potential_moves_right.append((i, y))
                 break
             if board[i][y].orientation == 0:
                 y += 2
-                potential_moves_right.append((i, y))
             else:
                 y += 1
+            if board[i][y].is_empty():
                 potential_moves_right.append((i, y))
-        for i in range(x + 1, len(board) - 1):
-            if y >= len(board[i]) - 1:
+            else:
                 break
-            if board[i][y].orientation == 0:
-                y += 2
-                potential_moves_left.append((i, y))
-            else:
-                y += 1
-                potential_moves_left.append((i, y))
 
-        return potential_moves_right, potential_moves_left
+        return potential_moves_right + potential_moves_left
 
     def up(self, position: tuple[int, int], board: list[list[ChessTile]]) -> tuple[list[tuple[int]]]:
         x, y = position
         potential_moves_right = []
         potential_moves_left = []
-        for i in range(x - 1, 0, -1):
+        for i in range(x - 1, -1, -1):
             if y <= 0:
                 break
             if board[i][y].orientation == 0:
                 y -= 1
-                potential_moves_right.append((i, y))
             else:
                 y -= 2
+            if board[i][y].is_empty():
                 potential_moves_right.append((i, y))
-        for i in range(x + 1, len(board) - 1):
-            if y <= 0:
+            else:
                 break
-            if board[i][y].orientation == 0:
-                y -= 1
-                potential_moves_left.append((i, y))
-            else:
-                y -= 2
-                potential_moves_left.append((i, y))
+        print(f"potential_moves_right {potential_moves_right}")
+        # for i in range(x + 1, len(board) - 1):
+        #     if y <= 0:
+        #         break
+        #     if board[i][y].orientation == 0:
+        #         y -= 1
+        #         potential_moves_left.append((i, y))
+        #     else:
+        #         y -= 2
+        #         potential_moves_left.append((i, y))
 
-        return potential_moves_right, potential_moves_left
+        return potential_moves_right + potential_moves_left
