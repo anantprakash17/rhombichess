@@ -37,11 +37,11 @@ class King(ChessPiece):
                 (x + 1, y),
                 (x - 1, y),
                 (x - 1, y + 1),
-                (x + 1, y + 1)
+                (x + 1, y + 1),
             ]
         elif tile.orientation == 1:
             potential_moves = [
-		        (x, y - 1),
+                (x, y - 1),
                 (x + 1, y + 2),
                 (x - 1, y - 1),
                 (x - 2, y - 1),
@@ -50,8 +50,8 @@ class King(ChessPiece):
                 (x - 2, y),
                 (x + 2, y + 1),
                 (x, y + 1),
-                (x - 1, y + 1)
-			]
+                (x - 1, y + 1),
+            ]
         else:
             potential_moves = [
                 (x, y - 1),
@@ -63,7 +63,7 @@ class King(ChessPiece):
                 (x - 1, y + 2),
                 (x - 1, y),
                 (x - 2, y),
-                (x - 2, y + 1)
+                (x - 2, y + 1),
             ]
         for move in potential_moves:
             if move[1] < 0 or move[0] > len(board) - 1:
@@ -221,3 +221,90 @@ class Machine(ChessPiece):
                 continue
             valid_moves.append(move)
         return valid_moves
+
+
+class Bishop(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a bishop piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.BISHOP, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the bishop piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves in 1 of 4 directions, 1 or more steps in a straight line along rhombuses with a common vertex and colour. 
+        It does not leap.
+        """
+        potential_moves = list(self.down(position, board) + self.up(position, board))
+        color = board[position[0]][position[1]].color
+        valid_moves = []
+        for direction in potential_moves:
+            for move in direction:
+                if move[0] < 0 or move[0] > len(board) - 1 or move[1] < 0 or move[1] > len(board[move[0]]) - 1:
+                    break
+                if not board[move[0]][move[1]].is_empty():
+                    break
+                # if board[move[0]][move[1]].color == color:
+                valid_moves.append(move)
+        print(valid_moves)
+        return valid_moves
+
+    def down(self, position: tuple[int, int], board: list[list[ChessTile]]) -> tuple[list[tuple[int]]]:
+        x, y = position
+        potential_moves_right = []
+        potential_moves_left = []
+        for i in range(x - 1, 0, -1):
+            if y >= len(board[i]) - 1:
+                break
+            if board[i][y].orientation == 0:
+                y += 2
+                potential_moves_right.append((i, y))
+            else:
+                y += 1
+                potential_moves_right.append((i, y))
+        for i in range(x + 1, len(board) - 1):
+            if y >= len(board[i]) - 1:
+                break
+            if board[i][y].orientation == 0:
+                y += 2
+                potential_moves_left.append((i, y))
+            else:
+                y += 1
+                potential_moves_left.append((i, y))
+
+        return potential_moves_right, potential_moves_left
+
+    def up(self, position: tuple[int, int], board: list[list[ChessTile]]) -> tuple[list[tuple[int]]]:
+        x, y = position
+        potential_moves_right = []
+        potential_moves_left = []
+        for i in range(x - 1, 0, -1):
+            if y <= 0:
+                break
+            if board[i][y].orientation == 0:
+                y -= 1
+                potential_moves_right.append((i, y))
+            else:
+                y -= 2
+                potential_moves_right.append((i, y))
+        for i in range(x + 1, len(board) - 1):
+            if y <= 0:
+                break
+            if board[i][y].orientation == 0:
+                y -= 1
+                potential_moves_left.append((i, y))
+            else:
+                y -= 2
+                potential_moves_left.append((i, y))
+
+        return potential_moves_right, potential_moves_left
