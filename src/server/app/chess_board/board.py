@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook
+from app.chess_board.chess_pieces import Machine, Rook, King
 
 
 class ChessBoard:
@@ -282,8 +282,8 @@ class ChessBoard:
         self.board[9][18].piece = ChessPiece(PieceType.QUEEN, 1)
 
         # add king
-        self.board[7][1].piece = ChessPiece(PieceType.KING, 0)
-        self.board[7][18].piece = ChessPiece(PieceType.KING, 1)
+        self.board[7][1].piece = King(0)
+        self.board[7][18].piece = King(1)
 
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
