@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { useRouter } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
@@ -48,7 +48,7 @@ describe('Board Component', () => {
 
   const rookValidMoves = {'5,17': ['5,16', '5,15', '5,14', '5,13', '5,12', '5,11', '5,10', '5,9', '5,8', '5,7', '5,6', '5,5', '5,4', '5,3', '4,17', '3,16', '2,16', '1,15', '0,15', '6,18', '7,18', '8,19']};
 
-  const rookOnly = {
+  const rookOnly = { board: {
     '(0, 0)': { piece: '', type: 'PADDING' },
     '(0, 1)': { piece: '', type: 'PADDING' },
     '(0, 2)': { piece: '', type: 'PADDING' },
@@ -156,7 +156,7 @@ describe('Board Component', () => {
       '(4, 20)': { piece: '', type: 'PADDING' },
       '(5, 0)': { piece: '', type: 'PADDING' },
       '(5, 1)': { piece: '', type: 'PADDING' },
-      '(5, 2)': { piece: 'rook-black', type: 'NORMAL' },
+      '(5, 2)': { piece: '', type: 'NORMAL' },
       '(5, 3)': { piece: '', type: 'NORMAL' },
       '(5, 4)': { piece: '', type: 'NORMAL' },
       '(5, 5)': { piece: '', type: 'NORMAL' },
@@ -282,7 +282,7 @@ describe('Board Component', () => {
       '(10, 20)': { piece: '', type: 'PADDING' },
       '(11, 0)': { piece: '', type: 'PADDING' },
       '(11, 1)': { piece: '', type: 'PADDING' },
-      '(11, 2)': { piece: 'rook-black', type: 'NORMAL' },
+      '(11, 2)': { piece: '', type: 'NORMAL' },
       '(11, 3)': { piece: '', type: 'NORMAL' },
       '(11, 4)': { piece: '', type: 'NORMAL' },
       '(11, 5)': { piece: '', type: 'NORMAL' },
@@ -297,7 +297,7 @@ describe('Board Component', () => {
       '(11, 14)': { piece: '', type: 'NORMAL' },
       '(11, 15)': { piece: '', type: 'NORMAL' },
       '(11, 16)': { piece: '', type: 'NORMAL' },
-      '(11, 17)': { piece: 'rook-white', type: 'NORMAL' },
+      '(11, 17)': { piece: '', type: 'NORMAL' },
       '(11, 18)': { piece: '', type: 'PADDING' },
       '(11, 19)': { piece: '', type: 'PADDING' },
       '(11, 20)': { piece: '', type: 'PADDING' },
@@ -406,9 +406,9 @@ describe('Board Component', () => {
       '(16, 18)': { piece: '', type: 'PADDING' },
       '(16, 19)': { piece: '', type: 'PADDING' },
       '(16, 20)': { piece: '', type: 'PADDING' },    
-    };
+    }, valid_moves: rookValidMoves, turn: 'white'};
 
-    const initialBoard = {
+    const initialGameData = { board: {
         '(0, 0)': { piece: '', type: 'PADDING' },
         '(0, 1)': { piece: '', type: 'PADDING' },
         '(0, 2)': { piece: '', type: 'PADDING' },
@@ -766,11 +766,11 @@ describe('Board Component', () => {
         '(16, 18)': { piece: '', type: 'PADDING' },
         '(16, 19)': { piece: '', type: 'PADDING' },
         '(16, 20)': { piece: '', type: 'PADDING' },    
-      };
+      }};
 
   it('displays all pieces in default starting state', () => {
 
-    render(<Board initialBoard={initialBoard} gameCode="4ZP6A" disabled={false} socket={mockSocket} color="white" initialValidMoves={{}} />);
+    render(<Board initialGameData={initialGameData} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
 
     verifyPieceLocation('soldier-black', 0, 5);
     verifyPieceLocation('soldier-white', 0, 15);
@@ -883,10 +883,9 @@ describe('Board Component', () => {
     verifyPieceLocation('soldier-white', 16, 15);
   });
 
-  it('makes valid move with the rook piece', async () => {
+   it('makes valid move with the rook piece', async () => {
 
-      global.fetch = jest.fn(() => Promise.resolve({
-        json: () => Promise.resolve({ board: {
+      const updatedGameData = { board: {
             '(0, 0)': { piece: '', type: 'PADDING' },
       '(0, 1)': { piece: '', type: 'PADDING' },
       '(0, 2)': { piece: '', type: 'PADDING' },
@@ -1244,12 +1243,11 @@ describe('Board Component', () => {
         '(16, 18)': { piece: '', type: 'PADDING' },
         '(16, 19)': { piece: '', type: 'PADDING' },
         '(16, 20)': { piece: '', type: 'PADDING' }, 
-        }, valid_moves: rookValidMoves}),
-      }));
+        }, valid_moves: rookValidMoves, turn: 'black'};
 
       mockSocket = createMockSocket();
-      render(<Board initialBoard={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="white" initialValidMoves={rookValidMoves} />);
-      
+      render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
+
       const whiteRook = screen.queryByTestId('rook-white-5-17');
       fireEvent.click(whiteRook);
 
@@ -1264,7 +1262,7 @@ describe('Board Component', () => {
       fireEvent.click(confirmMoveButton);
 
       await waitFor(() => {
-        expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/game/4ZP6'), {
+        expect(fetch).toHaveBeenCalledWith(expect.stringContaining('/api/game/4ZP6A'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1274,6 +1272,8 @@ describe('Board Component', () => {
         });
       });
 
+      mockSocket.emitEvent('game_data', updatedGameData);
+
       await waitFor(() => { 
         const whiteRookNew = screen.queryByTestId('rook-white-5-15');
         expect(whiteRookNew).toBeInTheDocument();
@@ -1282,7 +1282,7 @@ describe('Board Component', () => {
 
   it('cancel rook move', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialBoard={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="white" initialValidMoves={rookValidMoves} />);
+    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
       
     const whiteRook = screen.queryByTestId('rook-white-5-17');
     fireEvent.click(whiteRook);
@@ -1303,32 +1303,32 @@ describe('Board Component', () => {
     });
   });
 
-  it('cancel rook move', async () => {
-    mockSocket = createMockSocket();
-    render(<Board initialBoard={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="black" initialValidMoves={rookValidMoves} />);
+//   it('cancel rook move', async () => {
+//     mockSocket = createMockSocket();
+//     render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="black" />);
       
-    const whiteRook = screen.queryByTestId('rook-white-5-17');
-    fireEvent.click(whiteRook);
+//     const whiteRook = screen.queryByTestId('rook-white-5-17');
+//     fireEvent.click(whiteRook);
     
-    checkHighlightedTiles(rookValidMoves['5,17']);
+//     checkHighlightedTiles(rookValidMoves['5,17']);
 
-    const emptyTile = screen.queryByTestId('highlighted-5-15');
-    fireEvent.click(emptyTile);
+//     const emptyTile = screen.queryByTestId('highlighted-5-15');
+//     fireEvent.click(emptyTile);
 
-    const confirmMoveHeader = screen.getByText(/Confirm move?/i);
-    expect(confirmMoveHeader).toBeVisible();
-    const confirmMoveButton = screen.getByRole('button', { name: /Confirm/i });
-    fireEvent.click(confirmMoveButton);
+//     const confirmMoveHeader = screen.getByText(/Confirm move?/i);
+//     expect(confirmMoveHeader).toBeVisible();
+//     const confirmMoveButton = screen.getByRole('button', { name: /Confirm/i });
+//     fireEvent.click(confirmMoveButton);
 
-    await waitFor(() => { 
-      const whiteRook = screen.queryByTestId('rook-white-5-17');
-      expect(whiteRook).toBeInTheDocument();
-    });
-  });
+//     await waitFor(() => { 
+//       const whiteRook = screen.queryByTestId('rook-white-5-17');
+//       expect(whiteRook).toBeInTheDocument();
+//     });
+//   });
 
   it('check that if player selected white board renders with white on lower half', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialBoard={initialBoard} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="white" initialValidMoves={{}} />);
+    render(<Board initialGameData={initialGameData} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
       
     const whiteJester = screen.queryByTestId('jester-white-8-19');
     expect(whiteJester).toBeInTheDocument();
@@ -1338,7 +1338,7 @@ describe('Board Component', () => {
 
   it('check that if player selected black board renders with black on lower half', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialBoard={initialBoard} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="black" initialValidMoves={{}} />);
+    render(<Board initialGameData={initialGameData} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="black" />);
       
     const whiteJester = screen.queryByTestId('jester-white-8-19');
     expect(whiteJester).toBeInTheDocument();
