@@ -246,7 +246,7 @@ class Bishop(ChessPiece):
         It does not leap.
         """
         color = board[position[0]][position[1]].color
-        potential_moves = self.down(position, board) + self.up(position, board)
+        potential_moves = self.move(position, board, "up") + self.move(position, board, "down")
         valid_moves = []
         for x, y in potential_moves:
             if x < 0 or x > len(board) - 1 or y < 0 or y > len(board[x]) - 1:
@@ -255,53 +255,33 @@ class Bishop(ChessPiece):
                 break
             # if board[move[0]][move[1]].color == color:
             valid_moves.append((x, y))
-        print(valid_moves)
         return valid_moves
 
-    def down(self, position: tuple[int, int], board: list[list[ChessTile]]) -> tuple[list[tuple[int]]]:
+    def move(self, position: tuple[int, int], board: list[list[ChessTile]], direction: str) -> tuple[list[tuple[int]]]:
         x, y = position
         potential_moves_right = []
         potential_moves_left = []
         for i in range(x - 1, -1, -1):
-            if y > len(board[i]) - 2:
-                if board[i][y].is_empty():
-                    potential_moves_right.append((i, y))
-                break
-            if board[i][y].orientation == 0:
-                y += 2
-            else:
-                y += 1
+            if direction == "down":
+                if y > len(board[i]) - 2:
+                    if board[i][y].is_empty():
+                        potential_moves_right.append((i, y))
+                    break
+                if board[i][y].orientation == 0:
+                    y += 2
+                else:
+                    y += 1
+            elif direction == "up":
+                print(board[i][y].orientation)
+                if y <= 0:
+                    break
+                if board[i][y].orientation == 0:
+                    y -= 1
+                else:
+                    y -= 2
             if board[i][y].is_empty():
                 potential_moves_right.append((i, y))
             else:
                 break
-
-        return potential_moves_right + potential_moves_left
-
-    def up(self, position: tuple[int, int], board: list[list[ChessTile]]) -> tuple[list[tuple[int]]]:
-        x, y = position
-        potential_moves_right = []
-        potential_moves_left = []
-        for i in range(x - 1, -1, -1):
-            if y <= 0:
-                break
-            if board[i][y].orientation == 0:
-                y -= 1
-            else:
-                y -= 2
-            if board[i][y].is_empty():
-                potential_moves_right.append((i, y))
-            else:
-                break
-        print(f"potential_moves_right {potential_moves_right}")
-        # for i in range(x + 1, len(board) - 1):
-        #     if y <= 0:
-        #         break
-        #     if board[i][y].orientation == 0:
-        #         y -= 1
-        #         potential_moves_left.append((i, y))
-        #     else:
-        #         y -= 2
-        #         potential_moves_left.append((i, y))
 
         return potential_moves_right + potential_moves_left
