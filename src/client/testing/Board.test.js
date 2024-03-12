@@ -44,9 +44,20 @@ describe('Board Component', () => {
     });
   }
 
+  function checkNotHighlightedTiles(moveList) {
+    moveList.forEach((pos) => {
+      const formattedPos = pos.replace(',', '-');
+      const possibleMoveTile = screen.getByTestId(`${formattedPos}`);
+      expect(possibleMoveTile).toBeInTheDocument();
+    });
+  }
+
   let mockSocket;
 
-  const rookValidMoves = {'5,17': ['5,16', '5,15', '5,14', '5,13', '5,12', '5,11', '5,10', '5,9', '5,8', '5,7', '5,6', '5,5', '5,4', '5,3', '4,17', '3,16', '2,16', '1,15', '0,15', '6,18', '7,18', '8,19']};
+  const rookValidMoves = {
+    '5,17': ['5,16', '5,15', '5,14', '5,13', '5,12', '5,11', '5,10', '5,9', '5,8', '5,7', '5,6', '5,5', '5,4', '5,3', '4,17', '3,16', '2,16', '1,15', '0,15', '6,18', '7,18', '8,19'],
+    '5,2': ['5,3', '5,4', '5,5', '5,6', '5,7', '5,8', '5,9', '5,10', '5,11', '5,12', '5,13', '5,14', '5,15', '5,16', '4,3', '3,3', '2,4', '1,4', '0,5', '6,2', '7,1', '8,1']
+  };
 
   const rookOnly = { board: {
     '(0, 0)': { piece: '', type: 'PADDING' },
@@ -156,7 +167,7 @@ describe('Board Component', () => {
       '(4, 20)': { piece: '', type: 'PADDING' },
       '(5, 0)': { piece: '', type: 'PADDING' },
       '(5, 1)': { piece: '', type: 'PADDING' },
-      '(5, 2)': { piece: '', type: 'NORMAL' },
+      '(5, 2)': { piece: 'rook-black', type: 'NORMAL' },
       '(5, 3)': { piece: '', type: 'NORMAL' },
       '(5, 4)': { piece: '', type: 'NORMAL' },
       '(5, 5)': { piece: '', type: 'NORMAL' },
@@ -885,6 +896,11 @@ describe('Board Component', () => {
 
    it('makes valid move with the rook piece', async () => {
 
+      const updatedRookValidMoves = {
+        '5,15': ['5,14', '5,13', '5,12', '5,11', '5,10', '5,9', '5,8', '5,7', '5,6', '5,5', '5,4', '5,3', '5,16', '5,17', '4,15', '3,14', '2,14', '1,13', '0,13', '6,16', '7,16', '8,17', '9,17', '10,18'],
+        '5,2': ['5,3', '5,4', '5,5', '5,6', '5,7', '5,8', '5,9', '5,10', '5,11', '5,12', '5,13', '5,14', '5,15', '5,16', '4,3', '3,3', '2,4', '1,4', '0,5', '6,2', '7,1', '8,1']
+      };
+
       const updatedGameData = { board: {
             '(0, 0)': { piece: '', type: 'PADDING' },
       '(0, 1)': { piece: '', type: 'PADDING' },
@@ -993,7 +1009,7 @@ describe('Board Component', () => {
         '(4, 20)': { piece: '', type: 'PADDING' },
         '(5, 0)': { piece: '', type: 'PADDING' },
         '(5, 1)': { piece: '', type: 'PADDING' },
-        '(5, 2)': { piece: '', type: 'NORMAL' },
+        '(5, 2)': { piece: 'rook-black', type: 'NORMAL' },
         '(5, 3)': { piece: '', type: 'NORMAL' },
         '(5, 4)': { piece: '', type: 'NORMAL' },
         '(5, 5)': { piece: '', type: 'NORMAL' },
@@ -1243,7 +1259,7 @@ describe('Board Component', () => {
         '(16, 18)': { piece: '', type: 'PADDING' },
         '(16, 19)': { piece: '', type: 'PADDING' },
         '(16, 20)': { piece: '', type: 'PADDING' }, 
-        }, valid_moves: rookValidMoves, turn: 'black'};
+        }, valid_moves: updatedRookValidMoves, turn: 'black'};
 
       mockSocket = createMockSocket();
       render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
@@ -1303,28 +1319,25 @@ describe('Board Component', () => {
     });
   });
 
-//   it('cancel rook move', async () => {
-//     mockSocket = createMockSocket();
-//     render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} color="black" />);
+  it('ensure when its blacks turn a white piece cannot be clicked', async () => {
+    mockSocket = createMockSocket();
+    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="black" />);
       
-//     const whiteRook = screen.queryByTestId('rook-white-5-17');
-//     fireEvent.click(whiteRook);
+    const whiteRook = screen.queryByTestId('rook-white-5-17');
+    fireEvent.click(whiteRook);
     
-//     checkHighlightedTiles(rookValidMoves['5,17']);
+    checkNotHighlightedTiles(rookValidMoves['5,17']);
+  });
 
-//     const emptyTile = screen.queryByTestId('highlighted-5-15');
-//     fireEvent.click(emptyTile);
-
-//     const confirmMoveHeader = screen.getByText(/Confirm move?/i);
-//     expect(confirmMoveHeader).toBeVisible();
-//     const confirmMoveButton = screen.getByRole('button', { name: /Confirm/i });
-//     fireEvent.click(confirmMoveButton);
-
-//     await waitFor(() => { 
-//       const whiteRook = screen.queryByTestId('rook-white-5-17');
-//       expect(whiteRook).toBeInTheDocument();
-//     });
-//   });
+  it('ensure when its whites turn a black piece cannot be clicked', async () => {
+    mockSocket = createMockSocket();
+    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
+      
+    const whiteRook = screen.queryByTestId('rook-black-5-2');
+    fireEvent.click(whiteRook);
+    
+    checkNotHighlightedTiles(rookValidMoves['5,2']);
+  });
 
   it('check that if player selected white board renders with white on lower half', async () => {
     mockSocket = createMockSocket();
