@@ -245,34 +245,61 @@ class Bishop(ChessPiece):
         Rule: Moves in 1 of 4 directions, 1 or more steps in a straight line along rhombuses with a common vertex and colour. 
         It does not leap.
         """
-        color = board[position[0]][position[1]].color
-        potential_moves = self.move(position, board, "up") + self.move(position, board, "down")
+        orientation = board[position[0]][position[1]].orientation
+        potential_moves = []
+
+        if orientation == 0:
+            potential_moves += self.move(position, board, "up", True)
+            potential_moves += self.move(position, board, "up", False)
+            potential_moves += self.move(position, board, "down", True)
+            potential_moves += self.move(position, board, "down", False)
+        elif orientation == 1:
+            potential_moves += self.move(position, board, "up", True)
+            potential_moves += self.move(position, board, "down", False)
+            potential_moves += self.move_lr(position, board, True)
+        else:
+            potential_moves += self.move(position, board, "down", True)
+            potential_moves += self.move(position, board, "up", False)
+            potential_moves += self.move_lr(position, board, True)
+
         valid_moves = []
         for x, y in potential_moves:
             if x < 0 or x > len(board) - 1 or y < 0 or y > len(board[x]) - 1:
                 break
             if not board[x][y].is_empty():
                 break
-            # if board[move[0]][move[1]].color == color:
             valid_moves.append((x, y))
         return valid_moves
 
-    def move(self, position: tuple[int, int], board: list[list[ChessTile]], direction: str) -> tuple[list[tuple[int]]]:
+    def move(
+        self, position: tuple[int, int], board: list[list[ChessTile]], direction: str, right: bool
+    ) -> tuple[list[tuple[int]]]:
+        """
+        Move the bishop piece in the given direction diagonally
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+            direction: The direction to move the piece in ("up" or "down")
+            right: gathers the potential moves to the right if True, else to the left
+        Returns:
+            A list of potential moves
+        """
         x, y = position
-        potential_moves_right = []
-        potential_moves_left = []
-        for i in range(x - 1, -1, -1):
+        potential_moves = []
+        color = board[x][y].color
+        move = range(x - 1, -1, -1) if right else range(x + 1, len(board))
+
+        for i in move:
             if direction == "down":
                 if y > len(board[i]) - 2:
                     if board[i][y].is_empty():
-                        potential_moves_right.append((i, y))
+                        potential_moves.append((i, y))
                     break
                 if board[i][y].orientation == 0:
                     y += 2
                 else:
                     y += 1
             elif direction == "up":
-                print(board[i][y].orientation)
                 if y <= 0:
                     break
                 if board[i][y].orientation == 0:
@@ -280,8 +307,32 @@ class Bishop(ChessPiece):
                 else:
                     y -= 2
             if board[i][y].is_empty():
-                potential_moves_right.append((i, y))
+                potential_moves.append((i, y))
             else:
                 break
 
-        return potential_moves_right + potential_moves_left
+        return potential_moves
+
+    def move_lr(
+        self, position: tuple[int, int], board: list[list[ChessTile]], direction: bool
+    ) -> list[tuple[int, int]]:
+        """
+        Move the bishop piece in the given direction left or right
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+            direction: The direction to move the piece in (True for right, False for left)
+        Returns:
+            A list of potential moves
+        """
+        x, y = position
+        color = board[x][y].color
+        potential_moves = []
+        move = range(x - 1, -1, -1) if direction else range(x + 1, len(board) - 1)
+        for i in move:
+            if board[i][y].is_empty():
+                if board[i][y].color == color:
+                    potential_moves.append((i, y))
+            else:
+                break
+        return potential_moves + (self.move_lr(position, board, False) if direction else [])
