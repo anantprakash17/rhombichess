@@ -1215,3 +1215,67 @@ class Queen(ChessPiece):  # Author: Phil
         valid_moves.update(jester_init.calculate_valid_moves(position, board))
 
         return list(valid_moves)
+
+
+class Soldier(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a soldier piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.SOLDIER, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the soldier piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: On a vertical rhombus. Moves and captures like a Pawn on a similar rhombus.
+        Without capturing, it also moves to the rhombuses of capture.
+        On a non-vertical rhombus. Moves and captures like a Pawn on a similar rhombus.
+        Without capturing, it also moves to the rhombuses of capture.
+        (This soldier does not capture in the direction of a Jester or Dog).
+        """
+        valid_moves = []
+        x, y = position
+        tile = board[x][y]
+        potential_moves = []
+        if tile.orientation == 0:
+            potential_moves = [
+                (x + 1, y - 1),
+                (x - 1, y - 1),
+                (x + 1, y - 2),
+                (x - 1, y - 2),
+                (x, y - 2),
+            ]
+        elif tile.orientation == 1:
+            potential_moves = [
+                (x, y - 1),
+                (x, y - 2),
+                (x - 1, y - 1),
+                (x + 1, y),
+            ]
+
+        else:
+            potential_moves = [
+                (x, y - 1),
+                (x, y - 2),
+                (x - 1, y),
+                (x + 1, y - 1),
+            ]
+        for move in potential_moves:
+            if move[0] < 0 or move[0] >= len(board):
+                continue
+            if move[1] < 0 or move[1] >= len(board[move[0]]):
+                continue
+            tile = board[move[0]][move[1]]
+            if not tile.is_empty() or tile.type == TileType.PADDING:
+                continue
+            valid_moves.append(move)
+        return valid_moves

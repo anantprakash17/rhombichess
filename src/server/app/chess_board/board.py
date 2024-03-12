@@ -156,20 +156,20 @@ class ChessBoard:
         """
         # This part is done manually, not sure if there is a better way to do it
         # Add soldiers
-        self.board[0][5].piece = ChessPiece(PieceType.SOLDIER, 0)
-        self.board[0][15].piece = ChessPiece(PieceType.SOLDIER, 1)
+        self.board[0][5].piece = Soldier(0)
+        self.board[0][15].piece = Soldier(1)
 
-        self.board[16][5].piece = ChessPiece(PieceType.SOLDIER, 0)
-        self.board[16][15].piece = ChessPiece(PieceType.SOLDIER, 1)
+        self.board[16][5].piece = Soldier(0)
+        self.board[16][15].piece = Soldier(1)
 
-        self.board[4][5].piece = ChessPiece(PieceType.SOLDIER, 0)
-        self.board[4][15].piece = ChessPiece(PieceType.SOLDIER, 1)
+        self.board[4][5].piece = Soldier(0)
+        self.board[4][15].piece = Soldier(1)
 
-        self.board[8][5].piece = ChessPiece(PieceType.SOLDIER, 0)
-        self.board[8][15].piece = ChessPiece(PieceType.SOLDIER, 1)
+        self.board[8][5].piece = Soldier(0)
+        self.board[8][15].piece = Soldier(1)
 
-        self.board[12][5].piece = ChessPiece(PieceType.SOLDIER, 0)
-        self.board[12][15].piece = ChessPiece(PieceType.SOLDIER, 1)
+        self.board[12][5].piece = Soldier(0)
+        self.board[12][15].piece = Soldier(1)
 
         # add pawns
         self.board[1][5].piece = Pawn(0)
