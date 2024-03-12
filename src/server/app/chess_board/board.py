@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook, King
+from app.chess_board.chess_pieces import Machine, Rook, King, Hawk
 
 
 class ChessBoard:
@@ -274,8 +274,8 @@ class ChessBoard:
         self.board[10][18].piece = ChessPiece(PieceType.MAMMOTH, 1)
 
         # add hawk
-        self.board[6][2].piece = ChessPiece(PieceType.HAWK, 0)
-        self.board[6][18].piece = ChessPiece(PieceType.HAWK, 1)
+        self.board[6][2].piece = Hawk(0)
+        self.board[6][18].piece = Hawk(1)
 
         # add queen
         self.board[9][1].piece = ChessPiece(PieceType.QUEEN, 0)

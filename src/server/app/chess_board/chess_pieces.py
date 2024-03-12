@@ -221,3 +221,119 @@ class Machine(ChessPiece):
                 continue
             valid_moves.append(move)
         return valid_moves
+
+class Hawk(ChessPiece):
+
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a hawk piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.HAWK, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the hawk piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves 2 or 3 rhombuses (not 1) like a Queen but may leap to them.
+        The move across a wide-angle vertex is to 2 rhombuses only.
+        The Hawk may escape the initial setup on its first move.
+        """
+        valid_moves = []
+        x, y = position
+        tile = board[x][y]
+        potential_moves = []
+        if tile.orientation == 0:
+            potential_moves = [
+                (x + 2, y - 1),
+                (x + 2, y - 3),
+                (x - 2, y - 1),
+                (x - 2, y - 3),
+                (x, y - 4),
+                (x, y - 6),
+                (x + 2, y + 1),
+                (x + 2, y + 3),
+                (x - 2, y + 1),
+                (x - 2, y + 3),
+                (x, y + 4),
+                (x, y + 6),
+                (x - 8, y),
+                (x + 8, y),
+                # above hawk
+                (x + 3, y - 2),
+                (x + 3, y - 5),
+                (x - 3, y - 2),
+                (x - 3, y - 5),
+                # below hawk
+                (x + 3, y + 1),
+                (x + 3, y + 4),
+                (x - 3, y + 1),
+                (x - 3, y + 4),
+            ]
+        elif tile.orientation == 1:
+            potential_moves = [
+                (x + 2, y - 1),
+                (x + 4, y + 2),
+                (x, y - 2),
+                (x - 4, y - 2),
+                (x - 2, y - 3),
+                (x - 2, y + 1),
+                (x - 4, y),
+                (x, y + 2),
+                (x + 4, y),
+                (x + 2, y + 3),
+                (x + 6, y + 3),
+                (x + 3, y + 5),
+                (x, y + 3),
+                (x - 3, y + 2),
+                (x - 6, y),
+                (x - 6, y - 3),
+                (x + 3, y - 1),
+                (x + 6, y),
+                (x, y - 3),
+                (x - 4, y + 6),
+                (x + 4, y - 6),
+                (x - 3, y - 4),
+            ]
+        else:
+            potential_moves = [
+                (x + 2, y + 1),
+                (x - 4, y + 2),
+                (x + 4, y - 2),
+                (x, y - 2),
+                (x, y + 2),
+                (x - 2, y - 1),
+                (x - 4, y),
+                (x - 2, y + 3),
+                (x + 4, y),
+                (x + 2, y - 3),
+                (x - 4, y - 6),
+                (x + 4, y + 6),
+                (x + 6, y),
+                (x, y - 3),
+                (x + 3, y - 4),
+                (x, y + 3),
+                (x - 3, y + 5),
+                (x - 3, y - 1),
+                (x - 6, y),
+                (x - 6, y + 3),
+                (x + 6, y - 3),
+                (x + 3, y + 2),
+            ]
+        for move in potential_moves:
+            if move[0] < 0 or move[0] >= len(board):
+                continue
+            if move[1] < 0 or move[1] >= len(board[move[0]]):
+                continue
+            tile = board[move[0]][move[1]]
+            if not tile.is_empty() or tile.type == TileType.PADDING:
+                continue
+            valid_moves.append(move)
+        return valid_moves
