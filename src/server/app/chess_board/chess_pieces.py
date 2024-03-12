@@ -66,7 +66,7 @@ class King(ChessPiece):
                 (x - 2, y + 1)
             ]
         for move in potential_moves:
-            if move[1] >= len(board[move[0]]) or move[1] < 0:
+            if move[1] < 0 or move[0] > len(board) - 1:
                 continue
             tile = board[move[0]][move[1]]
             if not tile.is_empty() or tile.type == TileType.PADDING:
