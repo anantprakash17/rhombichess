@@ -108,7 +108,7 @@ class ChessBoard:
                     column.append(ChessTile(None, colors[color % 3], 0, TileType.NORMAL))
                     color += 1
                 else:
-                    column.append(ChessTile(None, None, None, TileType.DIAMOND))
+                    column.append(ChessTile(None, None, 0, TileType.DIAMOND))
                 flag = not flag
             column = copy.deepcopy(chesspadding) + column + copy.deepcopy(chesspadding)
         else:
