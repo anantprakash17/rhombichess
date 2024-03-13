@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook, King, Shield, Mammoth, Cat, Hawk, Prince, Dog
+from app.chess_board.chess_pieces import Machine, Rook, King, Shield, Mammoth, Cat, Hawk, Prince, Dog, Bishop
 
 
 class ChessBoard:
@@ -108,7 +108,7 @@ class ChessBoard:
                     column.append(ChessTile(None, colors[color % 3], 0, TileType.NORMAL))
                     color += 1
                 else:
-                    column.append(ChessTile(None, None, None, TileType.DIAMOND))
+                    column.append(ChessTile(None, None, 0, TileType.DIAMOND))
                 flag = not flag
             column = copy.deepcopy(chesspadding) + column + copy.deepcopy(chesspadding)
         else:
@@ -214,14 +214,14 @@ class ChessBoard:
         self.board[9][17].piece = ChessPiece(PieceType.JESTER, 1)
 
         # add bishops
-        self.board[1][4].piece = ChessPiece(PieceType.BISHOP, 0)
-        self.board[1][15].piece = ChessPiece(PieceType.BISHOP, 1)
+        self.board[1][4].piece = Bishop(0)
+        self.board[1][15].piece = Bishop(1)
 
-        self.board[14][4].piece = ChessPiece(PieceType.BISHOP, 0)
-        self.board[14][16].piece = ChessPiece(PieceType.BISHOP, 1)
+        self.board[14][4].piece = Bishop(0)
+        self.board[14][16].piece = Bishop(1)
 
-        self.board[3][3].piece = ChessPiece(PieceType.BISHOP, 0)
-        self.board[3][16].piece = ChessPiece(PieceType.BISHOP, 1)
+        self.board[3][3].piece = Bishop(0)
+        self.board[3][16].piece = Bishop(1)
 
         # add shields
         self.board[5][3].piece = Shield(0)
