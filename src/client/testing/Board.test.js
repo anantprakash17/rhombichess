@@ -1,10 +1,7 @@
 import React from 'react';
-import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { useRouter } from 'next/navigation';
-import { SessionProvider } from 'next-auth/react';
 import Board from '../components/Board';
-import { beforeEach } from 'node:test';
 
 global.fetch = jest.fn();
 
@@ -59,7 +56,7 @@ describe('Board Component', () => {
     '5,2': ['5,3', '5,4', '5,5', '5,6', '5,7', '5,8', '5,9', '5,10', '5,11', '5,12', '5,13', '5,14', '5,15', '5,16', '4,3', '3,3', '2,4', '1,4', '0,5', '6,2', '7,1', '8,1']
   };
 
-  const rookOnly = { 
+  const rookOnly = {
     board: {
       '(0, 0)': { piece: '', type: 'PADDING' },
       '(0, 1)': { piece: '', type: 'PADDING' },
@@ -209,6 +206,16 @@ describe('Board Component', () => {
       '(6, 19)': { piece: '', type: 'PADDING' },
       '(6, 20)': { piece: '', type: 'PADDING' },
       '(7, 0)': { piece: '', type: 'PADDING' },
+      '(7, 1)': { piece: '', type: 'NORMAL' },
+      '(7, 2)': { piece: '', type: 'NORMAL' },
+      '(7, 3)': { piece: '', type: 'NORMAL' },
+      '(7, 4)': { piece: '', type: 'NORMAL' },
+      '(7, 5)': { piece: '', type: 'NORMAL' },
+      '(7, 6)': { piece: '', type: 'NORMAL' },
+      '(7, 7)': { piece: '', type: 'NORMAL' },
+      '(7, 8)': { piece: '', type: 'NORMAL' },
+      '(7, 9)': { piece: '', type: 'NORMAL' },
+      '(7, 10)': { piece: '', type: 'NORMAL' },
       '(7, 11)': { piece: '', type: 'NORMAL' },
       '(7, 12)': { piece: '', type: 'NORMAL' },
       '(7, 13)': { piece: '', type: 'NORMAL' },
@@ -407,13 +414,13 @@ describe('Board Component', () => {
       '(16, 17)': { piece: '', type: 'PADDING' },
       '(16, 18)': { piece: '', type: 'PADDING' },
       '(16, 19)': { piece: '', type: 'PADDING' },
-      '(16, 20)': { piece: '', type: 'PADDING' },    
-    }, 
-    valid_moves: rookValidMoves, 
-    turn: 'white' 
+      '(16, 20)': { piece: '', type: 'PADDING' },
+    },
+    valid_moves: rookValidMoves,
+    turn: 'white',
   };
 
-  const initialGameData = { 
+  const initialGameData = {
     board: {
       '(0, 0)': { piece: '', type: 'PADDING' },
       '(0, 1)': { piece: '', type: 'PADDING' },
@@ -771,12 +778,11 @@ describe('Board Component', () => {
       '(16, 17)': { piece: '', type: 'PADDING' },
       '(16, 18)': { piece: '', type: 'PADDING' },
       '(16, 19)': { piece: '', type: 'PADDING' },
-      '(16, 20)': { piece: '', type: 'PADDING' },    
+      '(16, 20)': { piece: '', type: 'PADDING' },
     }
   };
 
   it('displays all pieces in default starting state', () => {
-
     render(<Board initialGameData={initialGameData} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
 
     verifyPieceLocation('soldier-black', 0, 5);
@@ -785,7 +791,7 @@ describe('Board Component', () => {
     verifyPieceLocation('pawn-black', 1, 5);
     verifyPieceLocation('pawn-white', 1, 14);
     verifyPieceLocation('bishop-white', 1, 15);
-    
+
     verifyPieceLocation('elephant-black', 2, 4);
     verifyPieceLocation('pawn-black', 2, 6);
     verifyPieceLocation('pawn-white', 2, 14);
@@ -891,7 +897,6 @@ describe('Board Component', () => {
   });
 
   it('makes valid move with the rook piece', async () => {
-
     const updatedRookValidMoves = {
       '5,15': ['5,14', '5,13', '5,12', '5,11', '5,10', '5,9', '5,8', '5,7', '5,6', '5,5', '5,4', '5,3', '5,16', '5,17', '4,15', '3,14', '2,14', '1,13', '0,13', '6,16', '7,16', '8,17', '9,17', '10,18'],
       '5,2': ['5,3', '5,4', '5,5', '5,6', '5,7', '5,8', '5,9', '5,10', '5,11', '5,12', '5,13', '5,14', '5,15', '5,16', '4,3', '3,3', '2,4', '1,4', '0,5', '6,2', '7,1', '8,1']
@@ -1255,14 +1260,14 @@ describe('Board Component', () => {
         '(16, 17)': { piece: '', type: 'PADDING' },
         '(16, 18)': { piece: '', type: 'PADDING' },
         '(16, 19)': { piece: '', type: 'PADDING' },
-        '(16, 20)': { piece: '', type: 'PADDING' }, 
+        '(16, 20)': { piece: '', type: 'PADDING' },
       },
-      valid_moves: updatedRookValidMoves, 
-      turn: 'black'
+      valid_moves: updatedRookValidMoves,
+      turn: 'black',
     };
 
     mockSocket = createMockSocket();
-    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
+    render(<Board initialGameData={rookOnly} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
 
     const whiteRook = screen.queryByTestId('rook-white-5-17');
     fireEvent.click(whiteRook);
@@ -1283,14 +1288,14 @@ describe('Board Component', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           old_pos: '5,17',
-          new_pos: '5,15'
-        })
+          new_pos: '5,15',
+        }),
       });
     });
 
     mockSocket.emitEvent('game_data', updatedGameData);
 
-    await waitFor(() => { 
+    await waitFor(() => {
       const whiteRookNew = screen.queryByTestId('rook-white-5-15');
       expect(whiteRookNew).toBeInTheDocument();
     });
@@ -1298,11 +1303,11 @@ describe('Board Component', () => {
 
   it('cancel rook move', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
-      
+    render(<Board initialGameData={rookOnly} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
+
     const whiteRook = screen.queryByTestId('rook-white-5-17');
     fireEvent.click(whiteRook);
-    
+
     checkHighlightedTiles(rookValidMoves['5,17']);
 
     const emptyTile = screen.queryByTestId('highlighted-5-15');
@@ -1313,36 +1318,35 @@ describe('Board Component', () => {
     const cancelMoveButton = screen.getByRole('button', { name: /Cancel/i });
     fireEvent.click(cancelMoveButton);
 
-    await waitFor(() => { 
-      const whiteRook = screen.queryByTestId('rook-white-5-17');
+    await waitFor(() => {
       expect(whiteRook).toBeInTheDocument();
     });
   });
 
   it('ensure when its blacks turn a white piece cannot be clicked', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="black" />);
-      
+    render(<Board initialGameData={rookOnly} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="black" />);
+
     const whiteRook = screen.queryByTestId('rook-white-5-17');
     fireEvent.click(whiteRook);
-    
+
     checkNotHighlightedTiles(rookValidMoves['5,17']);
   });
 
   it('ensure when its whites turn a black piece cannot be clicked', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialGameData={rookOnly} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
-      
+    render(<Board initialGameData={rookOnly} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
+
     const whiteRook = screen.queryByTestId('rook-black-5-2');
     fireEvent.click(whiteRook);
-    
+
     checkNotHighlightedTiles(rookValidMoves['5,2']);
   });
 
   it('check that if player selected white board renders with white on lower half', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialGameData={initialGameData} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="white" />);
-      
+    render(<Board initialGameData={initialGameData} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
+
     const whiteJester = screen.queryByTestId('jester-white-8-19');
     expect(whiteJester).toBeInTheDocument();
     const boardElement = screen.queryByTestId('board');
@@ -1351,12 +1355,11 @@ describe('Board Component', () => {
 
   it('check that if player selected black board renders with black on lower half', async () => {
     mockSocket = createMockSocket();
-    render(<Board initialGameData={initialGameData} gameCode='4ZP6A' disabled={false} socket={mockSocket} initialColor="black" />);
-      
+    render(<Board initialGameData={initialGameData} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="black" />);
+
     const whiteJester = screen.queryByTestId('jester-white-8-19');
     expect(whiteJester).toBeInTheDocument();
     const boardElement = screen.queryByTestId('board');
     expect(boardElement).toHaveClass('rotate-180');
   });
-
 });
