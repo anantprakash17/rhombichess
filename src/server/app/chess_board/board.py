@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook, King, Bishop
+from app.chess_board.chess_pieces import Machine, Rook, King, Shield, Mammoth, Cat, Hawk, Prince, Dog, Bishop
 
 
 class ChessBoard:
@@ -194,14 +194,14 @@ class ChessBoard:
         self.board[15][15].piece = ChessPiece(PieceType.ELEPHANT, 1)
 
         # add cats
-        self.board[5][4].piece = ChessPiece(PieceType.CAT, 0)
-        self.board[5][15].piece = ChessPiece(PieceType.CAT, 1)
+        self.board[5][4].piece = Cat(0)
+        self.board[5][15].piece = Cat(1)
 
-        self.board[8][3].piece = ChessPiece(PieceType.CAT, 0)
-        self.board[8][17].piece = ChessPiece(PieceType.CAT, 1)
+        self.board[8][3].piece = Cat(0)
+        self.board[8][17].piece = Cat(1)
 
-        self.board[11][4].piece = ChessPiece(PieceType.CAT, 0)
-        self.board[11][15].piece = ChessPiece(PieceType.CAT, 1)
+        self.board[11][4].piece = Cat(0)
+        self.board[11][15].piece = Cat(1)
 
         # add jesters
         self.board[7][2].piece = ChessPiece(PieceType.JESTER, 0)
@@ -224,14 +224,14 @@ class ChessBoard:
         self.board[3][16].piece = Bishop(1)
 
         # add shields
-        self.board[5][3].piece = ChessPiece(PieceType.SHIELD, 0)
-        self.board[5][16].piece = ChessPiece(PieceType.SHIELD, 1)
+        self.board[5][3].piece = Shield(0)
+        self.board[5][16].piece = Shield(1)
 
-        self.board[10][4].piece = ChessPiece(PieceType.SHIELD, 0)
-        self.board[10][16].piece = ChessPiece(PieceType.SHIELD, 1)
+        self.board[10][4].piece = Shield(0)
+        self.board[10][16].piece = Shield(1)
 
-        self.board[13][4].piece = ChessPiece(PieceType.SHIELD, 0)
-        self.board[13][15].piece = ChessPiece(PieceType.SHIELD, 1)
+        self.board[13][4].piece = Shield(0)
+        self.board[13][15].piece = Shield(1)
 
         # add knights
         self.board[7][4].piece = ChessPiece(PieceType.KNIGHT, 0)
@@ -255,29 +255,29 @@ class ChessBoard:
         self.board[9][16].piece = Machine(1)
 
         # add dogs
-        self.board[3][4].piece = ChessPiece(PieceType.DOG, 0)
-        self.board[3][15].piece = ChessPiece(PieceType.DOG, 1)
+        self.board[3][4].piece = Dog(0)
+        self.board[3][15].piece = Dog(1)
 
-        self.board[11][3].piece = ChessPiece(PieceType.DOG, 0)
-        self.board[11][16].piece = ChessPiece(PieceType.DOG, 1)
+        self.board[11][3].piece = Dog(0)
+        self.board[11][16].piece = Dog(1)
 
-        self.board[6][4].piece = ChessPiece(PieceType.DOG, 0)
-        self.board[6][16].piece = ChessPiece(PieceType.DOG, 1)
+        self.board[6][4].piece = Dog(0)
+        self.board[6][16].piece = Dog(1)
 
         # add princes
-        self.board[4][3].piece = ChessPiece(PieceType.PRINCE, 0)
-        self.board[4][17].piece = ChessPiece(PieceType.PRINCE, 1)
+        self.board[4][3].piece = Prince(0)
+        self.board[4][17].piece = Prince(1)
 
-        self.board[12][3].piece = ChessPiece(PieceType.PRINCE, 0)
-        self.board[12][17].piece = ChessPiece(PieceType.PRINCE, 1)
+        self.board[12][3].piece = Prince(0)
+        self.board[12][17].piece = Prince(1)
 
         # add mammoth
-        self.board[10][2].piece = ChessPiece(PieceType.MAMMOTH, 0)
-        self.board[10][18].piece = ChessPiece(PieceType.MAMMOTH, 1)
+        self.board[10][2].piece = Mammoth(0)
+        self.board[10][18].piece = Mammoth(1)
 
         # add hawk
-        self.board[6][2].piece = ChessPiece(PieceType.HAWK, 0)
-        self.board[6][18].piece = ChessPiece(PieceType.HAWK, 1)
+        self.board[6][2].piece = Hawk(0)
+        self.board[6][18].piece = Hawk(1)
 
         # add queen
         self.board[9][1].piece = ChessPiece(PieceType.QUEEN, 0)
