@@ -11,6 +11,8 @@ export default function GameStatsTab({ gameData, socket }) {
   const [timeLeftP2, setTimeLeftP2] = useState(gameData?.player_2?.timer_duration);
   const [timerRunningP1, setTimerRunningP1] = useState(gameData?.player_1?.timer_running);
   const [timerRunningP2, setTimerRunningP2] = useState(gameData?.player_2?.timer_running);
+  console.log("CAPTURED: ", gameData?.captured_pieces);
+  console.log("TURN: ", gameData?.turn);
 
   const peicesP1 = ['bishop-black', 'bishop-black', 'cat-black', 'cat-black', 'cat-black', 'dog-black', 'dog-black', 'dog-black', 'elephant-black', 'elephant-black', 'elephant-black', 'hawk-black', 'jester-black', 'king-black', 'knight-black', 'knight-black', 'machine-black', 'machine-black', 'mammoth-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'pawn-black', 'prince-black', 'prince-black', 'queen-black', 'rook-black','rook-black', 'shield-black', 'shield-black', 'shield-black', 'soldier-black', 'soldier-black', 'soldier-black', 'soldier-black', 'soldier-black'];
   const peicesP2 = ['bishop-white', 'bishop-white', 'cat-white', 'cat-white', 'cat-white', 'dog-white', 'dog-white', 'dog-white', 'elephant-white', 'elephant-white', 'elephant-white', 'hawk-white', 'jester-white', 'king-white', 'knight-white', 'knight-white', 'machine-white', 'machine-white', 'mammoth-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'pawn-white', 'prince-white', 'prince-white', 'queen-white', 'rook-white','rook-white', 'shield-white', 'shield-white', 'shield-white', 'soldier-white', 'soldier-white', 'soldier-white', 'soldier-white', 'soldier-white'];
@@ -82,7 +84,7 @@ export default function GameStatsTab({ gameData, socket }) {
       </div>
       <div className="flex flex-col w-full text-2xl font-bold mt-6">
         <div className="flex flex-1 items-center justify-between">
-          <div className="flex flex-col items-center justify-center">
+          <div className={`flex flex-col items-center justify-center py-10 rounded-lg ${gameData?.turn === gameData?.player_1?.color ? 'bg-green-300' : ''}`}>
             <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -98,7 +100,7 @@ export default function GameStatsTab({ gameData, socket }) {
         </div>
 
         <div className="flex flex-1 items-center justify-between">
-          <div className="flex flex-col items-center justify-center">
+          <div className={`flex flex-col items-center justify-center py-10 rounded-lg ${gameData?.turn === gameData?.player_2?.color ? 'bg-green-300' : ''}`}>
             <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
