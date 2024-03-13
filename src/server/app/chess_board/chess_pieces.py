@@ -397,11 +397,11 @@ class Elephant(ChessPiece):
                 (x + 2, y + 3),
             ]
         for move in potential_moves:
-            move_x, move_y = move
-            if move_x < 0 or move_x > len(board) - 1 or move_y < 0 or move_y > len(board[move_x]) - 1:
-                break
-            tile = board[move[0]][move[1]]
-            if not tile.is_empty() or tile.type == TileType.PADDING:
+            try:
+                tile = board[move[0]][move[1]]
+            except IndexError:
+                continue
+            if not tile.is_empty():
                 continue
             valid_moves.append(move)
         return valid_moves
