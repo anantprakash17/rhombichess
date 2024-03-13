@@ -18,23 +18,45 @@ def generate_valid_moves(game_id):
     for key, value in games[game_id]["board"].valid_moves.items():
         if value:
             key_str = f"{key[0]},{key[1]}"
-            valid_moves[key_str] = [
-                f"{move[0]},{move[1]}" for move in value
-            ]
+            valid_moves[key_str] = [f"{move[0]},{move[1]}" for move in value]
     return valid_moves
 
 
-def create_game(game_id, password, user, color, timer_duration, local = False):
+def create_game(game_id, password, user, color, timer_duration, local=False):
     opposite_color = "white" if color == "black" else "black"
 
-    player1 = {"id": user["id"], "name": user['name'], "color": color, "timer_duration": timer_duration, "timer_running": False}
-    player2 = {"id": None, "name": None, "color": opposite_color, "timer_duration": timer_duration, "timer_running": False}
-    
+    player1 = {
+        "id": user["id"],
+        "name": user["name"],
+        "color": color,
+        "timer_duration": timer_duration,
+        "timer_running": False,
+    }
+    player2 = {
+        "id": None,
+        "name": None,
+        "color": opposite_color,
+        "timer_duration": timer_duration,
+        "timer_running": False,
+    }
+
     timed_game = timer_duration != 0
 
     if local:
-        player1 = {"id": user["id"], "name": "Player #1", "color": color, "timer_duration": timer_duration, "timer_running": color == 'white'}
-        player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color, "timer_duration": timer_duration, "timer_running": opposite_color == 'white'}
+        player1 = {
+            "id": user["id"],
+            "name": "Player #1",
+            "color": color,
+            "timer_duration": timer_duration,
+            "timer_running": color == "white",
+        }
+        player2 = {
+            "id": user["id"],
+            "name": "Player #2",
+            "color": opposite_color,
+            "timer_duration": timer_duration,
+            "timer_running": opposite_color == "white",
+        }
 
     games[game_id] = {
         "password": password,
@@ -44,17 +66,19 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
         "winner": None,
         "timed_game": timed_game,
         "local": local,
-        "turn": 'white',
+        "turn": "white",
     }
     messages[game_id] = []
 
-    if (timed_game):
+    if timed_game:
         start_timer(game_id, "player_1")
         start_timer(game_id, "player_2")
 
+
 @app.route("/api/initial_board", methods=["GET"])
 def initial_board():
-    return jsonify({ "board": ChessBoard().get_piece_locations() })
+    return jsonify({"board": ChessBoard().get_piece_locations()})
+
 
 @app.route("/api/new_game", methods=["POST"])
 def new_game():
@@ -114,8 +138,8 @@ def join_game(game_id):
         games[game_id]["player_2"]["name"] = user_name
 
         # Start the timer once both players are in the game
-        games[game_id]["player_1"]["timer_running"] = games[game_id]["player_1"]['color'] == 'white'
-        games[game_id]["player_2"]["timer_running"] = games[game_id]["player_2"]['color'] == 'white'
+        games[game_id]["player_1"]["timer_running"] = games[game_id]["player_1"]["color"] == "white"
+        games[game_id]["player_2"]["timer_running"] = games[game_id]["player_2"]["color"] == "white"
         emit_timer_update(game_id)
         emit_game_data_update(game_id)
 
@@ -136,9 +160,10 @@ def game(game_id):
                 "password": game_password,
                 "board": games[game_id]["board"].get_piece_locations(),
                 "valid_moves": valid_moves,
+                "captured_pieces": games[game_id]["board"].captured_pieces,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
-                'winner': games[game_id]["winner"],
+                "winner": games[game_id]["winner"],
                 "timed_game": games[game_id]["timed_game"],
                 "local": games[game_id]["local"],
                 "turn": games[game_id]["turn"],
@@ -149,13 +174,13 @@ def game(game_id):
 
         if "old_pos" not in data or "new_pos" not in data:
             return jsonify({"error_message": "Invalid request"}), 405
-        
+
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
 
         # Change turns
-        games[game_id]["turn"] = 'white' if games[game_id]["turn"] == 'black' else 'black'
+        games[game_id]["turn"] = "white" if games[game_id]["turn"] == "black" else "black"
 
         # Start & stop timers
         games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
@@ -165,20 +190,27 @@ def game(game_id):
         emit_timer_update(game_id)
         emit_game_data_update(game_id)
 
-        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves, "turn": games[game_id]["turn"]})
+        return jsonify(
+            {
+                "board": games[game_id]["board"].get_piece_locations(),
+                "valid_moves": valid_moves,
+                "captured_pieces": games[game_id]["board"].captured_pieces,
+                "turn": games[game_id]["turn"],
+            }
+        )
     else:
         return jsonify({"error_message": "Invalid method"}), 405
-    
+
 
 @socketio.on("timer_update")
 def timer(game_id, player_key):
-    if games[game_id]['timed_game']:
-        while games[game_id]['player_1']["timer_duration"] > 0 and games[game_id]['player_2']["timer_duration"] > 0:
+    if games[game_id]["timed_game"]:
+        while games[game_id]["player_1"]["timer_duration"] > 0 and games[game_id]["player_2"]["timer_duration"] > 0:
             if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
                 time.sleep(1)
                 games[game_id][player_key]["timer_duration"] -= 1
 
-    winner = 'player_2' if games[game_id]['player_1']["timer_duration"] <= 0 else 'player_1'
+    winner = "player_2" if games[game_id]["player_1"]["timer_duration"] <= 0 else "player_1"
     games[game_id]["winner"] = winner
 
     emit_game_data_update(game_id)
@@ -222,14 +254,14 @@ def handle_send_message(data):
 
 def emit_timer_update(game_id):
     response_data = {
-        'game_id': game_id,
-        'winner': games[game_id]["winner"],
-        'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
-        'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
-        'timer_running_p1': games[game_id]["player_1"]["timer_running"],
-        'timer_running_p2': games[game_id]["player_2"]["timer_running"]
+        "game_id": game_id,
+        "winner": games[game_id]["winner"],
+        "timer_duration_p1": games[game_id]["player_1"]["timer_duration"],
+        "timer_duration_p2": games[game_id]["player_2"]["timer_duration"],
+        "timer_running_p1": games[game_id]["player_1"]["timer_running"],
+        "timer_running_p2": games[game_id]["player_2"]["timer_running"],
     }
-    socketio.emit('timer_update', response_data, to=game_id)
+    socketio.emit("timer_update", response_data, to=game_id)
 
 
 def emit_game_data_update(game_id):
@@ -240,9 +272,9 @@ def emit_game_data_update(game_id):
         "valid_moves": generate_valid_moves(game_id),
         "player_1": games[game_id]["player_1"],
         "player_2": games[game_id]["player_2"],
-        'winner': games[game_id]["winner"],
+        "winner": games[game_id]["winner"],
         "timed_game": games[game_id]["timed_game"],
         "local": games[game_id]["local"],
         "turn": games[game_id]["turn"],
     }
-    socketio.emit('game_data', response_data, to=game_id)
+    socketio.emit("game_data", response_data, to=game_id)
