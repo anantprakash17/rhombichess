@@ -11,6 +11,7 @@ export default function GameStatsTab({ gameData, socket }) {
   const [timeLeftP2, setTimeLeftP2] = useState(gameData?.player_2?.timer_duration);
   const [timerRunningP1, setTimerRunningP1] = useState(gameData?.player_1?.timer_running);
   const [timerRunningP2, setTimerRunningP2] = useState(gameData?.player_2?.timer_running);
+  const [turn, setTurn] = useState(gameData?.turn);
   console.log("CAPTURED: ", gameData?.captured_pieces);
   console.log("TURN: ", gameData?.turn);
 
@@ -25,6 +26,9 @@ export default function GameStatsTab({ gameData, socket }) {
       setTimeLeftP2(data.timer_duration_p2);
       setTimerRunningP1(data.timer_running_p1);
       setTimerRunningP2(data.timer_running_p2);
+      setTurn(data?.turn);
+      console.log("TURN2: ", data?.turn);
+      console.log("DATA: ", data);
     };
 
     socket.on('timer_update', handleTimerUpdate);
@@ -84,7 +88,7 @@ export default function GameStatsTab({ gameData, socket }) {
       </div>
       <div className="flex flex-col w-full text-2xl font-bold mt-6">
         <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center py-10 rounded-lg ${gameData?.turn === gameData?.player_1?.color ? 'bg-green-300' : ''}`}>
+          <div key={`${turn}`} className={`flex flex-col items-center justify-center py-10 rounded-lg ${turn === gameData?.player_1?.color ? 'bg-green-300' : ''}`}>
             <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -100,7 +104,7 @@ export default function GameStatsTab({ gameData, socket }) {
         </div>
 
         <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center py-10 rounded-lg ${gameData?.turn === gameData?.player_2?.color ? 'bg-green-300' : ''}`}>
+          <div key={`${turn}`} className={`flex flex-col items-center justify-center py-10 rounded-lg ${turn === gameData?.player_2?.color ? 'bg-green-300' : ''}`}>
             <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer

@@ -260,6 +260,7 @@ def emit_timer_update(game_id):
         "timer_duration_p2": games[game_id]["player_2"]["timer_duration"],
         "timer_running_p1": games[game_id]["player_1"]["timer_running"],
         "timer_running_p2": games[game_id]["player_2"]["timer_running"],
+        "turn": games[game_id]["turn"],
     }
     socketio.emit("timer_update", response_data, to=game_id)
 
