@@ -942,3 +942,76 @@ class Elephant(ChessPiece): # Author: Anant
                 continue
             valid_moves.append(move)
         return valid_moves
+
+
+class Knight(ChessPiece): # Author: Phil
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a Knight piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.KNIGHT, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the knight piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves (and may leap) 2 rhombuses like a Rook followed by 1 rhombus outwards
+        (at a 1/3 turn, i.e. 120°), or 1 rhombus followed by 2 likewise. A Knight’s move
+        always changes the colour of its rhombus. Both Knights may escape the initial
+        setup on their first move. See ex. R-Mach-N-K.       
+        """
+
+        valid_moves = []
+        x, y = position
+        tile = board[x][y]
+        if tile.orientation == 0:
+            potential_moves = [
+                (x + 1, y - 3),
+                (x - 1, y - 3),
+                (x + 3, y),
+                (x + 3, y - 1),
+                (x - 3, y - 1),
+                (x - 3, y),
+                (x + 1, y + 2),
+                (x - 1, y + 2)
+            ]
+        elif tile.orientation == 1:
+            potential_moves = [
+                (x + 2, y - 2),
+                (x + 1, y - 2),
+                (x - 2, y - 2),
+                (x - 3, y),
+                (x + 3, y + 1),
+                (x + 2, y + 2),
+                (x - 1, y + 3),
+                (x - 2, y + 2)
+			]
+        else:
+            potential_moves = [
+                (x + 2, y - 2),
+                (x - 1, y - 2),
+                (x - 2, y - 2),
+                (x + 3, y),
+                (x + 2, y + 2),
+                (x + 1, y + 3),
+                (x - 2, y + 2),
+                (x - 3, y + 1)
+            ]
+        for move in potential_moves:
+            if move[1] < 0 or move[0] > len(board) - 1:
+                continue
+            tile = board[move[0]][move[1]]
+            #if not tile.is_empty() or tile.type == TileType.PADDING: here just to make it ezpz to revert if needed
+                #continue
+            if tile.type == TileType.PADDING or (not tile.is_empty() and tile.piece.color == self.color):
+                continue
+            valid_moves.append(move)
+        return valid_moves
