@@ -11,7 +11,7 @@ export default async function Home() {
       'Content-Type': 'application/json',
     },
   });
-  const { board } = await response.json();
+  const data = await response.json();
 
   return (
     <main className="relative flex justify-center items-center h-screen">
@@ -19,7 +19,7 @@ export default async function Home() {
         <LandingHero />
       </div>
       <div className="w-1/2 scale-[.85] flex justify-center items-center content-center">
-        <Board initialBoard={board} disabled />
+        <Board initialGameData={data} disabled />
       </div>
     </main>
   );

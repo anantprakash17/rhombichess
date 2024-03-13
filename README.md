@@ -54,6 +54,13 @@ This will start the frontend on port 3000. To view the frontend, navigate to `lo
 
 
 ## Testing
+
+### Frontend
+To run the tests for the frontend, run the following command:
+```bash
+npm test
+```
+
 ### Backend
 To run the tests for the backend, run the following command:
 ```bash

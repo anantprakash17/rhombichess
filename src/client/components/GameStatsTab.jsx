@@ -59,14 +59,14 @@ export default function GameStatsTab({ gameData, socket }) {
             </svg>
           )}
         </button>
-        {gameData?.game_password && (
+        {gameData?.password && (
           <button
-            onClick={() => copyToClipboard('PASSWORD', gameData?.game_password)}
+            onClick={() => copyToClipboard('PASSWORD', gameData?.password)}
             className="flex items-center bg-gray-300 px-2 py-1 rounded"
             type="button"
           >
             <span>
-              {`Game Password: ${gameData?.game_password}`}
+              {`Game Password: ${gameData?.password}`}
             </span>
             {copiedField === 'PASSWORD' ? (
               <svg className="w-6 h-6 text-gray-700 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -30,6 +30,8 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
     player1 = {"id": user["id"], "name": user['name'], "color": color, "timer_duration": timer_duration, "timer_running": False}
     player2 = {"id": None, "name": None, "color": opposite_color, "timer_duration": timer_duration, "timer_running": False}
     
+    timed_game = timer_duration != 0
+
     if local:
         player1 = {"id": user["id"], "name": "Player #1", "color": color, "timer_duration": timer_duration, "timer_running": color == 'white'}
         player2 = {"id": user["id"], "name": "Player #2", "color": opposite_color, "timer_duration": timer_duration, "timer_running": opposite_color == 'white'}
@@ -39,11 +41,16 @@ def create_game(game_id, password, user, color, timer_duration, local = False):
         "board": ChessBoard(),
         "player_1": player1,
         "player_2": player2,
+        "winner": None,
+        "timed_game": timed_game,
+        "local": local,
+        "turn": 'white',
     }
     messages[game_id] = []
 
-    start_timer(game_id, "player_1")
-    start_timer(game_id, "player_2")
+    if (timed_game):
+        start_timer(game_id, "player_1")
+        start_timer(game_id, "player_2")
 
 @app.route("/api/initial_board", methods=["GET"])
 def initial_board():
@@ -106,16 +113,11 @@ def join_game(game_id):
         games[game_id]["player_2"]["id"] = user_id
         games[game_id]["player_2"]["name"] = user_name
 
+        # Start the timer once both players are in the game
         games[game_id]["player_1"]["timer_running"] = games[game_id]["player_1"]['color'] == 'white'
         games[game_id]["player_2"]["timer_running"] = games[game_id]["player_2"]['color'] == 'white'
-        response_data = {
-            'game_id': game_id,
-            'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
-            'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
-            'timer_running_p1': games[game_id]["player_1"]["timer_running"],
-            'timer_running_p2': games[game_id]["player_2"]["timer_running"]
-        }
-        socketio.emit('timer_update', response_data,  to=data.get("room"))
+        emit_timer_update(game_id)
+        emit_game_data_update(game_id)
 
     return jsonify({"game_id": game_id, "status": 200})
 
@@ -136,36 +138,50 @@ def game(game_id):
                 "valid_moves": valid_moves,
                 "player_1": games[game_id]["player_1"],
                 "player_2": games[game_id]["player_2"],
+                'winner': games[game_id]["winner"],
+                "timed_game": games[game_id]["timed_game"],
+                "local": games[game_id]["local"],
+                "turn": games[game_id]["turn"],
             }
         )
     elif request.method == "POST":
         data = request.get_json()
+
         if "old_pos" not in data or "new_pos" not in data:
             return jsonify({"error_message": "Invalid request"}), 405
+        
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
         games[game_id]["board"].move_piece(old_pos, new_pos)
+
+        # Change turns
+        games[game_id]["turn"] = 'white' if games[game_id]["turn"] == 'black' else 'black'
+
+        # Start & stop timers
         games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
         games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
-        response_data = {
-            'game_id': game_id,
-            'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
-            'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
-            'timer_running_p1': games[game_id]["player_1"]["timer_running"],
-            'timer_running_p2': games[game_id]["player_2"]["timer_running"]
-        }
-        socketio.emit('timer_update', response_data,  to=data.get("room"))
-        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves})
+
+        # Emit updates
+        emit_timer_update(game_id)
+        emit_game_data_update(game_id)
+
+        return jsonify({"board": games[game_id]["board"].get_piece_locations(), "valid_moves": valid_moves, "turn": games[game_id]["turn"]})
     else:
         return jsonify({"error_message": "Invalid method"}), 405
     
 
 @socketio.on("timer_update")
 def timer(game_id, player_key):
-    while games[game_id]['player_1']["timer_duration"] > 0 and games[game_id]['player_2']["timer_duration"] > 0:
-        if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
-            time.sleep(1)
-            games[game_id][player_key]["timer_duration"] -= 1
+    if games[game_id]['timed_game']:
+        while games[game_id]['player_1']["timer_duration"] > 0 and games[game_id]['player_2']["timer_duration"] > 0:
+            if games[game_id][player_key]["timer_running"] and games[game_id][player_key]["timer_duration"] > 0:
+                time.sleep(1)
+                games[game_id][player_key]["timer_duration"] -= 1
+
+    winner = 'player_2' if games[game_id]['player_1']["timer_duration"] <= 0 else 'player_1'
+    games[game_id]["winner"] = winner
+
+    emit_game_data_update(game_id)
 
 
 def start_timer(game_id, player_key):
@@ -204,14 +220,29 @@ def handle_send_message(data):
     socketio.emit("receive_message", messages[room], to=room)
 
 
-@socketio.on("send_move")
-def handle_send_move(data):
-    room = data.get("room")
-    
+def emit_timer_update(game_id):
     response_data = {
-        "board": games[room]["board"].get_piece_locations(),
-        "valid_moves": generate_valid_moves(room),
+        'game_id': game_id,
+        'winner': games[game_id]["winner"],
+        'timer_duration_p1': games[game_id]["player_1"]["timer_duration"],
+        'timer_duration_p2': games[game_id]["player_2"]["timer_duration"],
+        'timer_running_p1': games[game_id]["player_1"]["timer_running"],
+        'timer_running_p2': games[game_id]["player_2"]["timer_running"]
     }
-    
-    socketio.emit("receive_move", response_data, to=room)
+    socketio.emit('timer_update', response_data, to=game_id)
 
+
+def emit_game_data_update(game_id):
+    response_data = {
+        "game_id": game_id,
+        "password": games[game_id]["password"],
+        "board": games[game_id]["board"].get_piece_locations(),
+        "valid_moves": generate_valid_moves(game_id),
+        "player_1": games[game_id]["player_1"],
+        "player_2": games[game_id]["player_2"],
+        'winner': games[game_id]["winner"],
+        "timed_game": games[game_id]["timed_game"],
+        "local": games[game_id]["local"],
+        "turn": games[game_id]["turn"],
+    }
+    socketio.emit('game_data', response_data, to=game_id)

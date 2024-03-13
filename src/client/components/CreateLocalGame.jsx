@@ -92,7 +92,7 @@ export default function CreateLocalGame() {
         </div>
         <div>
           <label htmlFor="timer" className="mb-2 block font-medium">
-            Timer Duration
+            Timer Duration (optional)
           </label>
           <div className="flex gap-2">
             <input
