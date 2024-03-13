@@ -90,7 +90,7 @@ export default function GameStatsTab({ gameData, socket }) {
               timerRunning={timerRunningP1}
             />
           </div>
-          <div className="flex flex-1 justify-center h-[200px]">
+          <div className="flex flex-1 justify-center h-[180px]">
             <CapturedPieces capturedPieces={peicesP2} />
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function GameStatsTab({ gameData, socket }) {
               timerRunning={timerRunningP2}
             />
           </div>
-          <div className="flex flex-1 justify-center h-[200px]">
+          <div className="flex flex-1 justify-center h-[180px]">
             <CapturedPieces capturedPieces={peicesP1} />
           </div>
         </div>
