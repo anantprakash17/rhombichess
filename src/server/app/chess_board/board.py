@@ -12,7 +12,7 @@ class ChessBoard:
         self.create_board()
         self.add_default_pieces()
         self.valid_moves = {}
-        self.update_valid_moves
+        self.update_valid_moves()
         self.captured_pieces = {"black": [], "white": []}
 
     def create_board(self) -> None:
