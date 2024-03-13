@@ -84,11 +84,13 @@ export default function GameStatsTab({ gameData, socket }) {
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-col items-center justify-center">
             <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
-            <Timer
-              key={`${timeLeftP1}, ${timerRunningP1}`}
-              timerDuration={timeLeftP1}
-              timerRunning={timerRunningP1}
-            />
+            {gameData.timed_game ? (
+              <Timer
+                key={`${timeLeftP1}, ${timerRunningP1}`}
+                timerDuration={timeLeftP1}
+                timerRunning={timerRunningP1}
+              />
+            ) : null }
           </div>
           <div className="flex flex-1 justify-center h-[180px]">
             <CapturedPieces capturedPieces={peicesP2} />
@@ -98,18 +100,19 @@ export default function GameStatsTab({ gameData, socket }) {
         <div className="flex flex-1 items-center justify-between">
           <div className="flex flex-col items-center justify-center">
             <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
-            <Timer
-              key={`${timeLeftP2}, ${timerRunningP2}`}
-              timerDuration={timeLeftP2}
-              timerRunning={timerRunningP2}
-            />
+            {gameData.timed_game ? (
+              <Timer
+                key={`${timeLeftP2}, ${timerRunningP2}`}
+                timerDuration={timeLeftP2}
+                timerRunning={timerRunningP2}
+              />
+            ) : null }
           </div>
           <div className="flex flex-1 justify-center h-[180px]">
             <CapturedPieces capturedPieces={peicesP1} />
           </div>
         </div>
       </div>
-
     </section>
   );
 }
