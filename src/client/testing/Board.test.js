@@ -28,6 +28,8 @@ const createMockSocket = () => {
 };
 
 describe('Board Component', () => {
+  let mockSocket;
+
   function verifyPieceLocation(piece, columnIndex, cellIndex) {
     const testId = `${piece}-${columnIndex}-${cellIndex}`;
     const pieceOnTile = screen.queryByTestId(testId);
@@ -49,8 +51,6 @@ describe('Board Component', () => {
       expect(possibleMoveTile).toBeInTheDocument();
     });
   }
-
-  let mockSocket;
 
   it('displays all pieces in default starting state', () => {
     render(<Board initialGameData={initialGameData} gameCode="4ZP6A" disabled={false} socket={mockSocket} initialColor="white" />);
