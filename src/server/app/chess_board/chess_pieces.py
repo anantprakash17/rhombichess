@@ -147,3 +147,152 @@ class Machine(ChessPiece):
                 continue
             valid_moves.append(move)
         return valid_moves
+
+#I jest
+class Jester(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a jester piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.JESTER, color)
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the jester piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: Moves in 1 of 4 directions, 1 or more steps in a straight line across a vertex of its rhombus. It does not leap
+        """
+        valid_moves = []
+        x, y = position
+        valid_moves.extend(self.left(x, y, board))
+        valid_moves.extend(self.right(x, y, board))
+        valid_moves.extend(self.up(x, y, board))
+        valid_moves.extend(self.down(x, y, board))
+        return valid_moves
+
+    def left(self, x: int, y: int, board: list[list[ChessTile]]):
+        current_tile = board[x][y]
+        valid_moves = []
+        
+        if current_tile.orientation == 0:
+            for i in range(x+4, 17, 4):
+                current_tile = board[i][y]
+                if current_tile.type == TileType.PADDING:
+                    break
+                if not current_tile.is_empty():
+                    if current_tile.piece.color != self.color :
+                        valid_moves.append((i, y))
+                    break
+                valid_moves.append((i, y))
+        elif current_tile.orientation == 1:
+            a, b = x + 2, y - 3
+            while a < len(board) and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a, b))
+                a += 2
+                b -= 3
+            if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color: 
+                valid_moves.append((a, b))
+        else:
+            a, b = x + 2, y + 3
+            while a < len(board) and b < (len(board[a]) - 1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a,b))
+                a += 2
+                b += 3
+            if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+                valid_moves.append((a,b))
+            
+        return valid_moves
+
+    def right(self, x: int, y: int, board: list[list[ChessTile]]):
+        current_tile = board[x][y]
+        valid_moves = []
+        if current_tile.orientation == 0:
+            for i in range(x-4, -1, -4):
+                current_tile = board[i][y]
+                if current_tile.type == TileType.PADDING:
+                    break
+                if not current_tile.is_empty():
+                    if current_tile.piece.color != self.color :
+                        valid_moves.append((i, y))
+                    break
+                valid_moves.append((i, y))
+        elif current_tile.orientation == 1:
+            a, b = x - 2, y + 3
+            while a > 0 and b < (len(board[a])-1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a, b))
+                a -= 2
+                b += 3
+            if a > 0 and b < (len(board[a])-1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color: 
+                valid_moves.append((a, b))
+        else:
+            a, b = x - 2, y - 3
+            while a > 0 and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a,b))
+                a -= 2
+                b -= 3
+            if a > 0 and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+                valid_moves.append((a,b))
+        return valid_moves
+	
+    def up(self, x: int, y: int, board: list[list[ChessTile]]):
+        current_tile = board[x][y]
+        valid_moves = []
+        if current_tile.orientation == 0:
+            b = y-1
+            while board[x][b].is_empty() and (not (board[x][b].type == TileType.PADDING)):
+                valid_moves.append((x,b))
+                b -= 1
+            if b > 0 and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
+                valid_moves.append((x,b))
+        elif current_tile.orientation == 1:
+            a, b = x - 2, y - 1
+            while a > 0 and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a,b))
+                a -= 2
+                b -= 1
+            if a > 0 and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+                valid_moves.append((a,b))
+        else:
+            a, b = x + 2, y - 1
+            while a < len(board) and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a,b))
+                a += 2
+                b -= 1
+            if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+                valid_moves.append((a,b))
+        return valid_moves
+
+    def down(self, x: int, y: int, board: list[list[ChessTile]]):
+        current_tile = board[x][y]
+        valid_moves = []
+        if current_tile.orientation == 0:
+            b = y+1
+            while board[x][b].is_empty() and (not (board[x][b].type == TileType.PADDING)):
+                valid_moves.append((x,b))
+                b += 1
+            if b < (len(board[x]) - 1) and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
+                valid_moves.append((x,b))
+        elif current_tile.orientation == 1:
+            a, b = x + 2, y + 1
+            while a < len(board) and b < (len(board[a]) - 1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a,b))
+                a += 2
+                b += 1
+            if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+                valid_moves.append((a,b))
+        else:
+            a, b = x - 2, y + 1
+            while a > 0 and (len(board[a]) - 1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+                valid_moves.append((a,b))
+                a -= 2
+                b += 1
+            if a > 0 and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+                valid_moves.append((a,b))
+        return valid_moves
