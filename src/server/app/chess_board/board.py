@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook, King, Shield, Mammoth
+from app.chess_board.chess_pieces import Machine, Rook, King, Shield, Mammoth, Cat
 
 
 class ChessBoard:
@@ -194,14 +194,14 @@ class ChessBoard:
         self.board[15][15].piece = ChessPiece(PieceType.ELEPHANT, 1)
 
         # add cats
-        self.board[5][4].piece = ChessPiece(PieceType.CAT, 0)
-        self.board[5][15].piece = ChessPiece(PieceType.CAT, 1)
+        self.board[5][4].piece = Cat(0)
+        self.board[5][15].piece = Cat(1)
 
-        self.board[8][3].piece = ChessPiece(PieceType.CAT, 0)
-        self.board[8][17].piece = ChessPiece(PieceType.CAT, 1)
+        self.board[8][3].piece = Cat(0)
+        self.board[8][17].piece = Cat(1)
 
-        self.board[11][4].piece = ChessPiece(PieceType.CAT, 0)
-        self.board[11][15].piece = ChessPiece(PieceType.CAT, 1)
+        self.board[11][4].piece = Cat(0)
+        self.board[11][15].piece = Cat(1)
 
         # add jesters
         self.board[7][2].piece = ChessPiece(PieceType.JESTER, 0)
