@@ -12,8 +12,8 @@ class ChessBoard:
         self.create_board()
         self.add_default_pieces()
         self.valid_moves = {}
-        self.update_valid_moves(0)
-        self.update_valid_moves(1)
+        self.update_valid_moves()
+        self.captured_pieces = {"black": [], "white": []}
 
     def create_board(self) -> None:
         """
@@ -300,15 +300,20 @@ class ChessBoard:
         # if piece_moves is None or end not in piece_moves:
         #     return False
 
-        self.board[end[0]][end[1]].piece = self.board[start[0]][start[1]].piece
-        self.board[start[0]][start[1]].piece = None
+        # Check for capture
+        end_tile = self.board[end[0]][end[1]]
+        start_tile = self.board[start[0]][start[1]]
 
-        color = self.board[end[0]][end[1]].piece.color
+        if not end_tile.is_empty():
+            self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece)
 
-        self.update_valid_moves(color)
+        end_tile.piece = start_tile.piece
+        start_tile.piece = None
+
+        self.update_valid_moves()
         return True
 
-    def update_valid_moves(self, color: int):
+    def update_valid_moves(self) -> None:
         """
         Update the valid moves for each piece on the board.
         """
