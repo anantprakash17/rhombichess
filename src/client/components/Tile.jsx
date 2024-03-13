@@ -1,10 +1,10 @@
 import React from 'react';
 
 function Tile({
-  children, orientation, colour, onClick, disabled = false, highlight = false,
+  children, testid, orientation, colour, onClick, disabled = false, highlight = false,
 }) {
   let tile;
-
+  
   const colours = ['#FDE047', '#67E8F9', '#F472B6'];
 
   let tileStyle = 'group-hover:fill-gray-700 pointer-events-auto';
@@ -40,7 +40,7 @@ function Tile({
         {children}
         <div hidden={!highlight} className="w-[25px] h-[25px] shadow-lg border-gray-700 border-4 rounded-full bg-white absolute" />
       </div>
-      <div>
+      <div data-testid={highlight ? `highlighted-${testid}` : `${testid}`}>
         {tile}
       </div>
     </button>
