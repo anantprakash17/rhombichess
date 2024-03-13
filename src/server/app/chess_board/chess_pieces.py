@@ -500,38 +500,3 @@ class Cat(ChessPiece):
         return valid_moves
 
 
-class Queen(ChessPiece):
-
-    def __init__(self, color: int) -> None:
-        """
-        Initializes a cat piece
-        Args:
-            color (int): color of the piece
-        """
-        super().__init__(PieceType.QUEEN, color)
-
-    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
-        """
-        Calculate valid moves for the queen piece from the given position
-        Args:
-            position: The current position of the piece on the board
-            board: The chess board in its current state
-        Returns:
-            A list of valid moves
-        """
-        """
-        Rule: Moves in 1 of 12 directions, 1 or more rhombuses in a straight line like a Rook,
-        Bishop, or Jester. It does not leap.         
-        """
-        valid_moves = {(0,0)}
-        valid_moves.remove((0,0)) #for some god unknown reason python poops its pants when u don't initialize it as a set (skull emoji)
-
-        rook_init = Rook(self.color)
-        bishop_init = Bishop(self.color)
-        jester_init = Jester(self.color)
-        
-        valid_moves.update(rook_init.calculate_valid_moves(position, board))
-        valid_moves.update(bishop_init.calculate_valid_moves(position, board))
-        valid_moves.update(jester_init.calculate_valid_moves(position, board))
-
-        return list(valid_moves)
