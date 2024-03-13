@@ -143,6 +143,7 @@ function Board({
 
           return (
             <Tile
+              testid={`${columnIndex}-${cellIndex}`}
               key={`${columnIndex}-${cellIndex}`}
               orientation={orientation}
               colour={(normalCellIndex + normalCells.length) % 3}
@@ -152,6 +153,7 @@ function Board({
             >
               {cell.piece && (
               <Piece
+                testid={`${cell.piece}-${columnIndex}-${cellIndex}`}
                 className={`${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}
                 name={cell.piece}
                 isSelected={selectedPiece && selectedPiece.columnNumber === columnIndex && selectedPiece.index === cellIndex}
@@ -166,7 +168,7 @@ function Board({
 
   return (
     <div>
-      <div className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}>
+      <div data-testid="board" className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}>
         {generateBoardUI()}
       </div>
 
