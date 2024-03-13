@@ -1065,7 +1065,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a, b))
                 a += 2
                 b -= 3
-            if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color: 
+            if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color): 
                 valid_moves.append((a, b))
         else:
             a, b = x + 2, y + 3
@@ -1073,7 +1073,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a,b))
                 a += 2
                 b += 3
-            if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+            if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
             
         return valid_moves
@@ -1097,7 +1097,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a, b))
                 a -= 2
                 b += 3
-            if a > 0 and b < (len(board[a])-1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color: 
+            if a > 0 and b < (len(board[a])-1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color): 
                 valid_moves.append((a, b))
         else:
             a, b = x - 2, y - 3
@@ -1105,7 +1105,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a,b))
                 a -= 2
                 b -= 3
-            if a > 0 and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+            if a > 0 and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         return valid_moves
 	
@@ -1125,7 +1125,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a,b))
                 a -= 2
                 b -= 1
-            if a > 0 and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+            if a > 0 and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         else:
             a, b = x + 2, y - 1
@@ -1133,7 +1133,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a,b))
                 a += 2
                 b -= 1
-            if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+            if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         return valid_moves
 
@@ -1153,7 +1153,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a,b))
                 a += 2
                 b += 1
-            if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+            if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         else:
             a, b = x - 2, y + 1
@@ -1161,7 +1161,7 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a,b))
                 a -= 2
                 b += 1
-            if a > 0 and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and board[a][b].piece.color != self.color:
+            if a > 0 and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         return valid_moves
 
