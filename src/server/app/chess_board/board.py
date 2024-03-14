@@ -305,7 +305,7 @@ class ChessBoard:
         start_tile = self.board[start[0]][start[1]]
 
         if not end_tile.is_empty():
-            self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece)
+            self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece.get_piece())
 
         end_tile.piece = start_tile.piece
         start_tile.piece = None
