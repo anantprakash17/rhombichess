@@ -106,8 +106,6 @@ function Board({
 
   const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
-  const disableTile = (piece) => disabled || gameData.winner || (piece !== '' && !piece.includes(color));
-
   const handleTileClick = (columnNumber, index, pieceColor) => {
     if (gameData.turn !== color) { return; }
     if (selectedPiece?.columnNumber === columnNumber && selectedPiece?.index === index) { return; }
@@ -117,7 +115,7 @@ function Board({
         setSelectedPieceDest({ columnNumber, index });
         setPossibleMoves([]);
       }
-    } else if (board[columnNumber][index].piece !== '') {
+    } else if (board[columnNumber][index].piece !== '' && pieceColor === color) {
       setSelectedPiece({ columnNumber, index });
       const moves = gameData.valid_moves[`${columnNumber},${index}`] || [];
       setPossibleMoves(moves);
@@ -151,7 +149,7 @@ function Board({
               orientation={orientation}
               colour={(normalCellIndex + normalCells.length) % 3}
               onClick={() => handleTileClick(columnIndex, cellIndex, cell.piece.split('-')[1])}
-              disabled={disableTile(cell.piece)}
+              disabled={disabled || gameData.winner}
               highlight={isPossibleMove(columnIndex, cellIndex)}
             >
               {cell.piece && (

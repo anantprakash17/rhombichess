@@ -223,7 +223,7 @@ class Machine(ChessPiece):
         return valid_moves
 
 
-class Mammoth(ChessPiece): # Author: Nida
+class Mammoth(ChessPiece):  # Author: Nida
     def __init__(self, color: int) -> None:
         """
         Initializes a mammoth piece
@@ -337,7 +337,7 @@ class Mammoth(ChessPiece): # Author: Nida
         return valid_moves
 
 
-class Shield(ChessPiece): # Author: Nida
+class Shield(ChessPiece):  # Author: Nida
     def __init__(self, color: int) -> None:
         """
         Initializes a shield piece
@@ -415,7 +415,7 @@ class Shield(ChessPiece): # Author: Nida
         return valid_moves
 
 
-class Cat(ChessPiece): # Author: Nida
+class Cat(ChessPiece):  # Author: Nida
 
     def __init__(self, color: int) -> None:
         """
@@ -500,7 +500,7 @@ class Cat(ChessPiece): # Author: Nida
         return valid_moves
 
 
-class Hawk(ChessPiece): # Author: Nida
+class Hawk(ChessPiece):  # Author: Nida
 
     def __init__(self, color: int) -> None:
         """
@@ -617,7 +617,7 @@ class Hawk(ChessPiece): # Author: Nida
         return valid_moves
 
 
-class Prince(ChessPiece): # Author: Nida
+class Prince(ChessPiece):  # Author: Nida
     def __init__(self, color: int) -> None:
         """
         Initializes a prince piece
@@ -670,7 +670,7 @@ class Prince(ChessPiece): # Author: Nida
                 (x - 1, y + 1),
             ]
         else:
-            potential_moves = [   
+            potential_moves = [
                 (x, y - 1),
                 (x + 1, y + 1),
                 (x + 1, y - 1),
@@ -680,7 +680,7 @@ class Prince(ChessPiece): # Author: Nida
                 (x - 1, y + 2),
                 (x - 1, y),
                 (x - 2, y),
-                (x - 2, y + 1)
+                (x - 2, y + 1),
             ]
         for move in potential_moves:
             if move[0] < 0 or move[0] >= len(board):
@@ -694,7 +694,7 @@ class Prince(ChessPiece): # Author: Nida
         return valid_moves
 
 
-class Dog(ChessPiece): # Author: Phil
+class Dog(ChessPiece):  # Author: Phil
     def __init__(self, color: int) -> None:
         """
         Initializes a king piece
@@ -722,14 +722,7 @@ class Dog(ChessPiece): # Author: Phil
         x, y = position
         tile = board[x][y]
         if tile.orientation == 0:
-            potential_moves = [
-                (x, y + 2),
-                (x, y + 4),
-                (x, y - 2),
-                (x, y - 4),
-                (x - 4, y),
-                (x + 4, y)
-            ]
+            potential_moves = [(x, y + 2), (x, y + 4), (x, y - 2), (x, y - 4), (x - 4, y), (x + 4, y)]
         elif tile.orientation == 1:
             potential_moves = [
                 (x - 2, y - 1),
@@ -737,8 +730,8 @@ class Dog(ChessPiece): # Author: Phil
                 (x - 2, y + 3),
                 (x + 2, y - 3),
                 (x + 2, y + 1),
-                (x + 4, y + 2)
-			]
+                (x + 4, y + 2),
+            ]
         else:
             potential_moves = [
                 (x + 4, y - 2),
@@ -746,21 +739,21 @@ class Dog(ChessPiece): # Author: Phil
                 (x + 2, y + 3),
                 (x - 2, y - 3),
                 (x - 2, y + 1),
-                (x - 4, y + 2)
+                (x - 4, y + 2),
             ]
         for move in potential_moves:
             if move[1] < 0 or move[0] > len(board) - 1:
                 continue
             tile = board[move[0]][move[1]]
-            #if not tile.is_empty() or tile.type == TileType.PADDING:
-                #continue
+            # if not tile.is_empty() or tile.type == TileType.PADDING:
+            # continue
             if tile.type == TileType.PADDING or (not tile.is_empty() and tile.piece.color == self.color):
                 continue
             valid_moves.append(move)
         return valid_moves
 
 
-class Bishop(ChessPiece): # Author: Anant
+class Bishop(ChessPiece):  # Author: Anant
     def __init__(self, color: int) -> None:
         """
         Initializes a bishop piece
@@ -875,7 +868,7 @@ class Bishop(ChessPiece): # Author: Anant
         return potential_moves + (self.move_lr(position, board, False) if direction else [])
 
 
-class Elephant(ChessPiece): # Author: Anant
+class Elephant(ChessPiece):  # Author: Anant
     def __init__(self, color: int) -> None:
         """
         Initializes a elephant piece
@@ -944,7 +937,7 @@ class Elephant(ChessPiece): # Author: Anant
         return valid_moves
 
 
-class Knight(ChessPiece): # Author: Phil
+class Knight(ChessPiece):  # Author: Phil
     def __init__(self, color: int) -> None:
         """
         Initializes a Knight piece
@@ -981,7 +974,7 @@ class Knight(ChessPiece): # Author: Phil
                 (x - 3, y - 1),
                 (x - 3, y),
                 (x + 1, y + 2),
-                (x - 1, y + 2)
+                (x - 1, y + 2),
             ]
         elif tile.orientation == 1:
             potential_moves = [
@@ -992,8 +985,8 @@ class Knight(ChessPiece): # Author: Phil
                 (x + 3, y + 1),
                 (x + 2, y + 2),
                 (x - 1, y + 3),
-                (x - 2, y + 2)
-			]
+                (x - 2, y + 2),
+            ]
         else:
             potential_moves = [
                 (x + 2, y - 2),
@@ -1003,21 +996,21 @@ class Knight(ChessPiece): # Author: Phil
                 (x + 2, y + 2),
                 (x + 1, y + 3),
                 (x - 2, y + 2),
-                (x - 3, y + 1)
+                (x - 3, y + 1),
             ]
         for move in potential_moves:
             if move[1] < 0 or move[0] > len(board) - 1:
                 continue
             tile = board[move[0]][move[1]]
-            #if not tile.is_empty() or tile.type == TileType.PADDING: here just to make it ezpz to revert if needed
-                #continue
+            # if not tile.is_empty() or tile.type == TileType.PADDING: here just to make it ezpz to revert if needed
+            # continue
             if tile.type == TileType.PADDING or (not tile.is_empty() and tile.piece.color == self.color):
                 continue
             valid_moves.append(move)
         return valid_moves
 
 
-class Jester(ChessPiece): # Author: Phil
+class Jester(ChessPiece):  # Author: Phil
     def __init__(self, color: int) -> None:
         """
         Initializes a jester piece
@@ -1025,6 +1018,7 @@ class Jester(ChessPiece): # Author: Phil
             color (int): color of the piece
         """
         super().__init__(PieceType.JESTER, color)
+
     def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
         """
         Calculate valid moves for the jester piece from the given position
@@ -1048,14 +1042,14 @@ class Jester(ChessPiece): # Author: Phil
     def left(self, x: int, y: int, board: list[list[ChessTile]]):
         current_tile = board[x][y]
         valid_moves = []
-        
+
         if current_tile.orientation == 0:
-            for i in range(x+4, 17, 4):
+            for i in range(x + 4, 17, 4):
                 current_tile = board[i][y]
                 if current_tile.type == TileType.PADDING:
                     break
                 if not current_tile.is_empty():
-                    if current_tile.piece.color != self.color :
+                    if current_tile.piece.color != self.color:
                         valid_moves.append((i, y))
                     break
                 valid_moves.append((i, y))
@@ -1069,8 +1063,13 @@ class Jester(ChessPiece): # Author: Phil
                 valid_moves.append((a, b))
         else:
             a, b = x + 2, y + 3
-            while a < len(board) and b < (len(board[a]) - 1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
-                valid_moves.append((a,b))
+            while (
+                a < len(board)
+                and b < (len(board[a]) - 1)
+                and board[a][b].is_empty()
+                and (not (board[a][b].type == TileType.PADDING))
+            ):
+                valid_moves.append((a, b))
                 a += 2
                 b += 3
             if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
@@ -1082,18 +1081,23 @@ class Jester(ChessPiece): # Author: Phil
         current_tile = board[x][y]
         valid_moves = []
         if current_tile.orientation == 0:
-            for i in range(x-4, -1, -4):
+            for i in range(x - 4, -1, -4):
                 current_tile = board[i][y]
                 if current_tile.type == TileType.PADDING:
                     break
                 if not current_tile.is_empty():
-                    if current_tile.piece.color != self.color :
+                    if current_tile.piece.color != self.color:
                         valid_moves.append((i, y))
                     break
                 valid_moves.append((i, y))
         elif current_tile.orientation == 1:
             a, b = x - 2, y + 3
-            while a > 0 and b < (len(board[a])-1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
+            while (
+                a > 0
+                and b < (len(board[a]) - 1)
+                and board[a][b].is_empty()
+                and (not (board[a][b].type == TileType.PADDING))
+            ):
                 valid_moves.append((a, b))
                 a -= 2
                 b += 3
@@ -1102,27 +1106,27 @@ class Jester(ChessPiece): # Author: Phil
         else:
             a, b = x - 2, y - 3
             while a > 0 and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
-                valid_moves.append((a,b))
+                valid_moves.append((a, b))
                 a -= 2
                 b -= 3
             if a > 0 and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         return valid_moves
-	
+
     def up(self, x: int, y: int, board: list[list[ChessTile]]):
         current_tile = board[x][y]
         valid_moves = []
         if current_tile.orientation == 0:
-            b = y-1
+            b = y - 1
             while board[x][b].is_empty() and (not (board[x][b].type == TileType.PADDING)):
-                valid_moves.append((x,b))
+                valid_moves.append((x, b))
                 b -= 1
             if b > 0 and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
-                valid_moves.append((x,b))
+                valid_moves.append((x, b))
         elif current_tile.orientation == 1:
             a, b = x - 2, y - 1
             while a > 0 and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
-                valid_moves.append((a,b))
+                valid_moves.append((a, b))
                 a -= 2
                 b -= 1
             if a > 0 and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
@@ -1130,7 +1134,7 @@ class Jester(ChessPiece): # Author: Phil
         else:
             a, b = x + 2, y - 1
             while a < len(board) and b > 0 and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
-                valid_moves.append((a,b))
+                valid_moves.append((a, b))
                 a += 2
                 b -= 1
             if a < len(board) and b > 0 and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
@@ -1141,28 +1145,115 @@ class Jester(ChessPiece): # Author: Phil
         current_tile = board[x][y]
         valid_moves = []
         if current_tile.orientation == 0:
-            b = y+1
+            b = y + 1
             while board[x][b].is_empty() and (not (board[x][b].type == TileType.PADDING)):
-                valid_moves.append((x,b))
+                valid_moves.append((x, b))
                 b += 1
             if b < (len(board[x]) - 1) and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
-                valid_moves.append((x,b))
+                valid_moves.append((x, b))
         elif current_tile.orientation == 1:
             a, b = x + 2, y + 1
-            while a < len(board) and b < (len(board[a]) - 1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
-                valid_moves.append((a,b))
+            while (
+                a < len(board)
+                and b < (len(board[a]) - 1)
+                and board[a][b].is_empty()
+                and (not (board[a][b].type == TileType.PADDING))
+            ):
+                valid_moves.append((a, b))
                 a += 2
                 b += 1
             if a < len(board) and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
         else:
             a, b = x - 2, y + 1
-            while a > 0 and (len(board[a]) - 1) and board[a][b].is_empty() and (not (board[a][b].type == TileType.PADDING)):
-                valid_moves.append((a,b))
+            while (
+                a > 0
+                and (len(board[a]) - 1)
+                and board[a][b].is_empty()
+                and (not (board[a][b].type == TileType.PADDING))
+            ):
+                valid_moves.append((a, b))
                 a -= 2
                 b += 1
             if a > 0 and b < (len(board[a]) - 1) and board[a][b] != TileType.PADDING and (board[a][b].is_empty() or board[a][b].piece.color != self.color):
                 valid_moves.append((a,b))
+        return valid_moves
+
+
+class Pawn(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a pawn piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.PAWN, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the pawn piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: 
+        1. On a vertical rhombus: 
+        Moves 1 step forward like a Jester and captures 1 step forward onto the nearest non-vertical rhombuses, contiguous by side or vertex.
+        2. On a non-vertical rhombus: 
+        Moves 1 step forward like a Rook, or 2 such steps if there is no intervening piece. 
+        It captures 1 step forward onto the nearest vertical rhombuses, contiguous by side or vertex.
+        """
+        valid_moves = []
+        potential_moves = []
+        x, y = position
+        tile = board[x][y]
+        direction = -1 if self.color == 1 else 1
+
+        def can_capture(a: int, b: int) -> bool:
+            if a < 0 or a >= len(board) or b < 0 or b >= len(board[a]):
+                return False
+            return not board[a][b].is_empty() and board[a][b].piece.color != self.color
+
+        if tile.orientation == 0:
+            potential_moves.append((x, y + (direction * 2)))
+            valid_moves += filter(
+                lambda loc: can_capture(loc[0], loc[1]),
+                [
+                    (x + 1, y + direction if direction == -1 else y),
+                    (x - 1, y + direction if direction == -1 else y),
+                    (x - 1, y + (direction * 2) if direction == -1 else y + (direction)),
+                    (x + 1, y + (direction * 2) if direction == -1 else y + (direction)),
+                ],
+            )
+        else:
+            potential_moves.append((x, y + direction))
+            potential_moves.append((x, y + (direction * 2)))
+            if tile.orientation == -1:
+                valid_moves += filter(
+                    lambda loc: can_capture(loc[0], loc[1]),
+                    [
+                        (x + 1, y - 1 if direction == -1 else y + 1),
+                        (x - 1, y if direction == -1 else y + 2),
+                    ],
+                )
+            else:
+                valid_moves += filter(
+                    lambda loc: can_capture(loc[0], loc[1]),
+                    [
+                        (x + 1, y if direction == -1 else y + 2),
+                        (x - 1, y - 1 if direction == -1 else y + 1),
+                    ],
+                )
+        for move in potential_moves:
+            if move[1] < 0 or move[0] > len(board) - 1:
+                continue
+            tile = board[move[0]][move[1]]
+            if not tile.is_empty():
+                break
+            valid_moves.append(move)
         return valid_moves
 
 
