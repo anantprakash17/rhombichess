@@ -177,7 +177,8 @@ def game(game_id):
 
         old_pos = tuple(map(int, data["old_pos"].split(",")))
         new_pos = tuple(map(int, data["new_pos"].split(",")))
-        games[game_id]["board"].move_piece(old_pos, new_pos)
+        if not games[game_id]["board"].move_piece(old_pos, new_pos):
+            return jsonify({"error_message": "Invalid move"}), 400
 
         # Change turns
         games[game_id]["turn"] = "white" if games[game_id]["turn"] == "black" else "black"
