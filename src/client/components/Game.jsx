@@ -48,11 +48,11 @@ export default function Game({ gameData }) {
 
   return (
     <section className="w-full flex h-screen">
-      <div className="flex flex-1">
+      <div className="flex flex-1 justify-center items-center m-5">
         <div className="scale-90 flex-grow">
           <Board initialGameData={gameData} initialColor={color} gameCode={gameCode} socket={socket} />
         </div>
-        <div className="shadow-lg w-[450px] relative rounded-xl bg-gray-500 m-4 flex flex-col text-base text-gray-900">
+        <div className="h-full shadow-lg w-[450px] relative rounded-xl bg-gray-500 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
             <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tl-xl flex-1 p-4`}>GAME</button>
             <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-700' : 'bg-gray-600'} flex-1 p-4`}>GAMES</button>

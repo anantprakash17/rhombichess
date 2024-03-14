@@ -171,7 +171,7 @@ function Board({
 
   return (
     <div>
-      <div data-testid="board" className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}>
+      <div data-testid="board" className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180 pl-9' : 'pl-4'}`}>
         {generateBoardUI()}
       </div>
 
