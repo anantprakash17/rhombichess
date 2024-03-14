@@ -4,7 +4,6 @@ function Tile({
   children, testid, orientation, colour, onClick, disabled = false, highlight = false,
 }) {
   let tile;
-  
   const colours = ['#FDE047', '#67E8F9', '#F472B6'];
 
   let tileStyle = 'group-hover:fill-gray-700 pointer-events-auto';
