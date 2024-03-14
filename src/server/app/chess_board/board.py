@@ -280,8 +280,8 @@ class ChessBoard:
         self.board[6][18].piece = Hawk(1)
 
         # add queen
-        self.board[9][1].piece = ChessPiece(PieceType.QUEEN, 0)
-        self.board[9][18].piece = ChessPiece(PieceType.QUEEN, 1)
+        self.board[9][1].piece = Queen(0)
+        self.board[9][18].piece = Queen(1)
 
         # add king
         self.board[7][1].piece = King(0)
