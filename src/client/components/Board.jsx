@@ -51,6 +51,7 @@ function Board({
       } if (data.winner) {
         setWinnerModalOpen(true);
       }
+
       setColorInCheck(data.in_check[1] ? 'white' : data.in_check[0] ? 'black' : null);
       if (data.in_check) {
         setCheckModalOpen(true);
@@ -96,6 +97,9 @@ function Board({
       handleConfirmedMove();
     } else if (event.key === 'Escape' && confirmMoveModalOpen) {
       handleCanceledMove();
+    } else if (event.key === 'Escape' && (winnerModalOpen || checkModalOpen)) {
+      setWinnerModalOpen(false);
+      setCheckModalOpen(false);
     } else if (event.key === 'Escape') {
       setSelectedPiece(null);
       setPossibleMoves([]);
