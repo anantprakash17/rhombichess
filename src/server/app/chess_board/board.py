@@ -322,9 +322,7 @@ class ChessBoard:
         start_tile.piece = None
 
         self.update_valid_moves()
-        bl_in_check, wh_in_check = self.king_check(0), self.king_check(1)
-        self.in_check = (bl_in_check, wh_in_check)
-        print(self.in_check)
+        self.in_check = (self.king_check(0), self.king_check(1))
 
         return True
 
