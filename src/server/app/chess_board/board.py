@@ -14,6 +14,9 @@ class ChessBoard:
         self.valid_moves = {}
         self.update_valid_moves()
         self.captured_pieces = {"black": [], "white": []}
+        self.game_over = False
+        self.in_check = (False, False)
+        self.king_loc = {0: (7, 1), 1: (7, 18)}
 
     def create_board(self) -> None:
         """
@@ -304,13 +307,25 @@ class ChessBoard:
         end_tile = self.board[end[0]][end[1]]
         start_tile = self.board[start[0]][start[1]]
 
+        # Check if king captured
         if not end_tile.is_empty():
+            if "king" in end_tile.piece.get_piece():
+                self.game_over = True
             self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece.get_piece())
+
+        # Check if king is being moved
+        if "king" in start_tile.piece.get_piece():
+            self.king_loc[start_tile.piece.color] = end
+            print(self.king_loc)
 
         end_tile.piece = start_tile.piece
         start_tile.piece = None
 
         self.update_valid_moves()
+        bl_in_check, wh_in_check = self.king_check(0), self.king_check(1)
+        self.in_check = (bl_in_check, wh_in_check)
+        print(self.in_check)
+
         return True
 
     def update_valid_moves(self) -> None:
@@ -323,3 +338,19 @@ class ChessBoard:
                 tile = self.board[x][y]
                 if not tile.is_empty() and tile.piece:
                     self.valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
+
+    def king_check(self, color: int) -> bool:
+        """
+        Check if the king of the given color is in check
+        Args:
+            color (int): color of the king
+        Returns:
+            bool: True if the king is in check, False otherwise
+        """
+        for k, v in self.valid_moves.items():
+            if v is None:
+                continue
+            for move in v:
+                if move == self.king_loc[color] and self.board[k[0]][k[1]].piece.color != color:
+                    return True
+        return False
