@@ -131,6 +131,7 @@ function Board({
         {column.map((cell, cellIndex) => {
           if (cell.type !== 'NORMAL') { return null; }
 
+          const isPossible = isPossibleMove(columnIndex, cellIndex);
           const normalCellIndex = normalCells.findIndex((normalCell) => normalCell === cell);
           const isDiamond = (displayColumnIndex + 1) % 2 !== 0;
           const flip = displayColumnIndex >= 7;
@@ -150,15 +151,16 @@ function Board({
               colour={(normalCellIndex + normalCells.length) % 3}
               onClick={() => handleTileClick(columnIndex, cellIndex, cell.piece.split('-')[1])}
               disabled={disabled || gameData.winner}
-              highlight={isPossibleMove(columnIndex, cellIndex)}
+              capturable={isPossible && cell.piece}
+              highlight={isPossible}
             >
               {cell.piece && (
-              <Piece
-                testid={`${cell.piece}-${columnIndex}-${cellIndex}`}
-                className={`${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}
-                name={cell.piece}
-                isSelected={selectedPiece && selectedPiece.columnNumber === columnIndex && selectedPiece.index === cellIndex}
-              />
+                <Piece
+                  testid={`${cell.piece}-${columnIndex}-${cellIndex}`}
+                  className={`${color === 'black' && !gameData.local ? 'rotate-180' : ''}`}
+                  name={cell.piece}
+                  isSelected={selectedPiece && selectedPiece.columnNumber === columnIndex && selectedPiece.index === cellIndex}
+                />
               )}
             </Tile>
           );
