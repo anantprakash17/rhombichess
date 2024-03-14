@@ -96,19 +96,6 @@ function Board({
     }
   };
 
-  const handleTileClick = (columnNumber, index) => {
-    if (gameData.turn !== color) { return; }
-    if (selectedPiece) {
-      setConfirmMoveModalOpen(true);
-      setSelectedPieceDest({ columnNumber, index });
-      setPossibleMoves([]);
-    } else if (board[columnNumber][index].piece !== '') {
-      setSelectedPiece({ columnNumber, index });
-      const moves = gameData.valid_moves[`${columnNumber},${index}`] || [];
-      setPossibleMoves(moves);
-    }
-  };
-
   useEffect(() => {
     window.addEventListener('keydown', handleKeyPress);
 
@@ -120,6 +107,22 @@ function Board({
   const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
   const disableTile = (piece) => disabled || gameData.winner || (piece !== '' && !piece.includes(color));
+
+  const handleTileClick = (columnNumber, index, pieceColor) => {
+    if (gameData.turn !== color) { return; }
+    if (selectedPiece?.columnNumber === columnNumber && selectedPiece?.index === index) { return; }
+    if (selectedPiece && pieceColor !== color) {
+      if (isPossibleMove(columnNumber, index)) {
+        setConfirmMoveModalOpen(true);
+        setSelectedPieceDest({ columnNumber, index });
+        setPossibleMoves([]);
+      }
+    } else if (board[columnNumber][index].piece !== '') {
+      setSelectedPiece({ columnNumber, index });
+      const moves = gameData.valid_moves[`${columnNumber},${index}`] || [];
+      setPossibleMoves(moves);
+    }
+  };
 
   const generateBoardUI = () => board.slice().reverse().map((column, displayColumnIndex) => {
     const columnIndex = board.length - 1 - displayColumnIndex;
@@ -147,7 +150,7 @@ function Board({
               key={`${columnIndex}-${cellIndex}`}
               orientation={orientation}
               colour={(normalCellIndex + normalCells.length) % 3}
-              onClick={() => handleTileClick(columnIndex, cellIndex)}
+              onClick={() => handleTileClick(columnIndex, cellIndex, cell.piece.split('-')[1])}
               disabled={disableTile(cell.piece)}
               highlight={isPossibleMove(columnIndex, cellIndex)}
             >
