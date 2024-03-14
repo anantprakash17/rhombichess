@@ -296,9 +296,9 @@ class ChessBoard:
         """
 
         # ensure the move is valid
-        # piece_moves = self.valid_moves.get(start)
-        # if piece_moves is None or end not in piece_moves:
-        #     return False
+        piece_moves = self.valid_moves.get(start)
+        if piece_moves is None or end not in piece_moves:
+            return False
 
         # Check for capture
         end_tile = self.board[end[0]][end[1]]
