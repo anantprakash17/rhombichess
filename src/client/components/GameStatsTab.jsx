@@ -18,16 +18,13 @@ export default function GameStatsTab({ gameData, socket }) {
 
   useEffect(() => {
     if (gameData?.player_1?.color === 'white') {
-      setCapturedP1(gameData?.captured_pieces?.white);
-      setCapturedP2(gameData?.captured_pieces?.black);
-    } else {
       setCapturedP1(gameData?.captured_pieces?.black);
       setCapturedP2(gameData?.captured_pieces?.white);
+    } else {
+      setCapturedP1(gameData?.captured_pieces?.white);
+      setCapturedP2(gameData?.captured_pieces?.black);
     }
   }, [gameData]);
-
-  console.log("CAPTURED: ", gameData?.captured_pieces);
-  console.log("TURN: ", gameData?.turn);
 
   
   useEffect(() => {
@@ -38,16 +35,15 @@ export default function GameStatsTab({ gameData, socket }) {
       setTimeLeftP2(data.timer_duration_p2);
       setTimerRunningP1(data.timer_running_p1);
       setTimerRunningP2(data.timer_running_p2);
+
       setTurn(data?.turn);
       if (gameData?.player_1?.color === 'white') {
-        setCapturedP1(data?.captured_pieces?.white);
         setCapturedP1(data?.captured_pieces?.black);
-      } else {
-        setCapturedP1(data?.captured_pieces?.black);
+        setCapturedP2(data?.captured_pieces?.white);
+      } else if (gameData?.player_1?.color === 'black') {
         setCapturedP1(data?.captured_pieces?.white);
+        setCapturedP2(data?.captured_pieces?.black);
       }
-      console.log("TURN2: ", data?.turn);
-      console.log("DATA: ", data);
     };
 
     socket.on('timer_update', handleTimerUpdate);
