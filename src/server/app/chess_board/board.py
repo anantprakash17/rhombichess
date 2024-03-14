@@ -1,7 +1,7 @@
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from app.chess_board.chess_pieces import Machine, Rook, King, Shield, Mammoth, Cat, Hawk, Prince, Dog, Bishop, Elephant, Knight, Jester
+from app.chess_board.chess_pieces import *
 
 
 class ChessBoard:
@@ -147,41 +147,41 @@ class ChessBoard:
         self.board[12][15].piece = ChessPiece(PieceType.SOLDIER, 1)
 
         # add pawns
-        self.board[1][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[1][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[1][5].piece = Pawn(0)
+        self.board[1][14].piece = Pawn(1)
 
-        self.board[2][6].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[2][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[2][6].piece = Pawn(0)
+        self.board[2][14].piece = Pawn(1)
 
-        self.board[3][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[3][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[3][5].piece = Pawn(0)
+        self.board[3][14].piece = Pawn(1)
 
-        self.board[5][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[5][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[5][5].piece = Pawn(0)
+        self.board[5][14].piece = Pawn(1)
 
-        self.board[6][6].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[6][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[6][6].piece = Pawn(0)
+        self.board[6][14].piece = Pawn(1)
 
-        self.board[7][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[7][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[7][5].piece = Pawn(0)
+        self.board[7][14].piece = Pawn(1)
 
-        self.board[9][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[9][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[9][5].piece = Pawn(0)
+        self.board[9][14].piece = Pawn(1)
 
-        self.board[10][6].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[10][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[10][6].piece = Pawn(0)
+        self.board[10][14].piece = Pawn(1)
 
-        self.board[11][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[11][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[11][5].piece = Pawn(0)
+        self.board[11][14].piece = Pawn(1)
 
-        self.board[13][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[13][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[13][5].piece = Pawn(0)
+        self.board[13][14].piece = Pawn(1)
 
-        self.board[14][6].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[14][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[14][6].piece = Pawn(0)
+        self.board[14][14].piece = Pawn(1)
 
-        self.board[15][5].piece = ChessPiece(PieceType.PAWN, 0)
-        self.board[15][14].piece = ChessPiece(PieceType.PAWN, 1)
+        self.board[15][5].piece = Pawn(0)
+        self.board[15][14].piece = Pawn(1)
 
         # add elephants
         self.board[2][4].piece = Elephant(0)
@@ -204,7 +204,7 @@ class ChessBoard:
         self.board[11][15].piece = Cat(1)
 
         # add jesters
-        self.board[7][2].piece = Jester(0) 
+        self.board[7][2].piece = Jester(0)
         self.board[7][17].piece = Jester(1)
 
         self.board[8][1].piece = Jester(0)
