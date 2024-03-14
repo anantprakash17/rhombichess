@@ -21,6 +21,8 @@ function Board({
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [winnerModalOpen, setWinnerModalOpen] = useState(!!initialGameData?.winner);
+  const [checkModalOpen, setCheckModalOpen] = useState(!!initialGameData?.in_check);
+  const [colorInCheck, setColorInCheck] = useState(null);
   const [color, setColor] = useState(initialColor);
 
   const parseBoardData = (data) => {
@@ -48,6 +50,10 @@ function Board({
         setColor(data.turn);
       } if (data.winner) {
         setWinnerModalOpen(true);
+      }
+      setColorInCheck(data.in_check[1] ? 'white' : data.in_check[0] ? 'black' : null);
+      if (data.in_check) {
+        setCheckModalOpen(true);
       }
     };
 
@@ -202,6 +208,12 @@ function Board({
           onClose={() => { setWinnerModalOpen(false); }}
         />
       )}
+      {gameData.in_check && (
+        <CheckModal
+          open={checkModalOpen && gameData.in_check !== null && colorInCheck === color}
+          onClose={() => { setCheckModalOpen(false); }}
+        />
+      )}
     </div>
   );
 }
@@ -239,6 +251,25 @@ export function GameOverModal({ open, winner, onClose }) {
             Play Again
           </button>
         </Link>
+      </div>
+    </div>
+  );
+}
+
+export function CheckModal({ open, onClose }) {
+  return (
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
+      <div className="relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
+        <button onClick={onClose} className="absolute top-0 right-0 p-2 mr-2 text-white text-2xl hover:text-gray-300" type="button">
+          &times;
+        </button>
+        <Logo />
+        <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
+          Check!
+        </h2>
+        <p className="mt-1 text-xl text-gray-300">
+          You are in check!
+        </p>
       </div>
     </div>
   );
