@@ -1255,15 +1255,15 @@ class Pawn(ChessPiece):
                 valid_moves += filter(
                     lambda loc: can_capture(loc[0], loc[1]),
                     [
-                        (x + 1, y - 1 if direction == -1 else y),
-                        (x - 1, y if direction == -1 else y + 1),
+                        (x + 1, y - 1 if direction == -1 else y + 1),
+                        (x - 1, y if direction == -1 else y + 2),
                     ],
                 )
             else:
                 valid_moves += filter(
                     lambda loc: can_capture(loc[0], loc[1]),
                     [
-                        (x + 1, y if direction == -1 else y + 1),
+                        (x + 1, y if direction == -1 else y + 2),
                         (x - 1, y - 1 if direction == -1 else y + 1),
                     ],
                 )
