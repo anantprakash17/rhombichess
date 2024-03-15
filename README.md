@@ -1,7 +1,5 @@
-# RHOMBICHESS
-<p align="center">
-  <img src="rhombichess.png" />
-</p>
+# RhombiChess
+
 Chess has a rich history tracing back to the 6th century, and today it's played worldwide. As
 students intrigued by the game of chess, we were very eager to learn more about a chess variant
 with fresh new board rules, new pieces, and even a new board type. This is a project worth doing
@@ -11,6 +9,7 @@ the game can be played between two people and can have its settings easily chang
 unique experience every match. Making this variant stand out can promote a sense of community
 which enables people to form new connections.
 
+
 The purpose of this application is to introduce a chess variant that has special rules and pieces
 which could be challenging for even some chess enthusiasts as it forces the player to see the
 chessboard from various angles. It is significantly different from a traditional chessboard in that it
@@ -18,9 +17,16 @@ is a variant chessboard that is made up of rhombuses instead of squares (refer t
 skills as well as their overall chess skills. It could also be a platform for social interactions as we
 intend to host this game online.
 
+<p align="center">
+  TODO: Image goes here
+  <!-- <img src="rhombichess.png" /> -->
+</p>
+
 ## Team Members
+#### Frontend Developers
 - Monica Bazina-Grolinger
 - Farzan Yazdanjou
+#### Backend Develoeprs
 - Anant Prakash
 - Nida Nasir
 - Philip Lee
@@ -42,27 +48,25 @@ python3 src/server/server.py
 This will start the backend on port 5000. To view the backend, navigate to `localhost:8080` in your browser.
 
 ### Frontend
-The frontend for this project is based on React. To get started, you will need to have `npm` installed. To install all the required dependencies, run the following command:
+We use NextJS on the frontend for this project. To get started, you will need to have `npm` installed. To install all the required dependencies, run the following command:
 ```bash
 make setup-frontend
 ```
-This will install all the required dependencies. To start the frontend, run the following command:
+or navigate to `/src/client` and run `npm install`.
+
+To start the frontend, run the following command within the `/src/client` directory:
 ```bash
 npm run dev
 ```
 This will start the frontend on port 3000. To view the frontend, navigate to `localhost:3000` in your browser.
 
+> Note: The frontend makes various calls to the backend endpoints, even on the landing page. As such, the application requires the backend server to be running. Otherwise, the application will throw errors on load.
+
 
 ## Testing
 
-### Frontend
-To run the tests for the frontend, run the following command:
-```bash
-npm test
-```
-
 ### Backend
-To run the tests for the backend, run the following command:
+To run the tests for the backend (`/src/server`), run the following command:
 ```bash
 python3 -m pytest src/server/tests -v
 ```
@@ -76,6 +80,11 @@ This will start a locust server on `localhost:8089`. To view the locust server, 
 
 Use locust to test the backend by entering the number of users and the spawn rate, then click start.
 
+### Frontend
+To run the tests for the frontend (`/src/client`), run the following command:
+```bash
+npm test
+```
 
 ### Cleanup
 To clean up the project, run the following command:
