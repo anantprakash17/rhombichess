@@ -60,7 +60,7 @@ export default function GameStatsTab({ gameData, socket }) {
   };
 
   return (
-    <section className="m-2 flex flex-col h-full">
+    <section className="m-2 h-1/2 flex-grow">
       <div className="flex gap-4 justify-between">
         <button
           onClick={() => copyToClipboard('CODE', gameData?.game_id)}
