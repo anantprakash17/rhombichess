@@ -22,6 +22,7 @@ function Board({
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [winnerModalOpen, setWinnerModalOpen] = useState(!!initialGameData?.winner);
   const [checkModalOpen, setCheckModalOpen] = useState(!!initialGameData?.in_check);
+  const [piecePromotionModalOpen, setPiecePromotionModalOpen] = useState(false);
   const [colorInCheck, setColorInCheck] = useState(null);
   const [color, setColor] = useState(initialColor);
 
@@ -50,6 +51,9 @@ function Board({
         setColor(data.turn);
       } if (data.winner) {
         setWinnerModalOpen(true);
+      }
+      if (data.promotion) {
+        setPiecePromotionModalOpen(true);
       }
 
       setColorInCheck(data.in_check[1] ? 'white' : data.in_check[0] ? 'black' : null);
@@ -218,6 +222,13 @@ function Board({
           onClose={() => { setCheckModalOpen(false); }}
         />
       )}
+      {gameData.promotion && (
+        <PiecePromotionModal
+          open={piecePromotionModalOpen}
+          onClose={() => { setPiecePromotionModalOpen(false); }}
+          gameCode={gameCode}
+        />
+      )}
     </div>
   );
 }
@@ -274,6 +285,64 @@ export function CheckModal({ open, onClose }) {
         <p className="mt-1 text-xl text-gray-300">
           You are in check!
         </p>
+      </div>
+    </div>
+  );
+}
+
+export function PiecePromotionModal({ open, onClose, gameCode }) {
+  const [selectedPiece, setSelectedPiece] = useState('Queen'); // Default to Queen
+
+  const handlePromotion = () => {
+    fetch(`http://${window.location.hostname}:8080/api/game/promotion/${gameCode}`, { // Replace with your API endpoint
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ piece: selectedPiece }),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      onClose();
+    })
+    .catch(error => {
+      console.error('Failed to promote piece:', error);
+    });
+  };
+
+  return (
+    <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
+      <div className="relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
+        <button onClick={onClose} className="absolute top-0 right-0 p-2 mr-2 text-white text-2xl hover:text-gray-300" type="button">
+          &times;
+        </button>
+        <Logo />
+        <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
+          Promotion!
+        </h2>
+        <p className="mt-1 text-xl text-gray-300">
+          You can promote your pawn!
+        </p>
+        <select value={selectedPiece} onChange={e => setSelectedPiece(e.target.value)} className="mt-4 text-xl text-gray-300">
+          <option value="Queen">Queen</option>
+          <option value="Rook">Rook</option>
+          <option value="Bishop">Bishop</option>
+          <option value="Machine">Machine</option>
+          <option value="Knight">Knight</option>
+          <option value="Shield">Shield</option>
+          <option value="Jester">Jester</option>
+          <option value="Cat">Cat</option>
+          <option value="Elephant">Elephant</option>
+          <option value="Prince">Prince</option>
+          <option value="Dog">Dog</option>
+          <option value="Mammoth">Mammoth</option>
+          <option value="Hawk">Hawk</option>
+        </select>
+        <button onClick={handlePromotion} className="mt-4 p-2 text-white text-xl hover:text-gray-300" type="button">
+          Promote
+        </button>
       </div>
     </div>
   );
