@@ -167,6 +167,7 @@ def game(game_id):
                 "timed_game": games[game_id]["timed_game"],
                 "local": games[game_id]["local"],
                 "turn": games[game_id]["turn"],
+                "in_check": games[game_id]["board"].in_check,
             }
         )
     elif request.method == "POST":
@@ -187,6 +188,10 @@ def game(game_id):
         games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
         games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
 
+        # check winner
+        if games[game_id]["board"].game_over:
+            games[game_id]["winner"] = "player_1" if games[game_id]["turn"] == "black" else "player_2"
+
         # Emit updates
         emit_timer_update(game_id)
         emit_game_data_update(game_id)
@@ -197,6 +202,7 @@ def game(game_id):
                 "valid_moves": valid_moves,
                 "captured_pieces": games[game_id]["board"].captured_pieces,
                 "turn": games[game_id]["turn"],
+                "in_check": games[game_id]["board"].in_check,
             }
         )
     else:
@@ -277,5 +283,6 @@ def emit_game_data_update(game_id):
         "timed_game": games[game_id]["timed_game"],
         "local": games[game_id]["local"],
         "turn": games[game_id]["turn"],
+        "in_check": games[game_id]["board"].in_check,
     }
     socketio.emit("game_data", response_data, to=game_id)
