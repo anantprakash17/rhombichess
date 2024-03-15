@@ -168,6 +168,8 @@ def game(game_id):
                 "local": games[game_id]["local"],
                 "turn": games[game_id]["turn"],
                 "in_check": games[game_id]["board"].in_check,
+                "promotion": games[game_id]["board"].promotion,
+                "promotion_location": games[game_id]["board"].promotion_loc,
             }
         )
     elif request.method == "POST":
@@ -203,10 +205,22 @@ def game(game_id):
                 "captured_pieces": games[game_id]["board"].captured_pieces,
                 "turn": games[game_id]["turn"],
                 "in_check": games[game_id]["board"].in_check,
+                "promotion": games[game_id]["board"].promotion,
+                "promotion_location": games[game_id]["board"].promotion_loc,
             }
         )
     else:
         return jsonify({"error_message": "Invalid method"}), 405
+
+
+@app.route("/api/game/promotion/<game_id>", methods=["POST"])
+def promotion(game_id):
+    data = request.get_json()
+    piece = data.get("piece")
+    if not games[game_id]["board"].promote(piece):
+        return jsonify({"error_message": "Invalid promotion"}), 400
+    emit_game_data_update(game_id)
+    return jsonify({"board": games[game_id]["board"].get_piece_locations()}), 200
 
 
 @socketio.on("timer_update")
@@ -285,4 +299,13 @@ def emit_game_data_update(game_id):
         "turn": games[game_id]["turn"],
         "in_check": games[game_id]["board"].in_check,
     }
+
+    response_data.update(
+        {
+            "promotion": games[game_id]["board"].promotion,
+            "promotion_location": games[game_id]["board"].promotion_loc,
+        }
+        if games[game_id]["board"].promotion
+        else {}
+    )
     socketio.emit("game_data", response_data, to=game_id)
