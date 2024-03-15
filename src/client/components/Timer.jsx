@@ -22,7 +22,9 @@ export default function Timer({ timerDuration, timerRunning }) {
 
   return (
     <div>
-      <h2>{`${displayMin.toString().padStart(2, '0')}:${displaySec.toString().padStart(2, '0')}`}</h2>
+      <h2 className="text-gray-800">
+        {`${displayMin.toString().padStart(2, '0')}:${displaySec.toString().padStart(2, '0')}`}
+      </h2>
     </div>
   );
 }

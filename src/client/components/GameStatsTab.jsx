@@ -103,7 +103,7 @@ export default function GameStatsTab({ gameData, socket }) {
       </div>
       <div className="flex flex-col w-full text-2xl font-bold mt-6">
         <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center rounded-lg h-[160px] ${turn === gameData?.player_1?.color ? 'bg-green-300' : ''}`}>
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_1?.color && 'bg-green-300'}`}>
             <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -119,7 +119,7 @@ export default function GameStatsTab({ gameData, socket }) {
         </div>
 
         <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center py-10 rounded-lg h-[160px] ${turn === gameData?.player_2?.color ? 'bg-green-300' : ''}`}>
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_2?.color && 'bg-green-300'}`}>
             <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
