@@ -346,6 +346,7 @@ class ChessBoard:
         ):
             self.promotion_loc = end
             self.promotion = True
+            self.promotion_color = "black" if start_tile.piece.color == 0 else "white"
 
         end_tile.piece = start_tile.piece
         start_tile.piece = None

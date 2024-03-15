@@ -53,6 +53,7 @@ function Board({
         setWinnerModalOpen(true);
       }
       if (data.promotion) {
+        console.log(data.promotion_color);
         setPiecePromotionModalOpen(true);
       }
 

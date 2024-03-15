@@ -304,6 +304,7 @@ def emit_game_data_update(game_id):
         {
             "promotion": games[game_id]["board"].promotion,
             "promotion_location": games[game_id]["board"].promotion_loc,
+            "promotion_color": games[game_id]["board"].promotion_color,
         }
         if games[game_id]["board"].promotion
         else {}
