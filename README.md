@@ -47,6 +47,8 @@ python3 src/server/server.py
 
 This will start the backend on port 5000. To view the backend, navigate to `localhost:8080` in your browser.
 
+> If you wish to run the backend server outside of a virtual environment, navigate to `/src/server` and install `pip install flask-socketio`. From there, you can start the server using `python3 server.py`.
+
 ### Frontend
 We use NextJS on the frontend for this project. To get started, you will need to have `npm` installed. To install all the required dependencies, run the following command:
 ```bash
@@ -81,13 +83,13 @@ This will start a locust server on `localhost:8089`. To view the locust server, 
 Use locust to test the backend by entering the number of users and the spawn rate, then click start.
 
 ### Frontend
-To run the tests for the frontend (`/src/client`), run the following command:
+To run the tests for the frontend (`/src/client`), run the following command inside of the client directory:
 ```bash
 npm test
 ```
 
 ### Cleanup
-To clean up the project, run the following command:
+To clean up the project, run the following command from the root directory:
 ```bash
 make clean-all
 # or to clean just the backend
