@@ -22,7 +22,7 @@ function Board({
   const [confirmMoveModalOpen, setConfirmMoveModalOpen] = useState(false);
   const [possibleMoves, setPossibleMoves] = useState([]);
   const [winnerModalOpen, setWinnerModalOpen] = useState(!!initialGameData?.winner);
-  const [promotePieceModalOpen, setPromotePieceModalOpen] = useState(true);
+  const [promotePieceModalOpen, setPromotePieceModalOpen] = useState('white');
   const [promotedPiece, setPromotedPiece] = useState(null);
   const [color, setColor] = useState(initialColor);
 
@@ -180,7 +180,7 @@ function Board({
         {generateBoardUI()}
       </div>
 
-      <PromotePiece open={promotePieceModalOpen} onChange={handlePromotedPieceSelection} />
+      <PromotePiece color={promotePieceModalOpen} open={true} onChange={handlePromotedPieceSelection} />
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
         <div className="flex-col items-center justify-center w-full bg-slate-600">
@@ -217,63 +217,63 @@ function Board({
 
 export default Board;
 
-export function PromotePiece({ open, onChange }) {
+export function PromotePiece({ color, open, onChange }) {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
       <div className={`fixed bg-slate-600 rounded-md shadow-lg p-2 border-2 border-gray-700 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
         <div className="flex-col items-center justify-center w-full bg-slate-600">
           <div className="flex-col items-center justify-center">
-            <input type="radio" id="queen-white" name="piecePromotion" value="queen-white" className="hidden peer" required onChange={onChange} />
-            <label htmlFor="queen-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/queen-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`queen-${color}`} name="piecePromotion" value={`queen-${color}`} className="hidden peer" required onChange={onChange} />
+            <label htmlFor={`queen-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/queen-${color}.png`} alt={`queen-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="jester-white" name="piecePromotion" value="jester-white" className="hidden" onChange={onChange} />
-            <label htmlFor="jester-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/jester-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`jester-${color}`} name="piecePromotion" value={`jester-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`jester-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/jester-${color}.png`} alt={`jester-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="rook-white" name="piecePromotion" value="rook-white" className="hidden" onChange={onChange} />
-            <label htmlFor="rook-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/rook-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`rook-${color}`} name="piecePromotion" value={`rook-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`rook-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/rook-${color}.png`} alt={`rook-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="elephant-white" name="piecePromotion" value="elephant-white" className="hidden" onChange={onChange} />
-            <label htmlFor="elephant-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/elephant-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`elephant-${color}`} name="piecePromotion" value={`elephant-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`elephant-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/elephant-${color}.png`} alt={`elephant-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="bishop-white" name="piecePromotion" value="bishop-white" className="hidden" onChange={onChange} />
-            <label htmlFor="bishop-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/bishop-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`bishop-${color}`} name="piecePromotion" value={`bishop-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`bishop-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/bishop-${color}.png`} alt={`bishop-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="machine-white" name="piecePromotion" value="machine-white" className="hidden" onChange={onChange} />
-            <label htmlFor="machine-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/machine-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`machine-${color}`} name="piecePromotion" value={`machine-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`machine-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/machine-${color}.png`} alt={`machine-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="dog-white" name="piecePromotion" value="dog-white" className="hidden" onChange={onChange} />
-            <label htmlFor="dog-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/dog-white.png" alt="rook" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`dog-${color}`} name="piecePromotion" value={`dog-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`dog-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/dog-${color}.png`} alt={`dog-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="mammoth-white" name="piecePromotion" value="mammoth-white" className="hidden" onChange={onChange} />
-            <label htmlFor="mammoth-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/mammoth-white.png" alt="mammoth" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`mammoth-${color}`} name="piecePromotion" value={`mammoth-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`mammoth-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/mammoth-${color}.png`} alt={`mammoth-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="cat-white" name="piecePromotion" value="cat-white" className="hidden" onChange={onChange} />
-            <label htmlFor="cat-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/cat-white.png" alt="cat" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`cat-${color}`} name="piecePromotion" value={`cat-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`cat-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/cat-${color}.png`} alt={`cat-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="hawk-white" name="piecePromotion" value="hawk-white" className="hidden" onChange={onChange} />
-            <label htmlFor="hawk-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/hawk-white.png" alt="hawk" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`hawk-${color}`} name="piecePromotion" value={`hawk-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`hawk-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/hawk-${color}.png`} alt={`hawk-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="shield-white" name="piecePromotion" value="shield-white" className="hidden" onChange={onChange} />
-            <label htmlFor="shield-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/shield-white.png" alt="shield" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`shield-${color}`} name="piecePromotion" value={`shield-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`shield-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/shield-${color}.png`} alt={`shield-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="knight-white" name="piecePromotion" value="knight-white" className="hidden" onChange={onChange} />
-            <label htmlFor="knight-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/knight-white.png" alt="knight" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`knight-${color}`} name="piecePromotion" value={`knight-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`knight-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/knight-${color}.png`} alt={`knight-${color}`} width={40} height={30} className="mx-auto" />
             </label>
-            <input type="radio" id="prince-white" name="piecePromotion" value="prince-white" className="hidden" onChange={onChange} />
-            <label htmlFor="prince-white" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
-              <Image src="/pieces/prince-white.png" alt="prince" width={40} height={30} className="mx-auto" />
+            <input type="radio" id={`prince-${color}`} name="piecePromotion" value={`prince-${color}`} className="hidden" onChange={onChange} />
+            <label htmlFor={`prince-${color}`} className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer">
+              <Image src={`/pieces/prince-${color}.png`} alt={`prince-${color}`} width={40} height={30} className="mx-auto" />
             </label>
           </div>
         </div>
