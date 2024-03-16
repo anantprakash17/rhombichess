@@ -1,7 +1,14 @@
 import React from 'react';
 
 function Tile({
-  children, testid, orientation, colour, onClick, disabled = false, highlight = false,
+  children,
+  testid,
+  orientation,
+  colour,
+  onClick,
+  disabled = false,
+  highlight = false,
+  capturable = false,
 }) {
   let tile;
   const colours = ['#FDE047', '#67E8F9', '#F472B6'];
@@ -37,7 +44,7 @@ function Tile({
     <button onClick={onClick} disabled={disabled} type="button" className="group relative hover:cursor-pointer hover:z-50 pointer-events-none select-none focus:outline-0">
       <div className="absolute inset-0 flex flex-col justify-center items-center">
         {children}
-        <div hidden={!highlight} className="w-[25px] h-[25px] shadow-lg border-gray-700 border-4 rounded-full bg-white absolute" />
+        <div hidden={!highlight} className={`${capturable ? 'bg-red-500 border-red-700 ring-2 ring-red-800' : 'bg-white border-gray-700'} w-[25px] h-[25px] shadow-lg border-4 rounded-full absolute`} />
       </div>
       <div data-testid={highlight ? `highlighted-${testid}` : `${testid}`}>
         {tile}

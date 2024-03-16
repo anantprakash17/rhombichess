@@ -21,11 +21,6 @@ export default function CreateLocalGame() {
       formDataObject[key] = value;
     });
 
-    let { color } = formDataObject;
-    if (color === 'random' || !color) {
-      color = Math.random() < 0.5 ? 'white' : 'black';
-    }
-
     const minutes = formDataObject.minutes || '0';
     const seconds = formDataObject.seconds || '0';
 
@@ -40,7 +35,7 @@ export default function CreateLocalGame() {
       body: JSON.stringify({
         local: true,
         user: session.data.user,
-        color,
+        color: 'white',
         timer_duration: timerDuration,
       }),
     });
@@ -56,40 +51,14 @@ export default function CreateLocalGame() {
   return (
     <div>
       <h1 className="mb-6 text-3xl text-center font-bold tracking-tight leading-none text-gray-900">
-        Create a New Game
+        Create a New Local Game
       </h1>
       <form className="space-y-6 mb-10" onSubmit={handleCreateGame}>
-        <div>
-          <p className="mb-2 block font-medium">
-            Player #1 Color
-          </p>
-          <ul className="flex gap-2">
-            <li>
-              <input type="radio" id="random" name="color" value="random" className="hidden peer" required defaultChecked />
-              <label htmlFor="random" className="inline-flex items-center justify-between py-2 px-3 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white hover:text-gray-500 hover:bg-gray-100">
-                <div className="block">
-                  <div className="w-full font-semibold">Random</div>
-                </div>
-              </label>
-            </li>
-            <li>
-              <input type="radio" id="black" name="color" value="black" className="hidden peer" required />
-              <label htmlFor="black" className="inline-flex items-center justify-between py-2 px-3 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white hover:text-gray-500 hover:bg-gray-100">
-                <div className="block">
-                  <div className="w-full font-semibold">Black</div>
-                </div>
-              </label>
-            </li>
-            <li>
-              <input type="radio" id="white" name="color" value="white" className="hidden peer" required />
-              <label htmlFor="white" className="inline-flex items-center justify-between py-2 px-3 text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:bg-blue-500 peer-checked:text-white hover:text-gray-500 hover:bg-gray-100">
-                <div className="block">
-                  <div className="w-full font-semibold">White</div>
-                </div>
-              </label>
-            </li>
-          </ul>
-        </div>
+        <p className="text-xl pt-3 pb-4 font-medium text-gray-600">
+          Local games are meant to be played between two players on the same device.
+          We leave it to you to choose your colors - remember that white always plays first.
+          Have fun!
+        </p>
         <div>
           <label htmlFor="timer" className="mb-2 block font-medium">
             Timer Duration (optional)
@@ -112,7 +81,6 @@ export default function CreateLocalGame() {
             />
           </div>
         </div>
-        <p className="py-2">Other Options...</p>
         <div>
           <div className="text-center">
             <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="submit" onClick={() => {}}>
