@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import Tile from './Tile';
 import Piece from './Piece';
 import Logo from './icons/Logo';
@@ -23,6 +24,7 @@ function Board({
   const [winnerModalOpen, setWinnerModalOpen] = useState(!!initialGameData?.winner);
   const [checkModalOpen, setCheckModalOpen] = useState(!!initialGameData?.in_check);
   const [piecePromotionModalOpen, setPiecePromotionModalOpen] = useState(false);
+  const [piecePromotionColor, setPiecePormotionColor] = useState(null);
   const [colorInCheck, setColorInCheck] = useState(null);
   const [color, setColor] = useState(initialColor);
 
@@ -54,6 +56,7 @@ function Board({
       }
       if (data.promotion) {
         console.log(data.promotion_color);
+        setPiecePormotionColor(data.promotion_color);
         setPiecePromotionModalOpen(true);
       }
 
@@ -223,13 +226,11 @@ function Board({
           onClose={() => { setCheckModalOpen(false); }}
         />
       )}
-      {gameData.promotion && (
-        <PiecePromotionModal
-          open={piecePromotionModalOpen}
-          onClose={() => { setPiecePromotionModalOpen(false); }}
-          gameCode={gameCode}
-        />
-      )}
+      <PiecePromotionModal color={piecePromotionColor} open={piecePromotionModalOpen} gameCode={gameCode}>
+        <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="submit" onClick={() => { setPiecePromotionModalOpen(false); }}>
+          Upgrade
+        </button>
+      </PiecePromotionModal>
     </div>
   );
 }
@@ -291,59 +292,116 @@ export function CheckModal({ open, onClose }) {
   );
 }
 
-export function PiecePromotionModal({ open, onClose, gameCode }) {
-  const [selectedPiece, setSelectedPiece] = useState('Queen'); // Default to Queen
+export function PiecePromotionModal({ color, open, gameCode, children }) {
+  const [selectedPiece, setSelectedPiece] = useState('queen');
 
-  const handlePromotion = () => {
-    fetch(`http://${window.location.hostname}:8080/api/game/promotion/${gameCode}`, { // Replace with your API endpoint
+  const handlePromotion = (event) => {
+    event.preventDefault();
+    fetch(`http://${window.location.hostname}:8080/api/game/promotion/${gameCode}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ piece: selectedPiece }),
-    })
-    .then(response => {
+    }).then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      onClose();
-    })
-    .catch(error => {
+    }).catch((error) => {
       console.error('Failed to promote piece:', error);
     });
   };
 
   return (
-    <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
-      <div className="relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
-        <button onClick={onClose} className="absolute top-0 right-0 p-2 mr-2 text-white text-2xl hover:text-gray-300" type="button">
-          &times;
-        </button>
-        <Logo />
-        <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
-          Promotion!
-        </h2>
-        <p className="mt-1 text-xl text-gray-300">
-          You can promote your pawn!
-        </p>
-        <select value={selectedPiece} onChange={e => setSelectedPiece(e.target.value)} className="mt-4 text-xl text-gray-300">
-          <option value="Queen">Queen</option>
-          <option value="Rook">Rook</option>
-          <option value="Bishop">Bishop</option>
-          <option value="Machine">Machine</option>
-          <option value="Knight">Knight</option>
-          <option value="Shield">Shield</option>
-          <option value="Jester">Jester</option>
-          <option value="Cat">Cat</option>
-          <option value="Elephant">Elephant</option>
-          <option value="Prince">Prince</option>
-          <option value="Dog">Dog</option>
-          <option value="Mammoth">Mammoth</option>
-          <option value="Hawk">Hawk</option>
-        </select>
-        <button onClick={handlePromotion} className="mt-4 p-2 text-white text-xl hover:text-gray-300" type="button">
-          Promote
-        </button>
+    <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`} >
+      <div className={`fixed bg-slate-600 rounded-md shadow-lg p-2 border-2 border-gray-700 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
+        <form className="space-y-6 mb-10" onSubmit={handlePromotion}>
+          <div className="flex-col items-center justify-center w-full bg-slate-600">
+            <div className="flex-col items-center justify-center">
+              <ul>
+                <li>
+                  <input type="radio" id="queen" name="piecePromotion" value="queen" className="hidden peer" required checked={selectedPiece === 'queen'} onChange={(event) => setSelectedPiece(event.target.value)} />
+                  <label htmlFor="queen" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/queen-${color}.png`} alt={`queen-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="jester" name="piecePromotion" value="jester" className="hidden peer" required checked={selectedPiece === 'jester'} onChange={(event) => setSelectedPiece(event.target.value)} />
+                  <label htmlFor="jester" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/jester-${color}.png`} alt={`jester-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="rook" name="piecePromotion" value="rook" className="hidden peer" required checked={selectedPiece === 'rook'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="rook" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/rook-${color}.png`} alt={`rook-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="elephant" name="piecePromotion" value="elephant" className="hidden peer" required checked={selectedPiece === 'elephant'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="elephant" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/elephant-${color}.png`} alt={`elephant-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="bishop" name="piecePromotion" value="bishop" className="hidden peer" required checked={selectedPiece === 'bishop'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="bishop" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/bishop-${color}.png`} alt={`bishop-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="machine" name="piecePromotion" value="machine" className="hidden peer" required checked={selectedPiece === 'machine'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="machine" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/machine-${color}.png`} alt={`machine-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="dog" name="piecePromotion" value="dog" className="hidden peer" required checked={selectedPiece === 'dog'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="dog" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/dog-${color}.png`} alt={`dog-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="mammoth" name="piecePromotion" value="mammoth" className="hidden peer" required checked={selectedPiece === 'mammoth'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="mammoth" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/mammoth-${color}.png`} alt={`mammoth-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="cat" name="piecePromotion" value="cat" className="hidden peer" required checked={selectedPiece === 'cat'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="cat" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/cat-${color}.png`} alt={`cat-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="hawk" name="piecePromotion" value="hawk" className="hidden peer" required checked={selectedPiece === 'hawk'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="hawk" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/hawk-${color}.png`} alt={`hawk-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="shield" name="piecePromotion" value="shield" className="hidden peer" required checked={selectedPiece === 'shield'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="shield" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/shield-${color}.png`} alt={`shield-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="knight" name="piecePromotion" value="knight" className="hidden peer" required checked={selectedPiece === 'knight'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="knight" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/knight-${color}.png`} alt={`knight-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+                <li>
+                  <input type="radio" id="prince" name="piecePromotion" value="prince" className="hidden peer" required checked={selectedPiece === 'prince'} onChange={(e) => setSelectedPiece(e.target.value)} />
+                  <label htmlFor="prince" className="block relative rounded-lg p-1 m-1 bg-gray-500 hover:bg-gray-100 focus:bg-gray-300 cursor-pointer peer-checked:bg-gray-100">
+                    <Image src={`/pieces/prince-${color}.png`} alt={`prince-${color}`} width={40} height={30} className="mx-auto" />
+                  </label>
+                </li>
+              </ul>
+            </div>
+            {children}
+          </div>
+        </form>
       </div>
     </div>
   );
