@@ -17,10 +17,10 @@ is a variant chessboard that is made up of rhombuses instead of squares (refer t
 skills as well as their overall chess skills. It could also be a platform for social interactions as we
 intend to host this game online.
 
-<p align="center">
-  TODO: Image goes here
-  <!-- <img src="rhombichess.png" /> -->
-</p>
+<div align="center" width="full">
+  <img src="./images/landingpage.png" />
+  <img src="./images/playonline.png" />
+</div>
 
 ## Team Members
 #### Frontend Developers
