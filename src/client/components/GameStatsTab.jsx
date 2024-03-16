@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Timer from './Timer';
+import CapturedPieces from './CapturedPieces';
 
 export default function GameStatsTab({ gameData, socket }) {
   const [copiedField, setCopiedField] = useState(null);
@@ -10,6 +11,20 @@ export default function GameStatsTab({ gameData, socket }) {
   const [timeLeftP2, setTimeLeftP2] = useState(gameData?.player_2?.timer_duration);
   const [timerRunningP1, setTimerRunningP1] = useState(gameData?.player_1?.timer_running);
   const [timerRunningP2, setTimerRunningP2] = useState(gameData?.player_2?.timer_running);
+  const [turn, setTurn] = useState(gameData?.turn);
+
+  const [capturedP1, setCapturedP1] = useState(null);
+  const [capturedP2, setCapturedP2] = useState(null);
+
+  useEffect(() => {
+    if (gameData?.player_1?.color === 'white') {
+      setCapturedP1(gameData?.captured_pieces?.black);
+      setCapturedP2(gameData?.captured_pieces?.white);
+    } else {
+      setCapturedP1(gameData?.captured_pieces?.white);
+      setCapturedP2(gameData?.captured_pieces?.black);
+    }
+  }, [gameData]);
 
   useEffect(() => {
     if (!socket || !gameData) return;
@@ -19,6 +34,15 @@ export default function GameStatsTab({ gameData, socket }) {
       setTimeLeftP2(data.timer_duration_p2);
       setTimerRunningP1(data.timer_running_p1);
       setTimerRunningP2(data.timer_running_p2);
+
+      setTurn(data?.turn);
+      if (gameData?.player_1?.color === 'white') {
+        setCapturedP1(data?.captured_pieces?.black);
+        setCapturedP2(data?.captured_pieces?.white);
+      } else if (gameData?.player_1?.color === 'black') {
+        setCapturedP1(data?.captured_pieces?.white);
+        setCapturedP2(data?.captured_pieces?.black);
+      }
     };
 
     socket.on('timer_update', handleTimerUpdate);
@@ -76,60 +100,38 @@ export default function GameStatsTab({ gameData, socket }) {
           </button>
         )}
       </div>
-      <div className="mt-6">
-        <span className="text-xl font-medium text-white">
-          Moves
-        </span>
-        <div className="flex flex-col text-lg mt-2 gap-1 font-medium">
-          <span className="text-gray-900 font-semibold">
-            Black: King G12 to G19
-          </span>
-          <span className="text-gray-300">
-            White: Rook E9 to K6
-          </span>
-          <span className="text-gray-900 font-semibold">
-            Black: King G12 to G19
-          </span>
-          <span className="text-gray-300">
-            White: Bishop E8 to F9
-          </span>
-          <span className="text-gray-900 font-semibold">
-            Black: Knight D12 to H10
-          </span>
-        </div>
-      </div>
-      <div className="flex mt-24 w-full text-2xl font-bold">
-        {gameData.timed_game ? (
-          <>
-            <div className="ml-8 flex-1 flex flex-col items-center justify-center">
-              <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
+      <div className="flex flex-col w-full text-2xl font-bold mt-6">
+        <div className="flex flex-1 items-center justify-between">
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_1?.color && 'bg-green-300'}`}>
+            <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
+            {gameData.timed_game ? (
               <Timer
                 key={`${timeLeftP1}, ${timerRunningP1}`}
                 timerDuration={timeLeftP1}
                 timerRunning={timerRunningP1}
-                timedGame={gameData.timed_game}
               />
-            </div>
-            <div className="mr-8 flex-1 flex flex-col items-center justify-center">
-              <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
+            ) : null }
+          </div>
+          <div className="flex flex-1 justify-center h-[180px]">
+            <CapturedPieces capturedPieces={capturedP1} />
+          </div>
+        </div>
+
+        <div className="flex flex-1 items-center justify-between">
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_2?.color && 'bg-green-300'}`}>
+            <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
+            {gameData.timed_game ? (
               <Timer
                 key={`${timeLeftP2}, ${timerRunningP2}`}
                 timerDuration={timeLeftP2}
                 timerRunning={timerRunningP2}
-                timedGame={gameData.timed_game}
               />
-            </div>
-          </>
-        ) : (
-          <div className="w-full flex flex-col justify-center items-center">
-            <p className="text-gray-800">
-              No Time Limit
-            </p>
-            <p className="text-xl font-medium mt-1 text-gray-700">
-              The game ends on checkmate.
-            </p>
+            ) : null }
           </div>
-        )}
+          <div className="flex flex-1 justify-center h-[180px]">
+            <CapturedPieces capturedPieces={capturedP2} />
+          </div>
+        </div>
       </div>
     </section>
   );

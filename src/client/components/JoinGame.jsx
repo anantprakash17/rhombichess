@@ -79,22 +79,25 @@ export default function JoinGame() {
       )}
       <form className="space-y-6" onSubmit={handleJoinGame}>
         <div>
-          <label htmlFor="gameCode" className="mb-2 block font-medium">
-            Game Code
-          </label>
-          <div className="relative">
-            <input
-              className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-              id="gameCode"
-              name="gameCode"
-              onChange={handleGameCodeChange}
-              placeholder="4ZP6A"
-              required
-              type="text"
-            />
-          </div>
-          {showGamePasswordField && (
-            <>
+          <div className="flex gap-4">
+            <div className="flex-grow">
+              <label htmlFor="gameCode" className="mb-2 block font-medium">
+                Game Code
+              </label>
+              <div className="relative">
+                <input
+                  className="mb-4 block w-full rounded-lg border border-slate-300 bg-slate-50 p-2.5 pr-12 placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+                  id="gameCode"
+                  name="gameCode"
+                  onChange={handleGameCodeChange}
+                  placeholder="4ZP6A"
+                  required
+                  type="text"
+                />
+              </div>
+            </div>
+            {showGamePasswordField && (
+            <div className="flex-grow">
               <label htmlFor="gameCode" className="mb-2 block font-medium">
                 Game Password
               </label>
@@ -120,8 +123,9 @@ export default function JoinGame() {
                   )}
                 </button>
               </div>
-            </>
-          )}
+            </div>
+            )}
+          </div>
           <div className="text-center">
             <button className="w-full rounded-lg bg-blue-500 px-5 py-2.5 text-center font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 disabled:cursor-not-allowed" type="submit" onClick={() => {}}>
               Join Game
