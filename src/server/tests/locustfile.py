@@ -1,4 +1,5 @@
 from locust import HttpUser, task, between
+import random
 import json
 
 
@@ -15,6 +16,7 @@ class GameSimulationUser(HttpUser):
                 "password": "value",
                 "color": "black",
                 "user": {"id": "123", "name": "Bucky Barns"},
+                "timer_duration": 0,
             },
             headers=headers,
         )
@@ -27,9 +29,7 @@ class GameSimulationUser(HttpUser):
         if self.game_id is not None:  # Check if game_id is set
             headers = {"Content-Type": "application/json"}
             # Perform actions specific to this game
-            self.client.get(
-                f"/api/game/{self.game_id}", name="/api/game/[game_id]", headers=headers
-            )
+            self.client.get(f"/api/game/{self.game_id}", name="/api/game/[game_id]", headers=headers)
             self.client.post(
                 f"/api/join_game/{self.game_id}",
                 json={
@@ -39,9 +39,24 @@ class GameSimulationUser(HttpUser):
                 name="/api/join_game/[game_id]",
                 headers=headers,
             )
-            self.client.post(
+            response = self.client.post(
                 f"/api/game/{self.game_id}",
-                json={"old_pos": "0,0", "new_pos": "0,1"},
+                json={"old_pos": "1,5", "new_pos": "1,7"},
                 name="/api/game/[game_id]",
                 headers=headers,
             )
+            valid_moves = json.loads(response.text)["valid_moves"]
+            while valid_moves:
+                pos, possible_moves = next(iter(valid_moves.items()))
+                old_pos, new_pos = pos, random.choice(possible_moves)
+                self.client.post(
+                    f"/api/game/{self.game_id}",
+                    json={"old_pos": old_pos, "new_pos": new_pos},
+                    name="/api/game/[game_id]",
+                    headers=headers,
+                )
+                # Get the updated valid moves
+                response = self.client.get(f"/api/game/{self.game_id}", name="/api/game/[game_id]", headers=headers)
+                valid_moves = json.loads(response.text)["valid_moves"]
+        # No more valid moves, create a new game
+        self.on_start()

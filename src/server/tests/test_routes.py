@@ -22,6 +22,7 @@ def test_new_game(client: FlaskClient):
             "password": "value",
             "color": "black",
             "user": {"id": "123", "name": "Captain America"},
+            "timer_duration": 0,
         },
     )
     assert response.status_code == 200
@@ -109,9 +110,7 @@ def test_game_post_invalid_request(client: FlaskClient):
 
 
 def test_game_post_move_piece(client: FlaskClient):
-    response = client.post(
-        f"/api/game/{game_id}", json={"old_pos": "0,0", "new_pos": "0,1"}
-    )
+    response = client.post(f"/api/game/{game_id}", json={"old_pos": "1,5", "new_pos": "1,7"})
     assert response.status_code == 200
     assert "board" in response.get_json()
 
@@ -126,6 +125,7 @@ def test_handle_multiple_games(client: FlaskClient):
                 "password": "value",
                 "color": "black",
                 "user": {"id": "123", "name": "Captain America"},
+                "timer_duration": 0,
             },
         )
         assert response.status_code == 200
@@ -151,6 +151,7 @@ def test_repeated_calls(client: FlaskClient):
             "password": "value",
             "color": "black",
             "user": {"id": "123", "name": "Captain America"},
+            "timer_duration": 0,
         },
     )
     response4 = client.post(
@@ -159,6 +160,7 @@ def test_repeated_calls(client: FlaskClient):
             "password": "value",
             "color": "black",
             "user": {"id": "123", "name": "Captain America"},
+            "timer_duration": 0,
         },
     )
     assert response3.status_code == 200
@@ -184,6 +186,7 @@ def test_new_game_player_color(client: FlaskClient):
             "password": "value",
             "color": "black",
             "user": {"id": "123", "name": "Captain America"},
+            "timer_duration": 0,
         },
     )
     data = response.get_json()
@@ -195,11 +198,9 @@ def test_new_game_player_color(client: FlaskClient):
 
 def test_game_post_move_piece_correct_game(client: FlaskClient):
     get_board = client.get(f"/api/game/{game_id}").get_json()["board"]
-    assert get_board[0][1] == "soldier-black"
-    response = client.post(
-        f"/api/game/{game_id}", json={"old_pos": "0,1", "new_pos": "0,0"}
-    )
+    assert get_board["(1, 7)"]["piece"] == "pawn-black"
+    response = client.post(f"/api/game/{game_id}", json={"old_pos": "1,7", "new_pos": "1,9"})
     data = response.get_json()
     board = data["board"]
-    assert board[0][0] == "soldier-black"
-    assert board[0][1] == ""
+    assert board["(1, 9)"]["piece"] == "pawn-black"
+    assert board["(1, 7)"]["piece"] == ""
