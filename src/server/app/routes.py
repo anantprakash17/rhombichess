@@ -183,12 +183,13 @@ def game(game_id):
         if not games[game_id]["board"].move_piece(old_pos, new_pos):
             return jsonify({"error_message": "Invalid move"}), 400
 
-        # Change turns
-        games[game_id]["turn"] = "white" if games[game_id]["turn"] == "black" else "black"
+        if not games[game_id]["board"].promotion:
+            # Change turns
+            games[game_id]["turn"] = "white" if games[game_id]["turn"] == "black" else "black"
 
-        # Start & stop timers
-        games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
-        games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
+            # Start & stop timers
+            games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
+            games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
 
         # check winner
         if games[game_id]["board"].game_over:
@@ -219,7 +220,14 @@ def promotion(game_id):
     piece = data.get("piece")
     if not games[game_id]["board"].promote(piece):
         return jsonify({"error_message": "Invalid promotion"}), 400
+    # Change turns and start/stop timers
+    games[game_id]["turn"] = "white" if games[game_id]["turn"] == "black" else "black"
+    games[game_id]["player_1"]["timer_running"] = not games[game_id]["player_1"]["timer_running"]
+    games[game_id]["player_2"]["timer_running"] = not games[game_id]["player_2"]["timer_running"]
+
     emit_game_data_update(game_id)
+    emit_timer_update(game_id)
+
     return jsonify({"board": games[game_id]["board"].get_piece_locations()}), 200
 
 
@@ -283,6 +291,9 @@ def emit_timer_update(game_id):
         "timer_running_p2": games[game_id]["player_2"]["timer_running"],
         "turn": games[game_id]["turn"],
         "captured_pieces": games[game_id]["board"].captured_pieces,
+        "promotion": games[game_id]["board"].promotion,
+        "promotion_location": games[game_id]["board"].promotion_loc,
+        "in_check": games[game_id]["board"].in_check,
     }
     socketio.emit("timer_update", response_data, to=game_id)
 
@@ -300,14 +311,8 @@ def emit_game_data_update(game_id):
         "local": games[game_id]["local"],
         "turn": games[game_id]["turn"],
         "in_check": games[game_id]["board"].in_check,
+        "promotion": games[game_id]["board"].promotion,
+        "promotion_location": games[game_id]["board"].promotion_loc,
     }
 
-    response_data.update(
-        {
-            "promotion": games[game_id]["board"].promotion,
-            "promotion_location": games[game_id]["board"].promotion_loc,
-        }
-        if games[game_id]["board"].promotion
-        else {}
-    )
     socketio.emit("game_data", response_data, to=game_id)
