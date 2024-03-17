@@ -169,7 +169,6 @@ def game(game_id):
                 "turn": games[game_id]["turn"],
                 "in_check": games[game_id]["board"].in_check,
                 "promotion": games[game_id]["board"].promotion,
-                "promotion_location": games[game_id]["board"].promotion_loc,
             }
         )
     elif request.method == "POST":
@@ -207,7 +206,6 @@ def game(game_id):
                 "turn": games[game_id]["turn"],
                 "in_check": games[game_id]["board"].in_check,
                 "promotion": games[game_id]["board"].promotion,
-                "promotion_location": games[game_id]["board"].promotion_loc,
             }
         )
     else:
@@ -292,7 +290,6 @@ def emit_timer_update(game_id):
         "turn": games[game_id]["turn"],
         "captured_pieces": games[game_id]["board"].captured_pieces,
         "promotion": games[game_id]["board"].promotion,
-        "promotion_location": games[game_id]["board"].promotion_loc,
         "in_check": games[game_id]["board"].in_check,
     }
     socketio.emit("timer_update", response_data, to=game_id)
@@ -312,7 +309,6 @@ def emit_game_data_update(game_id):
         "turn": games[game_id]["turn"],
         "in_check": games[game_id]["board"].in_check,
         "promotion": games[game_id]["board"].promotion,
-        "promotion_location": games[game_id]["board"].promotion_loc,
     }
 
     socketio.emit("game_data", response_data, to=game_id)
