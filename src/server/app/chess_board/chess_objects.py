@@ -19,6 +19,8 @@ class PieceType(Enum):
     DOG = "dog"
     MAMMOTH = "mammoth"
     HAWK = "hawk"
+    PADDING = "padding"
+    DIAMOND = "diamond"
 
 
 class TileType(Enum):
