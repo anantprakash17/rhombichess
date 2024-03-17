@@ -1105,13 +1105,14 @@ class Jester(ChessPiece):  # Author: Phil
 
 
 class Pawn(ChessPiece):
-    def __init__(self, color: int) -> None:
+    def __init__(self, color: int, move_conditions=None) -> None:
         """
         Initializes a pawn piece
         Args:
             color (int): color of the piece
         """
         super().__init__(PieceType.PAWN, color)
+        self.mimic_conditions = move_conditions
 
     def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
         """
@@ -1136,15 +1137,17 @@ class Pawn(ChessPiece):
         tile = board[x][y]
         direction = -1 if self.color == 1 else 1
 
-        def can_capture(a: int, b: int) -> bool:
+        def pawn_capture_conditions(a: int, b: int) -> bool:
             if a < 0 or a >= len(board) or b < 0 or b >= len(board[a]):
                 return False
             return not board[a][b].is_empty() and board[a][b].piece.color != self.color
 
+        filter_cond = self.mimic_conditions if self.mimic_conditions else pawn_capture_conditions
+
         if tile.orientation == 0:
             potential_moves.append((x, y + (direction * 2)))
             valid_moves += filter(
-                lambda loc: can_capture(loc[0], loc[1]),
+                lambda loc: filter_cond(loc[0], loc[1]),
                 [
                     (x + 1, y + direction if direction == -1 else y),
                     (x - 1, y + direction if direction == -1 else y),
@@ -1157,7 +1160,7 @@ class Pawn(ChessPiece):
             potential_moves.append((x, y + (direction * 2)))
             if tile.orientation == -1:
                 valid_moves += filter(
-                    lambda loc: can_capture(loc[0], loc[1]),
+                    lambda loc: filter_cond(loc[0], loc[1]),
                     [
                         (x + 1, y - 1 if direction == -1 else y + 1),
                         (x - 1, y if direction == -1 else y + 2),
@@ -1165,7 +1168,7 @@ class Pawn(ChessPiece):
                 )
             else:
                 valid_moves += filter(
-                    lambda loc: can_capture(loc[0], loc[1]),
+                    lambda loc: filter_cond(loc[0], loc[1]),
                     [
                         (x + 1, y if direction == -1 else y + 2),
                         (x - 1, y - 1 if direction == -1 else y + 1),
@@ -1215,3 +1218,38 @@ class Queen(ChessPiece):  # Author: Phil
         valid_moves.update(jester_init.calculate_valid_moves(position, board))
 
         return list(valid_moves)
+
+
+class Soldier(ChessPiece):
+    def __init__(self, color: int) -> None:
+        """
+        Initializes a soldier piece
+        Args:
+            color (int): color of the piece
+        """
+        super().__init__(PieceType.SOLDIER, color)
+
+    def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
+        """
+        Calculate valid moves for the soldier piece from the given position
+        Args:
+            position: The current position of the piece on the board
+            board: The chess board in its current state
+        Returns:
+            A list of valid moves
+        """
+        """
+        Rule: On a vertical rhombus. Moves and captures like a Pawn on a similar rhombus.
+        Without capturing, it also moves to the rhombuses of capture.
+        On a non-vertical rhombus. Moves and captures like a Pawn on a similar rhombus.
+        Without capturing, it also moves to the rhombuses of capture.
+        (This soldier does not capture in the direction of a Jester or Dog).
+        """
+
+        def can_capture(a: int, b: int) -> bool:
+            if a < 0 or a >= len(board) or b < 0 or b >= len(board[a]):
+                return False
+            return (board[a][b].is_empty()) or (not board[a][b].is_empty() and board[a][b].piece.color != self.color)
+
+        pawn = Pawn(self.color, can_capture)
+        return pawn.calculate_valid_moves(position, board)
