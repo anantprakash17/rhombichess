@@ -1105,13 +1105,14 @@ class Jester(ChessPiece):  # Author: Phil
 
 
 class Pawn(ChessPiece):
-    def __init__(self, color: int) -> None:
+    def __init__(self, color: int, move_conditions=None) -> None:
         """
         Initializes a pawn piece
         Args:
             color (int): color of the piece
         """
         super().__init__(PieceType.PAWN, color)
+        self.mimic_conditions = move_conditions
 
     def calculate_valid_moves(self, position: tuple[int, int], board: list[list[ChessTile]]) -> list[tuple[int, int]]:
         """
@@ -1136,15 +1137,17 @@ class Pawn(ChessPiece):
         tile = board[x][y]
         direction = -1 if self.color == 1 else 1
 
-        def can_capture(a: int, b: int) -> bool:
+        def pawn_capture_conditions(a: int, b: int) -> bool:
             if a < 0 or a >= len(board) or b < 0 or b >= len(board[a]):
                 return False
             return not board[a][b].is_empty() and board[a][b].piece.color != self.color
 
+        filter_cond = self.mimic_conditions if self.mimic_conditions else pawn_capture_conditions
+
         if tile.orientation == 0:
             potential_moves.append((x, y + (direction * 2)))
             valid_moves += filter(
-                lambda loc: can_capture(loc[0], loc[1]),
+                lambda loc: filter_cond(loc[0], loc[1]),
                 [
                     (x + 1, y + direction if direction == -1 else y),
                     (x - 1, y + direction if direction == -1 else y),
@@ -1157,7 +1160,7 @@ class Pawn(ChessPiece):
             potential_moves.append((x, y + (direction * 2)))
             if tile.orientation == -1:
                 valid_moves += filter(
-                    lambda loc: can_capture(loc[0], loc[1]),
+                    lambda loc: filter_cond(loc[0], loc[1]),
                     [
                         (x + 1, y - 1 if direction == -1 else y + 1),
                         (x - 1, y if direction == -1 else y + 2),
@@ -1165,7 +1168,7 @@ class Pawn(ChessPiece):
                 )
             else:
                 valid_moves += filter(
-                    lambda loc: can_capture(loc[0], loc[1]),
+                    lambda loc: filter_cond(loc[0], loc[1]),
                     [
                         (x + 1, y if direction == -1 else y + 2),
                         (x - 1, y - 1 if direction == -1 else y + 1),
@@ -1242,40 +1245,11 @@ class Soldier(ChessPiece):
         Without capturing, it also moves to the rhombuses of capture.
         (This soldier does not capture in the direction of a Jester or Dog).
         """
-        valid_moves = []
-        x, y = position
-        tile = board[x][y]
-        potential_moves = []
-        if tile.orientation == 0:
-            potential_moves = [
-                (x + 1, y - 1),
-                (x - 1, y - 1),
-                (x + 1, y - 2),
-                (x - 1, y - 2),
-                (x, y - 2),
-            ]
-        elif tile.orientation == 1:
-            potential_moves = [
-                (x, y - 1),
-                (x, y - 2),
-                (x - 1, y - 1),
-                (x + 1, y),
-            ]
 
-        else:
-            potential_moves = [
-                (x, y - 1),
-                (x, y - 2),
-                (x - 1, y),
-                (x + 1, y - 1),
-            ]
-        for move in potential_moves:
-            if move[0] < 0 or move[0] >= len(board):
-                continue
-            if move[1] < 0 or move[1] >= len(board[move[0]]):
-                continue
-            tile = board[move[0]][move[1]]
-            if not tile.is_empty() or tile.type == TileType.PADDING:
-                continue
-            valid_moves.append(move)
-        return valid_moves
+        def can_capture(a: int, b: int) -> bool:
+            if a < 0 or a >= len(board) or b < 0 or b >= len(board[a]):
+                return False
+            return (board[a][b].is_empty()) or (not board[a][b].is_empty() and board[a][b].piece.color != self.color)
+
+        pawn = Pawn(self.color, can_capture)
+        return pawn.calculate_valid_moves(position, board)
