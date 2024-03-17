@@ -5,26 +5,6 @@ from app.chess_board.chess_pieces import *
 
 
 class ChessBoard:
-
-    PIECE_CLASSES = {
-        PieceType.KING: King,
-        PieceType.QUEEN: Queen,
-        PieceType.PAWN: Pawn,
-        PieceType.ROOK: Rook,
-        PieceType.BISHOP: Bishop,
-        PieceType.MACHINE: Machine,
-        PieceType.KNIGHT: Knight,
-        PieceType.SHIELD: Shield,
-        PieceType.JESTER: Jester,
-        PieceType.CAT: Cat,
-        PieceType.ELEPHANT: Elephant,
-        # PieceType.SOLDIER: Soldier,
-        PieceType.PRINCE: Prince,
-        PieceType.DOG: Dog,
-        PieceType.MAMMOTH: Mammoth,
-        PieceType.HAWK: Hawk,
-    }
-
     def __init__(self):
         """
         Creates a chess board
@@ -37,8 +17,6 @@ class ChessBoard:
         self.game_over = False
         self.in_check = (False, False)
         self.king_loc = {0: (7, 1), 1: (7, 18)}
-        self.promotion = False
-        self.promotion_loc = None
 
     def create_board(self) -> None:
         """
@@ -340,13 +318,6 @@ class ChessBoard:
             self.king_loc[start_tile.piece.color] = end
             print(self.king_loc)
 
-        # Check for promotion
-        if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and (
-            end[1] >= 15 or end[1] <= 4
-        ):
-            self.promotion_loc = end
-            self.promotion = True
-
         end_tile.piece = start_tile.piece
         start_tile.piece = None
 
@@ -381,21 +352,3 @@ class ChessBoard:
                 if move == self.king_loc[color] and self.board[k[0]][k[1]].piece.color != color:
                     return True
         return False
-
-    def promote(self, piece: str) -> None:
-        """
-        Promotes a pawn to the given piece
-        Args:
-            piece (str): piece to promote to
-        """
-        if not self.promotion:
-            return False
-
-        piece_type = PieceType(piece.lower())
-        promotion_piece = self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece
-        self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece = self.PIECE_CLASSES[piece_type](
-            promotion_piece.color
-        )
-        self.promotion = False
-        self.promotion_loc = None
-        return True
