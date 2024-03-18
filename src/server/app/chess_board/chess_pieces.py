@@ -1,6 +1,5 @@
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
-
 class King(ChessPiece):
     def __init__(self, color: int) -> None:
         """
@@ -1023,6 +1022,9 @@ class Jester(ChessPiece):  # Author: Phil
         if current_tile.orientation == 0:
             b = y - 1
             while board[x][b].is_empty() and (not (board[x][b].type == TileType.PADDING)):
+                if board[x][b].type == TileType.DIAMOND:
+                    b -= 1
+                    continue
                 valid_moves.append((x, b))
                 b -= 1
             if b > 0 and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
@@ -1061,6 +1063,9 @@ class Jester(ChessPiece):  # Author: Phil
         if current_tile.orientation == 0:
             b = y + 1
             while board[x][b].is_empty() and (not (board[x][b].type == TileType.PADDING)):
+                if board[x][b].type == TileType.DIAMOND:
+                    b += 1
+                    continue
                 valid_moves.append((x, b))
                 b += 1
             if b < (len(board[x]) - 1) and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
