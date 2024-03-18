@@ -228,9 +228,9 @@ function Board({
           onClose={() => { setCheckModalOpen(false); }}
         />
       )}
-      {gameData.promotion && (
+      {gameData.promotion && color == gameData.turn && (
         <PiecePromotionModal
-          color={"white"}
+          color={gameData.turn}
           open={piecePromotionModalOpen}
           gameCode={gameCode}
         />
@@ -306,7 +306,8 @@ export function PiecePromotionModal({ color, open, gameCode }) {
   ];
 
 
-  const handlePromotion = () => {
+  const handlePromotion = (event) => {
+    event.preventDefault();
     fetch(`http://${window.location.hostname}:8080/api/game/promotion/${gameCode}`, {
       method: 'POST',
       headers: {
@@ -318,6 +319,7 @@ export function PiecePromotionModal({ color, open, gameCode }) {
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
+        setPiecePromotionModalOpen(false);
       })
       .catch(error => {
         console.error('Failed to promote piece:', error);
@@ -327,7 +329,7 @@ export function PiecePromotionModal({ color, open, gameCode }) {
   return (
     <div className={`fixed inset-0 z-50 ${open ? 'visible' : 'invisible'}`}>
       <div className={`fixed bg-slate-600 rounded-md shadow-lg p-2 border-2 border-gray-700 flex items-center space-x-2 transition-transform duration-300 ease-in-out ${open ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
-        <form onSubmit={handlePromotion}>
+        <form onSubmit={(event) => handlePromotion(event)}>
           <div className="flex-col items-center justify-center w-full bg-slate-600">
             <div className="flex-col items-center justify-center">
               <ul>

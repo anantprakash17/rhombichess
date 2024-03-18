@@ -156,8 +156,8 @@ class ChessBoard:
         """
         # This part is done manually, not sure if there is a better way to do it
         # Add soldiers
-        self.board[0][5].piece = Soldier(0)
-        self.board[0][15].piece = Soldier(1)
+        self.board[0][15].piece = Soldier(0)
+        self.board[0][5].piece = Soldier(1)
 
         self.board[16][5].piece = Soldier(0)
         self.board[16][15].piece = Soldier(1)
