@@ -1,5 +1,4 @@
-#from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
-from chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 class King(ChessPiece):
     def __init__(self, color: int) -> None:
@@ -711,7 +710,7 @@ class Bishop(ChessPiece):  # Author: Anant
 
         for i in move:
             if direction == "down":
-                if y > len(board[i]) - 2:
+                if y > len(board[i]) - 2 and board[i][y].type != TileType.PADDING:
                     if board[i][y].is_empty():
                         potential_moves.append((i, y))
                     elif super().can_capture(i, y, board):
@@ -728,7 +727,9 @@ class Bishop(ChessPiece):  # Author: Anant
                     y -= 1
                 else:
                     y -= 2
-            if board[i][y].is_empty() and board[i][y].type != TileType.PADDING:
+            if board[i][y].type == TileType.PADDING:
+                break
+            if board[i][y].is_empty():
                 potential_moves.append((i, y))
             elif super().can_capture(i, y, board):
                 potential_moves.append((i, y))
@@ -754,7 +755,7 @@ class Bishop(ChessPiece):  # Author: Anant
         potential_moves = []
         move = range(x - 1, -1, -1) if direction else range(x + 1, len(board) - 1)
         for i in move:
-            if board[i][y].is_empty():
+            if board[i][y].is_empty() and board[i][y].type != TileType.PADDING:
                 if board[i][y].color == color:
                     potential_moves.append((i, y))
             elif super().can_capture(i, y, board) and board[i][y].color == color:
