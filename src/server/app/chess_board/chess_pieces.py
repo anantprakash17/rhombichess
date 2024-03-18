@@ -689,7 +689,7 @@ class Bishop(ChessPiece):  # Author: Anant
             if not board[move[0]][move[1]].color == self.color:
                 continue
             valid_moves.append(move)
-        return potential_moves
+        return valid_moves
 
     def move(
         self, position: tuple[int, int], board: list[list[ChessTile]], direction: str, right: bool
