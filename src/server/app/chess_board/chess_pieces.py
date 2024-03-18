@@ -1,4 +1,5 @@
-from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
+#from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
+from chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
 class King(ChessPiece):
     def __init__(self, color: int) -> None:
@@ -723,7 +724,6 @@ class Bishop(ChessPiece):  # Author: Anant
             elif direction == "up":
                 if y <= 0:
                     break
-                print(board[i][y].orientation, end='')
                 if board[i][y].orientation == 0:
                     y -= 1
                 else:
