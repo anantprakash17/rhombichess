@@ -686,7 +686,7 @@ class Bishop(ChessPiece):  # Author: Anant
             potential_moves += self.move_lr(position, board, True)
         valid_moves = []
         for move in potential_moves:
-            if not board[move[0]][move[1]].color == self.color:
+            if board[move[0]][move[1]].color == self.color:
                 continue
             valid_moves.append(move)
         return valid_moves
