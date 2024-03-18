@@ -945,7 +945,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a < len(board)
                 and b > 0
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -963,7 +963,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a < len(board)
                 and b < (len(board[a]) - 1)
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -997,7 +997,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a > 0
                 and b < (len(board[a]) - 1)
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -1010,7 +1010,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a > 0
                 and b > 0
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -1027,7 +1027,7 @@ class Jester(ChessPiece):  # Author: Phil
                     continue
                 valid_moves.append((x, b))
                 b -= 1
-            if b > 0 and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
+            if b > 0 and board[x][b].type != TileType.PADDING and board[x][b].piece.color != self.color:
                 valid_moves.append((x, b))
         elif current_tile.orientation == 1:
             a, b = x - 2, y - 1
@@ -1038,7 +1038,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a > 0
                 and b > 0
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -1051,7 +1051,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a < len(board)
                 and b > 0
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -1068,10 +1068,12 @@ class Jester(ChessPiece):  # Author: Phil
                     continue
                 valid_moves.append((x, b))
                 b += 1
-            if b < (len(board[x]) - 1) and board[x][b] != TileType.PADDING and board[x][b].piece.color != self.color:
+            if b < (len(board[x]) - 1) and board[x][b].type != TileType.PADDING and board[x][b].piece.color != self.color:
                 valid_moves.append((x, b))
         elif current_tile.orientation == 1:
             a, b = x + 2, y + 1
+            #print((a,b),end='')
+            #print(board[a][b].type)
             while (
                 a < len(board)
                 and b < (len(board[a]) - 1)
@@ -1084,7 +1086,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a < len(board)
                 and b < (len(board[a]) - 1)
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
@@ -1102,7 +1104,7 @@ class Jester(ChessPiece):  # Author: Phil
             if (
                 a > 0
                 and b < (len(board[a]) - 1)
-                and board[a][b] != TileType.PADDING
+                and board[a][b].type != TileType.PADDING
                 and (board[a][b].is_empty() or board[a][b].piece.color != self.color)
             ):
                 valid_moves.append((a, b))
