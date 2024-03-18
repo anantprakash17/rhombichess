@@ -341,9 +341,7 @@ class ChessBoard:
             print(self.king_loc)
 
         # Check for promotion
-        if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and (
-            end[1] >= 15 or end[1] <= 4
-        ):
+        if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and self.check_promotion(end):
             self.promotion_loc = end
             self.promotion = True
 
@@ -399,3 +397,10 @@ class ChessBoard:
         self.promotion = False
         self.promotion_loc = None
         return True
+
+    def check_promotion(self, coords: tuple[int, int]) -> bool:
+        """
+        Check if a pawn or solder can be promoted
+        """
+        tile = self.board[coords[0]][coords[1]]
+        return coords[1] >= (15 if tile.orientation != 0 else 16) or coords[1] <= 4
