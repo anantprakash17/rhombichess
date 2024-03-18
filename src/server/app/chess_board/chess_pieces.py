@@ -684,7 +684,6 @@ class Bishop(ChessPiece):  # Author: Anant
             potential_moves += self.move(position, board, "down", True)
             potential_moves += self.move(position, board, "up", False)
             potential_moves += self.move_lr(position, board, True)
-
         valid_moves = []
         for move in potential_moves:
             if not board[move[0]][move[1]].color == self.color:
@@ -724,18 +723,18 @@ class Bishop(ChessPiece):  # Author: Anant
             elif direction == "up":
                 if y <= 0:
                     break
+                print(board[i][y].orientation, end='')
                 if board[i][y].orientation == 0:
                     y -= 1
                 else:
                     y -= 2
-            if board[i][y].is_empty():
+            if board[i][y].is_empty() and board[i][y].type != TileType.PADDING:
                 potential_moves.append((i, y))
             elif super().can_capture(i, y, board):
                 potential_moves.append((i, y))
                 break
             else:
                 break
-
         return potential_moves
 
     def move_lr(
