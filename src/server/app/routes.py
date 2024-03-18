@@ -168,6 +168,7 @@ def game(game_id):
                 "local": games[game_id]["local"],
                 "turn": games[game_id]["turn"],
                 "in_check": games[game_id]["board"].in_check,
+                "checkmate": games[game_id]["board"].checkmate,
                 "promotion": games[game_id]["board"].promotion,
             }
         )
@@ -192,7 +193,10 @@ def game(game_id):
 
         # check winner
         if games[game_id]["board"].game_over:
-            games[game_id]["winner"] = "player_1" if games[game_id]["turn"] == "black" else "player_2"
+            winner = "player_1" if games[game_id]["turn"] == "black" else "player_2"
+            if games[game_id]["board"].checkmate:
+                winner = "player_2" if winner == "player_1" else "player_1"
+            games[game_id]["winner"] = winner
 
         # Emit updates
         emit_timer_update(game_id)
@@ -206,6 +210,7 @@ def game(game_id):
                 "turn": games[game_id]["turn"],
                 "in_check": games[game_id]["board"].in_check,
                 "promotion": games[game_id]["board"].promotion,
+                "checkmate": games[game_id]["board"].checkmate,
             }
         )
     else:
@@ -309,6 +314,7 @@ def emit_game_data_update(game_id):
         "turn": games[game_id]["turn"],
         "in_check": games[game_id]["board"].in_check,
         "promotion": games[game_id]["board"].promotion,
+        "checkmate": games[game_id]["board"].checkmate,
     }
 
     socketio.emit("game_data", response_data, to=game_id)
