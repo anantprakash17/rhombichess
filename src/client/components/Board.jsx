@@ -52,7 +52,7 @@ function Board({
       } if (data.winner) {
         setWinnerModalOpen(true);
       }
-      if (data.promotion) {
+      if (data.promotion && data.turn === color) {
         setPiecePromotionModalOpen(true);
       }
 
