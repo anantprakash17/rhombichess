@@ -18,7 +18,7 @@ class ChessBoard:
         PieceType.JESTER: Jester,
         PieceType.CAT: Cat,
         PieceType.ELEPHANT: Elephant,
-        # PieceType.SOLDIER: Soldier,
+        PieceType.SOLDIER: Soldier,
         PieceType.PRINCE: Prince,
         PieceType.DOG: Dog,
         PieceType.MAMMOTH: Mammoth,
