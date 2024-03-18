@@ -3,6 +3,7 @@ import copy
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from app.chess_board.chess_pieces import *
 
+
 class ChessBoard:
 
     PIECE_CLASSES = {
@@ -34,10 +35,12 @@ class ChessBoard:
         self.update_valid_moves()
         self.captured_pieces = {"black": [], "white": []}
         self.game_over = False
+        self.checkmate = False
         self.in_check = (False, False)
         self.king_loc = {0: (7, 1), 1: (7, 18)}
         self.promotion = False
         self.promotion_loc = None
+        self.sim_game = False
 
     def create_board(self) -> None:
         """
@@ -308,8 +311,8 @@ class ChessBoard:
         self.board[9][18].piece = Queen(1)
 
         # add king
-        self.board[7][1].piece = King(0)
-        self.board[7][18].piece = King(1)
+        self.board[7][10].piece = King(0)
+        self.board[7][1].piece = King(1)
 
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
@@ -349,6 +352,14 @@ class ChessBoard:
 
         self.update_valid_moves()
         self.in_check = (self.king_check(0), self.king_check(1))
+
+        if not self.sim_game and any(self.in_check):
+            if self.in_check[0]:
+                self.checkmate = self.checkmate_check(0)
+            else:
+                self.checkmate = self.checkmate_check(1)
+            if self.checkmate:
+                self.game_over = True
 
         return True
 
@@ -403,3 +414,25 @@ class ChessBoard:
         """
         tile = self.board[coords[0]][coords[1]]
         return coords[1] >= (15 if tile.orientation != 0 else 16) or coords[1] <= 4
+
+    def checkmate_check(self, color: int) -> bool:
+        """
+        Check if the king of the given color is in checkmate
+        Args:
+            color (int): color of the king
+        Returns:
+            bool: True if the king is in checkmate, False otherwise
+        """
+        for k, v in self.valid_moves.items():
+            if v is None or self.board[k[0]][k[1]].piece.color != color:
+                continue
+            for move in v:
+                sim_game = copy.deepcopy(self)
+                sim_game.sim_game = True
+                end_tile = sim_game.board[move[0]][move[1]]
+                if end_tile.type == TileType.PADDING:
+                    continue
+                if sim_game.move_piece(k, move) and not sim_game.king_check(color):
+                    return False
+        print("Checkmate")
+        return True
