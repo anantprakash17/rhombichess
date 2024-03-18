@@ -52,10 +52,6 @@ function Board({
       } if (data.winner) {
         setWinnerModalOpen(true);
       }
-      if (data.promotion && data.turn === color) {
-        setPiecePromotionModalOpen(true);
-      }
-
       setColorInCheck(data.in_check[1] ? 'white' : data.in_check[0] ? 'black' : null);
       if (data.in_check) {
         setCheckModalOpen(true);
@@ -78,7 +74,14 @@ function Board({
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ old_pos: oldPosition, new_pos: newPosition }),
-    });
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.promotion) {
+          setPiecePromotionModalOpen(true);
+        }
+      })
+      .catch(error => console.error('Error:', error));
   };
 
   const handleCanceledMove = () => {
@@ -303,15 +306,15 @@ export function PiecePromotionModal({ open, onClose, gameCode }) {
       },
       body: JSON.stringify({ piece: selectedPiece }),
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      onClose();
-    })
-    .catch(error => {
-      console.error('Failed to promote piece:', error);
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        onClose();
+      })
+      .catch(error => {
+        console.error('Failed to promote piece:', error);
+      });
   };
 
   return (
