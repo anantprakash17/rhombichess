@@ -69,6 +69,16 @@ This will start the frontend on port 3000. To view the frontend, navigate to `lo
 
 > Note: The frontend makes various calls to the backend endpoints, even on the landing page. As such, the application requires the backend server to be running. Otherwise, the application will throw errors on load.
 
+### Environment Variables
+The front-end requires a few environment variables to function. In a real-world setting, these variables would be distributed in a more secure manner - however, these are not too sensitive and can be re-generated if needed. Navigate to `/src/client/.env` (or create the file if it doesn't exist) and paste in the following:
+
+```
+NEXTAUTH_SECRET=3c1af333b04c584f2b9c4f0718fa6ad7
+NEXTAUTH_URL=http://localhost:3000
+
+DATABASE_URL="postgres://***REMOVED***/neondb"
+SHADOW_DATABASE_URL="postgres://***REMOVED***/shadow"
+```
 
 ## Testing
 
