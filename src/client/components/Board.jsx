@@ -90,6 +90,12 @@ function Board({
   };
 
   const handleCanceledMove = () => {
+    const newBoard = [...board];
+    newBoard[selectedPieceDest.columnNumber] = [...newBoard[selectedPieceDest.columnNumber]];
+    newBoard[selectedPieceDest.columnNumber][selectedPieceDest.index] = { ...newBoard[selectedPieceDest.columnNumber][selectedPieceDest.index], piece: selectedPieceDest.piece };
+    newBoard[selectedPiece.columnNumber][selectedPiece.index] = { ...newBoard[selectedPiece.columnNumber][selectedPiece.index], piece: selectedPiece.piece };
+    setBoard(newBoard);
+
     setConfirmMoveModalOpen(false);
     setSelectedPiece(null);
     setSelectedPieceDest(null);
@@ -128,17 +134,25 @@ function Board({
 
   const isPossibleMove = (columnNumber, index) => possibleMoves.some((move) => move === `${columnNumber},${index}`);
 
-  const handleTileClick = (columnNumber, index, pieceColor) => {
+  const handleTileClick = (columnNumber, index, piece) => {
+    const pieceColor = piece.split('-')[1];
     if (gameData.turn !== color) { return; }
     if (selectedPiece?.columnNumber === columnNumber && selectedPiece?.index === index) { return; }
     if (selectedPiece && pieceColor !== color) {
       if (isPossibleMove(columnNumber, index)) {
-        setConfirmMoveModalOpen(true);
-        setSelectedPieceDest({ columnNumber, index });
+        const newBoard = [...board];
+        newBoard[columnNumber] = [...newBoard[columnNumber]];
+        newBoard[columnNumber][index] = { ...newBoard[columnNumber][index], piece: selectedPiece.piece };
+        newBoard[selectedPiece.columnNumber][selectedPiece.index] = { ...newBoard[columnNumber][index], piece: '' };
+        setBoard(newBoard);
+
+        document.activeElement.blur();
+        setSelectedPieceDest({ columnNumber, index, piece });
         setPossibleMoves([]);
+        setConfirmMoveModalOpen(true);
       }
-    } else if (board[columnNumber][index].piece !== '' && pieceColor === color) {
-      setSelectedPiece({ columnNumber, index });
+    } else if (piece !== '' && pieceColor === color) {
+      setSelectedPiece({ columnNumber, index, piece });
       const moves = gameData.valid_moves[`${columnNumber},${index}`] || [];
       setPossibleMoves(moves);
     }
@@ -171,7 +185,7 @@ function Board({
               key={`${columnIndex}-${cellIndex}`}
               orientation={orientation}
               colour={(normalCellIndex + normalCells.length) % 3}
-              onClick={() => handleTileClick(columnIndex, cellIndex, cell.piece.split('-')[1])}
+              onClick={() => handleTileClick(columnIndex, cellIndex, cell.piece)}
               disabled={disabled || gameData.winner}
               capturable={isPossible && cell.piece}
               highlight={isPossible}
@@ -204,7 +218,7 @@ function Board({
           </div>
           <div className="flex">
             <button onClick={handleCanceledMove} className="relative pb-4 mx-1 text-xl rounded-lg font-semibold border border-gray-100 text-gray-100 px-4 py-2 hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-300" type="button">
-              Cancel
+              Undo
               <svg width="20" height="20" className="absolute bottom-0 right-2 w-6 h-6 text-gray-100" viewBox="0 0 24 24" fill="currentColor" x="26" y="26" role="img" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1 7h6v2H3v2h4v2H3v2h4v2H1V7m10 0h4v2h-4v2h2a2 2 0 0 1 2 2v2c0 1.11-.89 2-2 2H9v-2h4v-2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2m8 0h2a2 2 0 0 1 2 2v1h-2V9h-2v6h2v-1h2v1c0 1.11-.89 2-2 2h-2a2 2 0 0 1-2-2V9c0-1.1.9-2 2-2Z" />
               </svg>
