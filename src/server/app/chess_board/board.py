@@ -3,7 +3,6 @@ import copy
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from app.chess_board.chess_pieces import *
 
-
 class ChessBoard:
 
     PIECE_CLASSES = {
@@ -69,7 +68,7 @@ class ChessBoard:
                 min_horiz += 2
         board = board + [self.create_tile_column([1, 2, 0], 0, 0)] + copy.deepcopy(board[::-1])
         board[8].append(ChessTile(None, None, None, TileType.PADDING))
-
+        board[8][0] = ChessTile(None, None, None, TileType.PADDING)
         # Flip the orientation of the tiles after the middle column
         for i in range(9, 17):
             for j in range(len(board[i])):
