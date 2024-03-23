@@ -313,7 +313,7 @@ class ChessBoard:
 
         # add king
         self.board[7][1].piece = King(0)
-        self.board[7][10].piece = King(1)
+        self.board[7][18].piece = King(1)
 
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
@@ -353,18 +353,12 @@ class ChessBoard:
         self.update_valid_moves()
         self.in_check = (self.king_check(0), self.king_check(1))
 
-        if not self.sim_game and any(self.in_check):
-            if self.in_check[0]:
-                self.checkmate = self.checkmate_check(0)
-            else:
-                self.checkmate = self.checkmate_check(1)
-            if self.checkmate:
-                self.game_over = True
-        elif not self.sim_game:
-            # filter out moves that will put the king in check
-            color = 1 if end_tile.piece.color == 0 else 0
-            print(f"Color: {color}")
-            self.filter_dangerous_moves(color)
+        color = 1 if end_tile.piece.color == 0 else 0
+
+        if not self.filter_dangerous_moves(color):
+            self.checkmate = True
+            self.game_over = True
+
         return True
 
     def update_valid_moves(self, test_move=False) -> None | dict[tuple[int, int], list[tuple[int, int]]]:
@@ -428,38 +422,6 @@ class ChessBoard:
         tile = self.board[coords[0]][coords[1]]
         return coords[1] >= (15 if tile.orientation != 0 else 16) or coords[1] <= 4
 
-    def checkmate_check(self, color: int) -> bool:
-        """
-        Check if the king of the given color is in checkmate and filters out any moves that keep the king in check
-        Args:
-            color (int): color of the king
-        Returns:
-            bool: True if the king is in checkmate, False otherwise
-        """
-        checkmate = True
-        new_valid_moves = {}
-        for k, v in self.valid_moves.items():
-            if v is None or self.board[k[0]][k[1]].piece.color != color:
-                continue
-            tried_moves = set()
-            new_valid_moves[k] = []
-            for move in v:
-                if move in tried_moves:
-                    continue
-                tried_moves.add(move)
-                sim_game = copy.deepcopy(self)
-                sim_game.sim_game = True
-                end_tile = sim_game.board[move[0]][move[1]]
-                if end_tile.type == TileType.PADDING:
-                    continue
-                if sim_game.move_piece(k, move):
-                    if not sim_game.king_check(color):
-                        checkmate = False
-                        new_valid_moves[k].append(move)
-        for k, v in new_valid_moves.items():
-            self.valid_moves[k] = v
-        return checkmate
-
     def filter_dangerous_moves(self, color: int) -> None:
         new_valid_moves = {}
         for k, v in self.valid_moves.items():
@@ -497,6 +459,9 @@ class ChessBoard:
                 self.board[k[0]][k[1]].piece = self.board[move[0]][move[1]].piece
                 self.board[move[0]][move[1]].piece = capture
 
+        checkmate = True
         for k, v in new_valid_moves.items():
+            if v:
+                checkmate = False
             self.valid_moves[k] = v
-        return
+        return not checkmate

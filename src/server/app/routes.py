@@ -194,8 +194,6 @@ def game(game_id):
         # check winner
         if games[game_id]["board"].game_over:
             winner = "player_1" if games[game_id]["turn"] == "black" else "player_2"
-            if games[game_id]["board"].checkmate:
-                winner = "player_2" if winner == "player_1" else "player_1"
             games[game_id]["winner"] = winner
 
         # Emit updates
