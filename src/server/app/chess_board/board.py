@@ -341,7 +341,6 @@ class ChessBoard:
         # Check if king is being moved
         if "king" in start_tile.piece.get_piece():
             self.king_loc[start_tile.piece.color] = end
-            print(self.king_loc)
 
         # Check for promotion
         if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and self.check_promotion(end):
@@ -361,7 +360,11 @@ class ChessBoard:
                 self.checkmate = self.checkmate_check(1)
             if self.checkmate:
                 self.game_over = True
-
+        elif not self.sim_game:
+            # filter out moves that will put the king in check
+            color = 0 if end_tile.piece.color == 0 else 1
+            print(f"Color: {color}")
+            self.checkmate_check(color)
         return True
 
     def update_valid_moves(self) -> None:
@@ -427,11 +430,15 @@ class ChessBoard:
         start = time.time()
         checkmate = True
         new_valid_moves = {}
+        tried_moves = set()
         for k, v in self.valid_moves.items():
             if v is None or self.board[k[0]][k[1]].piece.color != color:
                 continue
             new_valid_moves[k] = []
             for move in v:
+                if move in tried_moves:
+                    continue
+                tried_moves.add(move)
                 sim_game = copy.deepcopy(self)
                 sim_game.sim_game = True
                 end_tile = sim_game.board[move[0]][move[1]]
@@ -441,6 +448,6 @@ class ChessBoard:
                     if not sim_game.king_check(color):
                         checkmate = False
                         new_valid_moves[k].append(move)
-        self.valid_moves = new_valid_moves
-        print(f"Checkmate check time: {time.time() - start}")
+        for k, v in new_valid_moves.items():
+            self.valid_moves[k] = v
         return checkmate
