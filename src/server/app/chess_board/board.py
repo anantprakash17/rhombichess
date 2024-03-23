@@ -1,5 +1,4 @@
 import copy
-import time
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from app.chess_board.chess_pieces import *
