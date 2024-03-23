@@ -1,4 +1,5 @@
 import copy
+import time
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from app.chess_board.chess_pieces import *
@@ -31,7 +32,7 @@ class ChessBoard:
         """
         self.create_board()
         self.add_default_pieces()
-        self.valid_moves = {}
+        self.valid_moves: dict[tuple[int, int], list[tuple[int, int]]] = {}
         self.update_valid_moves()
         self.captured_pieces = {"black": [], "white": []}
         self.game_over = False
@@ -311,8 +312,8 @@ class ChessBoard:
         self.board[9][18].piece = Queen(1)
 
         # add king
-        self.board[7][10].piece = King(0)
-        self.board[7][1].piece = King(1)
+        self.board[7][1].piece = King(0)
+        self.board[7][10].piece = King(1)
 
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
@@ -417,22 +418,29 @@ class ChessBoard:
 
     def checkmate_check(self, color: int) -> bool:
         """
-        Check if the king of the given color is in checkmate
+        Check if the king of the given color is in checkmate and filters out any moves that keep the king in check
         Args:
             color (int): color of the king
         Returns:
             bool: True if the king is in checkmate, False otherwise
         """
+        start = time.time()
+        checkmate = True
+        new_valid_moves = {}
         for k, v in self.valid_moves.items():
             if v is None or self.board[k[0]][k[1]].piece.color != color:
                 continue
+            new_valid_moves[k] = []
             for move in v:
                 sim_game = copy.deepcopy(self)
                 sim_game.sim_game = True
                 end_tile = sim_game.board[move[0]][move[1]]
                 if end_tile.type == TileType.PADDING:
                     continue
-                if sim_game.move_piece(k, move) and not sim_game.king_check(color):
-                    return False
-        print("Checkmate")
-        return True
+                if sim_game.move_piece(k, move):
+                    if not sim_game.king_check(color):
+                        checkmate = False
+                        new_valid_moves[k].append(move)
+        self.valid_moves = new_valid_moves
+        print(f"Checkmate check time: {time.time() - start}")
+        return checkmate
