@@ -1,5 +1,4 @@
 import copy
-import time
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from app.chess_board.chess_pieces import *
@@ -427,7 +426,6 @@ class ChessBoard:
         Returns:
             bool: True if the king is in checkmate, False otherwise
         """
-        start = time.time()
         checkmate = True
         new_valid_moves = {}
         tried_moves = set()
