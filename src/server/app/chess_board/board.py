@@ -154,165 +154,55 @@ class ChessBoard:
 
     def add_default_pieces(self) -> None:
         """
-        Adds default pieces to the board
+        Adds the default pieces to the board
         """
-        # This part is done manually, not sure if there is a better way to do it
-        # Add soldiers
-        self.board[0][5].piece = Soldier(0)
-        self.board[0][15].piece = Soldier(1)
+        piece_positions = {
+            Soldier: [(0, 5), (0, 15), (16, 5), (16, 15), (4, 5), (4, 15), (8, 5), (8, 15), (12, 5), (12, 15)],
+            Pawn: [
+                (1, 5),
+                (1, 14),
+                (2, 6),
+                (2, 14),
+                (3, 5),
+                (3, 14),
+                (5, 5),
+                (5, 14),
+                (6, 6),
+                (6, 14),
+                (7, 5),
+                (7, 14),
+                (9, 5),
+                (9, 14),
+                (10, 6),
+                (10, 14),
+                (11, 5),
+                (11, 14),
+                (13, 5),
+                (13, 14),
+                (14, 6),
+                (14, 14),
+                (15, 5),
+                (15, 14),
+            ],
+            Elephant: [(2, 4), (2, 16), (13, 3), (13, 16), (15, 4), (15, 15)],
+            Cat: [(5, 4), (5, 15), (8, 3), (8, 17), (11, 4), (11, 15)],
+            Jester: [(7, 2), (7, 17), (8, 1), (8, 19), (9, 2), (9, 17)],
+            Bishop: [(1, 4), (1, 15), (14, 4), (14, 16), (3, 3), (3, 16)],
+            Shield: [(5, 3), (5, 16), (10, 4), (10, 16), (13, 4), (13, 15)],
+            Knight: [(7, 4), (7, 15), (9, 4), (9, 15)],
+            Rook: [(5, 2), (5, 17), (11, 2), (11, 17)],
+            Machine: [(7, 3), (7, 16), (9, 3), (9, 16)],
+            Dog: [(3, 4), (3, 15), (11, 3), (11, 16)],
+            Prince: [(4, 3), (4, 17), (12, 3), (12, 17)],
+            Mammoth: [(10, 2), (10, 18)],
+            Hawk: [(6, 2), (6, 18)],
+            Queen: [(9, 1), (9, 18)],
+            King: [(7, 1), (7, 18)],
+        }
 
-        self.board[16][5].piece = Soldier(0)
-        self.board[16][15].piece = Soldier(1)
-
-        self.board[4][5].piece = Soldier(0)
-        self.board[4][15].piece = Soldier(1)
-
-        self.board[8][5].piece = Soldier(0)
-        self.board[8][15].piece = Soldier(1)
-
-        self.board[12][5].piece = Soldier(0)
-        self.board[12][15].piece = Soldier(1)
-
-        # add pawns
-        self.board[1][5].piece = Pawn(0)
-        self.board[1][14].piece = Pawn(1)
-
-        self.board[2][6].piece = Pawn(0)
-        self.board[2][14].piece = Pawn(1)
-
-        self.board[3][5].piece = Pawn(0)
-        self.board[3][14].piece = Pawn(1)
-
-        self.board[5][5].piece = Pawn(0)
-        self.board[5][14].piece = Pawn(1)
-
-        self.board[6][6].piece = Pawn(0)
-        self.board[6][14].piece = Pawn(1)
-
-        self.board[7][5].piece = Pawn(0)
-        self.board[7][14].piece = Pawn(1)
-
-        self.board[9][5].piece = Pawn(0)
-        self.board[9][14].piece = Pawn(1)
-
-        self.board[10][6].piece = Pawn(0)
-        self.board[10][14].piece = Pawn(1)
-
-        self.board[11][5].piece = Pawn(0)
-        self.board[11][14].piece = Pawn(1)
-
-        self.board[13][5].piece = Pawn(0)
-        self.board[13][14].piece = Pawn(1)
-
-        self.board[14][6].piece = Pawn(0)
-        self.board[14][14].piece = Pawn(1)
-
-        self.board[15][5].piece = Pawn(0)
-        self.board[15][14].piece = Pawn(1)
-
-        # add elephants
-        self.board[2][4].piece = Elephant(0)
-        self.board[2][16].piece = Elephant(1)
-
-        self.board[13][3].piece = Elephant(0)
-        self.board[13][16].piece = Elephant(1)
-
-        self.board[15][4].piece = Elephant(0)
-        self.board[15][15].piece = Elephant(1)
-
-        # add cats
-        self.board[5][4].piece = Cat(0)
-        self.board[5][15].piece = Cat(1)
-
-        self.board[8][3].piece = Cat(0)
-        self.board[8][17].piece = Cat(1)
-
-        self.board[11][4].piece = Cat(0)
-        self.board[11][15].piece = Cat(1)
-
-        # add jesters
-        self.board[7][2].piece = Jester(0)
-        self.board[7][17].piece = Jester(1)
-
-        self.board[8][1].piece = Jester(0)
-        self.board[8][19].piece = Jester(1)
-
-        self.board[9][2].piece = Jester(0)
-        self.board[9][17].piece = Jester(1)
-
-        # add bishops
-        self.board[1][4].piece = Bishop(0)
-        self.board[1][15].piece = Bishop(1)
-
-        self.board[14][4].piece = Bishop(0)
-        self.board[14][16].piece = Bishop(1)
-
-        self.board[3][3].piece = Bishop(0)
-        self.board[3][16].piece = Bishop(1)
-
-        # add shields
-        self.board[5][3].piece = Shield(0)
-        self.board[5][16].piece = Shield(1)
-
-        self.board[10][4].piece = Shield(0)
-        self.board[10][16].piece = Shield(1)
-
-        self.board[13][4].piece = Shield(0)
-        self.board[13][15].piece = Shield(1)
-
-        # add knights
-        self.board[7][4].piece = Knight(0)
-        self.board[7][15].piece = Knight(1)
-
-        self.board[9][4].piece = Knight(0)
-        self.board[9][15].piece = Knight(1)
-
-        # add rooks
-        self.board[5][2].piece = Rook(0)
-        self.board[5][17].piece = Rook(1)
-
-        self.board[11][2].piece = Rook(0)
-        self.board[11][17].piece = Rook(1)
-
-        # add machines
-        self.board[7][3].piece = Machine(0)
-        self.board[7][16].piece = Machine(1)
-
-        self.board[9][3].piece = Machine(0)
-        self.board[9][16].piece = Machine(1)
-
-        # add dogs
-        self.board[3][4].piece = Dog(0)
-        self.board[3][15].piece = Dog(1)
-
-        self.board[11][3].piece = Dog(0)
-        self.board[11][16].piece = Dog(1)
-
-        self.board[6][4].piece = Dog(0)
-        self.board[6][16].piece = Dog(1)
-
-        # add princes
-        self.board[4][3].piece = Prince(0)
-        self.board[4][17].piece = Prince(1)
-
-        self.board[12][3].piece = Prince(0)
-        self.board[12][17].piece = Prince(1)
-
-        # add mammoth
-        self.board[10][2].piece = Mammoth(0)
-        self.board[10][18].piece = Mammoth(1)
-
-        # add hawk
-        self.board[6][2].piece = Hawk(0)
-        self.board[6][18].piece = Hawk(1)
-
-        # add queen
-        self.board[9][1].piece = Queen(0)
-        self.board[9][18].piece = Queen(1)
-
-        # add king
-        self.board[7][1].piece = King(0)
-        self.board[7][18].piece = King(1)
+        for piece, positions in piece_positions.items():
+            for i, position in enumerate(positions):
+                self.board[position[0]][position[1]].piece = piece(i % 2)
 
     def move_piece(self, start: tuple[int, int], end: tuple[int, int]) -> bool:
         """
@@ -327,24 +217,12 @@ class ChessBoard:
         if piece_moves is None or end not in piece_moves:
             return False
 
-        # Check for capture
         end_tile = self.board[end[0]][end[1]]
         start_tile = self.board[start[0]][start[1]]
 
-        # Check if king captured
-        if not end_tile.is_empty():
-            if "king" in end_tile.piece.get_piece():
-                self.game_over = True
-            self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece.get_piece())
-
-        # Check if king is being moved
-        if "king" in start_tile.piece.get_piece():
-            self.king_loc[start_tile.piece.color] = end
-
-        # Check for promotion
-        if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and self.check_promotion(end):
-            self.promotion_loc = end
-            self.promotion = True
+        self.handle_capture(end_tile)
+        self.handle_king_movement(start_tile, end)
+        self.handle_promotion(start_tile, end)
 
         end_tile.piece = start_tile.piece
         start_tile.piece = None
@@ -360,16 +238,48 @@ class ChessBoard:
 
         return True
 
+    def handle_capture(self, end_tile: ChessTile):
+        """
+        Handles the capture of a piece
+        Args:
+            end_tile (ChessTile): tile to check for capture
+        """
+        if not end_tile.is_empty():
+            if "king" in end_tile.piece.get_piece():
+                self.game_over = True
+            color = "black" if end_tile.piece.color == 0 else "white"
+            self.captured_pieces[color].append(end_tile.piece.get_piece())
+
+    def handle_king_movement(self, start_tile: ChessTile, end: tuple[int, int]):
+        """
+        Updates the king location if the king is moved
+        Args:
+            start_tile (ChessTile): starting tile
+            end (tuple): ending position
+        """
+        if "king" in start_tile.piece.get_piece():
+            self.king_loc[start_tile.piece.color] = end
+
+    def handle_promotion(self, start_tile: ChessTile, end: tuple[int, int]):
+        """
+        Checks if a pawn or soldier can be promoted
+        Args:
+            start_tile (ChessTile): starting tile
+            end (tuple): ending position
+        """
+        if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and self.check_promotion(end):
+            self.promotion_loc = end
+            self.promotion = True
+
     def update_valid_moves(self, test_move=False) -> None | dict[tuple[int, int], list[tuple[int, int]]]:
         """
         Update the valid moves for each piece on the board.
         """
         valid_moves = {}
 
-        for x in range(len(self.board)):
-            for y in range(len(self.board[x])):
-                tile = self.board[x][y]
-                if not tile.is_empty() and tile.piece:
+        for x, row in enumerate(self.board):
+            for y, tile in enumerate(row):
+                if tile.piece:
                     valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
 
         if test_move:
@@ -388,15 +298,11 @@ class ChessBoard:
         if test_moveset is None:
             test_moveset = self.valid_moves
 
-        for k, v in test_moveset.items():
-            if v is None:
-                continue
-            for move in v:
-                if move == self.king_loc[color] and self.board[k[0]][k[1]].piece.color != color:
-                    return True
-        return False
+        return any(
+            self.king_loc[color] in v and self.board[k[0]][k[1]].piece.color != color for k, v in test_moveset.items()
+        )
 
-    def promote(self, piece: str) -> None:
+    def promote(self, piece: str) -> bool:
         """
         Promotes a pawn to the given piece
         Args:
@@ -406,40 +312,46 @@ class ChessBoard:
             return False
 
         piece_type = PieceType(piece.lower())
-        promotion_piece = self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece
-        self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece = self.PIECE_CLASSES[piece_type](
-            promotion_piece.color
-        )
+        promotion_tile = self.board[self.promotion_loc[0]][self.promotion_loc[1]]
+        promotion_piece = promotion_tile.piece
+        promotion_tile.piece = self.PIECE_CLASSES[piece_type](promotion_piece.color)
+
         self.promotion = False
         self.promotion_loc = None
+
         return True
 
     def check_promotion(self, coords: tuple[int, int]) -> bool:
         """
         Check if a pawn or solder can be promoted
+        Args:
+            coords (tuple): coordinates of the piece
         """
         tile = self.board[coords[0]][coords[1]]
         return coords[1] >= (15 if tile.orientation != 0 else 16) or coords[1] <= 4
 
     def filter_dangerous_moves(self, color: int) -> None:
         new_valid_moves = {}
-        for k, v in self.valid_moves.items():
-            piece = self.board[k[0]][k[1]].piece
-            if v is None or piece.color != color:
+        for start, locations in self.valid_moves.items():
+            start_tile = self.board[start[0]][start[1]]
+            piece = start_tile.piece
+
+            # skip if no valid moves or piece is not the same color
+            if locations is None or piece.color != color:
                 continue
-            new_valid_moves[k] = []
-            tried_moves = set()
-            for move in v:
-                if move in tried_moves:
-                    continue
-                tried_moves.add(move)
 
-                if self.board[move[0]][move[1]].type == TileType.PADDING:
+            new_valid_moves[start] = []
+
+            for move in locations:
+                end_tile = self.board[move[0]][move[1]]
+
+                if end_tile.type == TileType.PADDING:
                     continue
 
-                capture = self.board[move[0]][move[1]].piece
-                self.board[move[0]][move[1]].piece = self.board[k[0]][k[1]].piece
-                self.board[k[0]][k[1]].piece = None
+                # simulate move
+                capture = end_tile.piece
+                end_tile.piece = start_tile.piece
+                start_tile.piece = None
 
                 # update king location if king is moved
                 if "king" in piece.get_piece():
@@ -448,19 +360,19 @@ class ChessBoard:
                 test_moveset = self.update_valid_moves(test_move=True)
 
                 if not self.king_check(color, test_moveset):
-                    new_valid_moves[k].append(move)
+                    new_valid_moves[start].append(move)
 
                 # set king location back to original
                 if "king" in piece.get_piece():
-                    self.king_loc[color] = k
+                    self.king_loc[color] = start
 
-                # set valid moves back to original
-                self.board[k[0]][k[1]].piece = self.board[move[0]][move[1]].piece
-                self.board[move[0]][move[1]].piece = capture
+                # undo move
+                start_tile.piece = end_tile.piece
+                end_tile.piece = capture
 
         checkmate = True
-        for k, v in new_valid_moves.items():
-            if v:
+        for start, locations in new_valid_moves.items():
+            if locations:
                 checkmate = False
-            self.valid_moves[k] = v
+            self.valid_moves[start] = locations
         return not checkmate
