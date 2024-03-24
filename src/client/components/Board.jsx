@@ -13,6 +13,7 @@ import Link from 'next/link';
 import Tile from './Tile';
 import Piece from './Piece';
 import Logo from './icons/Logo';
+import baseUrl from '../constants';
 
 function Board({
   initialGameData, gameCode, disabled, socket, initialColor,
@@ -75,7 +76,7 @@ function Board({
       return;
     }
 
-    fetch(`http://${window.location.hostname}:8080/api/game/${gameCode}`, {
+    fetch(`http://${baseUrl}/api/game/${gameCode}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ old_pos: oldPosition, new_pos: newPosition }),
@@ -328,7 +329,7 @@ export function PiecePromotionModal({ color, open, gameCode }) {
 
   const handlePromotion = (event) => {
     event.preventDefault();
-    fetch(`http://${window.location.hostname}:8080/api/game/promotion/${gameCode}`, {
+    fetch(`http://${baseUrl}/api/game/promotion/${gameCode}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

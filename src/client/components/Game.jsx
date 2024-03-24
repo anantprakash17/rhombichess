@@ -11,6 +11,7 @@ import { useSession } from 'next-auth/react';
 import Board from './Board';
 import ChatWindow from './ChatWindow';
 import GameStatsTab from './GameStatsTab';
+import baseUrl from '../constants';
 
 export default function Game({ gameData }) {
   const [socket, setSocket] = useState(null);
@@ -27,7 +28,7 @@ export default function Game({ gameData }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const newSocket = io.connect(`http://${window.location.hostname}:8080`);
+      const newSocket = io.connect(`http://${baseUrl}`);
       setSocket(newSocket);
       return () => newSocket.disconnect();
     } return null;
