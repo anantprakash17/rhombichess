@@ -12,6 +12,8 @@
   },
   "rules": {
     "react/prop-types": "off",
+    "max-len": "off",
+    "no-console": "off",
     "no-param-reassign": "off",
     "jsx-a11y/label-has-associated-control": [ 2, {
       "required": {

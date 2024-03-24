@@ -1,3 +1,5 @@
+/* eslint-disable import/no-mutable-exports */
+/* eslint-disable no-undef-init */
 import { PrismaClient } from '@prisma/client';
 
 let prisma = undefined;

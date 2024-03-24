@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable consistent-return */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable max-len */

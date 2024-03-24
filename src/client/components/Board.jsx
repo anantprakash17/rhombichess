@@ -272,7 +272,9 @@ export function ConfirmMoveModal({ open, children }) {
   );
 }
 
-export function GameOverModal({ open, winner, checkmate, onClose }) {
+export function GameOverModal({
+  open, winner, checkmate, onClose,
+}) {
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
       <div className="flex flex-col items-center relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
