@@ -3,6 +3,7 @@ import copy
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 from app.chess_board.chess_pieces import *
 
+
 class ChessBoard:
 
     PIECE_CLASSES = {
@@ -30,14 +31,16 @@ class ChessBoard:
         """
         self.create_board()
         self.add_default_pieces()
-        self.valid_moves = {}
+        self.valid_moves: dict[tuple[int, int], list[tuple[int, int]]] = {}
         self.update_valid_moves()
         self.captured_pieces = {"black": [], "white": []}
         self.game_over = False
+        self.checkmate = False
         self.in_check = (False, False)
         self.king_loc = {0: (7, 1), 1: (7, 18)}
         self.promotion = False
         self.promotion_loc = None
+        self.sim_game = False
 
     def create_board(self) -> None:
         """
@@ -337,7 +340,6 @@ class ChessBoard:
         # Check if king is being moved
         if "king" in start_tile.piece.get_piece():
             self.king_loc[start_tile.piece.color] = end
-            print(self.king_loc)
 
         # Check for promotion
         if any(piece in start_tile.piece.get_piece() for piece in ["soldier", "pawn"]) and self.check_promotion(end):
@@ -350,20 +352,32 @@ class ChessBoard:
         self.update_valid_moves()
         self.in_check = (self.king_check(0), self.king_check(1))
 
+        color = 1 if end_tile.piece.color == 0 else 0
+
+        if not self.filter_dangerous_moves(color):
+            self.checkmate = True
+            self.game_over = True
+
         return True
 
-    def update_valid_moves(self) -> None:
+    def update_valid_moves(self, test_move=False) -> None | dict[tuple[int, int], list[tuple[int, int]]]:
         """
         Update the valid moves for each piece on the board.
         """
-        self.valid_moves.clear()  # Clear the current valid moves
+        valid_moves = {}
+
         for x in range(len(self.board)):
             for y in range(len(self.board[x])):
                 tile = self.board[x][y]
                 if not tile.is_empty() and tile.piece:
-                    self.valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
+                    valid_moves[(x, y)] = tile.piece.calculate_valid_moves((x, y), self.board)
 
-    def king_check(self, color: int) -> bool:
+        if test_move:
+            return valid_moves
+        else:
+            self.valid_moves = valid_moves
+
+    def king_check(self, color: int, test_moveset=None) -> bool:
         """
         Check if the king of the given color is in check
         Args:
@@ -371,7 +385,10 @@ class ChessBoard:
         Returns:
             bool: True if the king is in check, False otherwise
         """
-        for k, v in self.valid_moves.items():
+        if test_moveset is None:
+            test_moveset = self.valid_moves
+
+        for k, v in test_moveset.items():
             if v is None:
                 continue
             for move in v:
@@ -403,3 +420,47 @@ class ChessBoard:
         """
         tile = self.board[coords[0]][coords[1]]
         return coords[1] >= (15 if tile.orientation != 0 else 16) or coords[1] <= 4
+
+    def filter_dangerous_moves(self, color: int) -> None:
+        new_valid_moves = {}
+        for k, v in self.valid_moves.items():
+            piece = self.board[k[0]][k[1]].piece
+            if v is None or piece.color != color:
+                continue
+            new_valid_moves[k] = []
+            tried_moves = set()
+            for move in v:
+                if move in tried_moves:
+                    continue
+                tried_moves.add(move)
+
+                if self.board[move[0]][move[1]].type == TileType.PADDING:
+                    continue
+
+                capture = self.board[move[0]][move[1]].piece
+                self.board[move[0]][move[1]].piece = self.board[k[0]][k[1]].piece
+                self.board[k[0]][k[1]].piece = None
+
+                # update king location if king is moved
+                if "king" in piece.get_piece():
+                    self.king_loc[color] = move
+
+                test_moveset = self.update_valid_moves(test_move=True)
+
+                if not self.king_check(color, test_moveset):
+                    new_valid_moves[k].append(move)
+
+                # set king location back to original
+                if "king" in piece.get_piece():
+                    self.king_loc[color] = k
+
+                # set valid moves back to original
+                self.board[k[0]][k[1]].piece = self.board[move[0]][move[1]].piece
+                self.board[move[0]][move[1]].piece = capture
+
+        checkmate = True
+        for k, v in new_valid_moves.items():
+            if v:
+                checkmate = False
+            self.valid_moves[k] = v
+        return not checkmate

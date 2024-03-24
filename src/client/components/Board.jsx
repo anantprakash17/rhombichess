@@ -237,10 +237,11 @@ function Board({
         <GameOverModal
           open={winnerModalOpen && gameData.winner !== null}
           winner={gameData[gameData.winner]}
+          checkmate={gameData.checkmate}
           onClose={() => { setWinnerModalOpen(false); }}
         />
       )}
-      {checkModalOpen && (
+      {checkModalOpen && !gameData.winner && (
         <CheckModal
           open={checkModalOpen}
           onClose={() => { setCheckModalOpen(false); }}
@@ -271,21 +272,21 @@ export function ConfirmMoveModal({ open, children }) {
   );
 }
 
-export function GameOverModal({ open, winner, onClose }) {
+export function GameOverModal({ open, winner, checkmate, onClose }) {
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${open ? 'visible' : 'invisible'}`}>
-      <div className="relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
+      <div className="flex flex-col items-center relative bg-slate-600 rounded-lg shadow-xl p-6 m-4 max-w-sm max-h-full text-center z-50">
         <button onClick={onClose} className="absolute top-0 right-0 p-2 mr-2 text-white text-2xl hover:text-gray-300" type="button">
           &times;
         </button>
         <Logo />
         <h2 className="text-center mx-2 m-1 mb-0 text-3xl font-bold text-white">
-          {`${winner.color.charAt(0).toUpperCase() + winner.color.slice(1).toLowerCase()} Won!`}
+          {`${winner.color.charAt(0).toUpperCase() + winner.color.slice(1).toLowerCase()} ${checkmate ? 'won by checkmate!' : 'won!'}`}
         </h2>
         <p className="mt-1 text-xl text-gray-300">
           {winner.name}
         </p>
-        <Link href="/">
+        <Link href="/" className="w-full">
           <button className="w-full mx-1 mt-5 text-xl rounded-lg font-semibold bg-green-500 text-white px-4 py-2 hover:bg-green-600 focus:bg-green-700" type="button">
             Play Again
           </button>
