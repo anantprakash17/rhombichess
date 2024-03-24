@@ -1,0 +1,20 @@
+version: '3'
+services:
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+       - DB_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
