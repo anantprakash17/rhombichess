@@ -76,7 +76,7 @@ function Board({
       return;
     }
 
-    fetch(`http://${baseUrl}/api/game/${gameCode}`, {
+    fetch(`${baseUrl}/api/game/${gameCode}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ old_pos: oldPosition, new_pos: newPosition }),
@@ -329,7 +329,7 @@ export function PiecePromotionModal({ color, open, gameCode }) {
 
   const handlePromotion = (event) => {
     event.preventDefault();
-    fetch(`http://${baseUrl}/api/game/promotion/${gameCode}`, {
+    fetch(`${baseUrl}/api/game/promotion/${gameCode}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -28,7 +28,7 @@ export default function Game({ gameData }) {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const newSocket = io.connect(`http://${baseUrl}`);
+      const newSocket = io.connect(`${baseUrl}`);
       setSocket(newSocket);
       return () => newSocket.disconnect();
     } return null;
