@@ -421,12 +421,12 @@ export function TopLabel() {
 }
 
 export function SideLabel() {
-  const numbers = Array.from({ length: 37 }, (_, i) => i + 1);
+  const numbers = Array.from({ length: 18 }, (_, i) => i + 1);
 
   return (
-    <div className="w-fit mt-6 pr-14 ml-[-76px] h-full items-center justify-between flex flex-col text-[16px] font-semibold text-gray-500">
-      {numbers.reverse().map((number) => (
-        <div className="my-[0.5px]" key={number}>
+    <div className="w-fit mb-[-7px] pr-14 ml-[-76px] h-full items-center justify-between flex flex-col text-[16px] font-semibold text-gray-500">
+      {numbers.map((number) => (
+        <div className="min-h-[50px] h-[50px] flex justify-center items-center" key={number}>
           {number}
         </div>
       ))}
