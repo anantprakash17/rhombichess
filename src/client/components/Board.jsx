@@ -16,7 +16,7 @@ import Logo from './icons/Logo';
 import baseUrl from '../constants';
 
 function Board({
-  initialGameData, gameCode, disabled, socket, initialColor,
+  initialGameData, gameCode, disabled, socket, initialColor, labels = true,
 }) {
   const [gameData, setGameData] = useState(initialGameData);
   const [selectedPiece, setSelectedPiece] = useState(null);
@@ -208,9 +208,21 @@ function Board({
 
   return (
     <div>
-      <div data-testid="board" className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180 pl-9' : 'pl-4'}`}>
-        {generateBoardUI()}
-      </div>
+      {labels ? (
+        <div className="flex justify-center items-center w-fit m-auto relative">
+          <SideLabel />
+          <div className="w-fit flex flex-col justify-center items-center m-auto">
+            <TopLabel />
+            <div data-testid="board" className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180 pl-9' : 'pl-4'}`}>
+              {generateBoardUI()}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div data-testid="board" className={`flex justify-center items-center ${color === 'black' && !gameData.local ? 'rotate-180 pl-9' : 'pl-4'}`}>
+          {generateBoardUI()}
+        </div>
+      )}
 
       <ConfirmMoveModal open={confirmMoveModalOpen}>
         <div className="flex-col items-center justify-center w-full bg-slate-600">
@@ -380,6 +392,44 @@ export function PiecePromotionModal({ color, open, gameCode }) {
           </button>
         </form>
       </div>
+    </div>
+  );
+}
+
+export function TopLabel() {
+  return (
+    <div className="w-full ml-[-17px] mt-[-21px] items-center justify-between flex font-semibold text-gray-500">
+      <span className="pl-4">a</span>
+      <span>b</span>
+      <span>c</span>
+      <span>d</span>
+      <span>e</span>
+      <span>f</span>
+      <span>g</span>
+      <span>h</span>
+      <span className="px-3 ml-[-1.5px]">i</span>
+      <span>j</span>
+      <span>k</span>
+      <span>l</span>
+      <span>m</span>
+      <span>n</span>
+      <span>o</span>
+      <span>p</span>
+      <span className="pr-4">q</span>
+    </div>
+  );
+}
+
+export function SideLabel() {
+  const numbers = Array.from({ length: 18 }, (_, i) => i + 1);
+
+  return (
+    <div className="w-fit mb-[-7px] pr-14 ml-[-76px] h-full items-center justify-between flex flex-col text-[16px] font-semibold text-gray-500">
+      {numbers.map((number) => (
+        <div className="min-h-[50px] h-[50px] flex justify-center items-center" key={number}>
+          {number}
+        </div>
+      ))}
     </div>
   );
 }

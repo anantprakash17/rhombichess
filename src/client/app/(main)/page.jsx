@@ -19,7 +19,7 @@ export default async function Home() {
         <LandingHero />
       </div>
       <div className="w-1/2 scale-[.85] flex justify-center items-center content-center">
-        <Board initialGameData={data} disabled />
+        <Board initialGameData={data} disabled labels={false} />
       </div>
     </main>
   );
