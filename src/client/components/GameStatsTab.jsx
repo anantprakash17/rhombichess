@@ -1,10 +1,10 @@
 /* eslint-disable consistent-return */
 
-import React, { useState, useEffect, useReducer, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Timer from './Timer';
 import CapturedPieces from './CapturedPieces';
-import { set } from 'lodash';
+
 
 export default function GameStatsTab({ gameData, socket }) {
   const [copiedField, setCopiedField] = useState(null);
