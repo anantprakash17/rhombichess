@@ -6,7 +6,6 @@ import Timer from './Timer';
 import CapturedPieces from './CapturedPieces';
 import MoveStack from './MoveStack';
 
-
 export default function GameStatsTab({ gameData, socket }) {
   const [copiedField, setCopiedField] = useState(null);
   const [timeLeftP1, setTimeLeftP1] = useState(gameData?.player_1?.timer_duration);
@@ -145,7 +144,7 @@ export default function GameStatsTab({ gameData, socket }) {
         </div>
       </div>
       <div className="overflow-auto min-h-[155px] max-h-[300px] scrollbar-custom bg-gray-300 px-2 py-1 rounded">
-        < MoveStack moveStack={moveStack} endOfMoves={endOfMoves} />
+        <MoveStack moveStack={moveStack} endOfMoves={endOfMoves} />
       </div>
     </section>
   );
