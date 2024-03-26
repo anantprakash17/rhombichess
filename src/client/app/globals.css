@@ -18,9 +18,20 @@
     background-color: #1f2937;
     border-radius: 20px;
 }
-  
-  
 
+.scrollbar-custom-white::-webkit-scrollbar {
+    width: 8px;
+}
+  
+.scrollbar-custom-white::-webkit-scrollbar-track {
+    background: rgb(209 213 219 / 1);
+    border-radius: 20px;
+}
+  
+.scrollbar-custom-white::-webkit-scrollbar-thumb {
+    background-color: #1f2937;
+    border-radius: 20px;
+}
   
   
   

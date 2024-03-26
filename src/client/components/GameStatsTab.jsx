@@ -69,7 +69,7 @@ export default function GameStatsTab({ gameData, socket }) {
   };
 
   return (
-    <section className="m-2 h-1/2 flex-grow">
+    <section className="m-2 flex-grow">
       <div className="flex gap-4 justify-between">
         <button
           onClick={() => copyToClipboard('CODE', gameData?.game_id)}
@@ -110,9 +110,9 @@ export default function GameStatsTab({ gameData, socket }) {
           </button>
         )}
       </div>
-      <div className="flex flex-col w-full text-2xl font-bold mt-6">
+      <div className="flex flex-col w-full text-2xl font-bold mt-4">
         <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_1?.color && 'bg-green-300'}`}>
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[150px] ${turn === gameData?.player_1?.color && 'bg-green-300'}`}>
             <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -122,13 +122,13 @@ export default function GameStatsTab({ gameData, socket }) {
               />
             ) : null }
           </div>
-          <div className="flex flex-1 justify-center h-[180px]">
+          <div className="flex flex-1 justify-center h-[150px]">
             <CapturedPieces capturedPieces={capturedP1} />
           </div>
         </div>
 
-        <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_2?.color && 'bg-green-300'}`}>
+        <div className="flex flex-1 items-center justify-between mt-2">
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[150px] ${turn === gameData?.player_2?.color && 'bg-green-300'}`}>
             <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -138,12 +138,12 @@ export default function GameStatsTab({ gameData, socket }) {
               />
             ) : null }
           </div>
-          <div className="flex flex-1 justify-center h-[180px]">
+          <div className="flex flex-1 justify-center h-[150px]">
             <CapturedPieces capturedPieces={capturedP2} />
           </div>
         </div>
       </div>
-      <div className="overflow-auto min-h-[155px] max-h-[300px] scrollbar-custom bg-gray-300 px-2 py-1 rounded">
+      <div>
         <MoveStack moveStack={moveStack} endOfMoves={endOfMoves} />
       </div>
     </section>

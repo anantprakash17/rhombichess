@@ -54,16 +54,16 @@ export default function Game({ gameData }) {
         <div className="scale-90 flex-grow">
           <Board initialGameData={gameData} initialColor={color} gameCode={gameCode} socket={socket} />
         </div>
-        <div className="h-full shadow-lg w-[450px] relative rounded-xl bg-gray-500 flex flex-col text-base text-gray-900">
+        <div className="my-5 h-full shadow-lg w-[450px] relative rounded-xl bg-gray-500 flex flex-col text-base text-gray-900">
           <div className="bg-gray-400 rounded-xl flex text-white font-semibold">
-            <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tl-xl flex-1 p-4`}>GAME</button>
-            <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-700' : 'bg-gray-600'} flex-1 p-4`}>GAMES</button>
-            <button type="button" onClick={() => setActiveTab('players')} className={`${activeTab === 'players' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tr-xl flex-1 p-4`}>PLAYERS</button>
+            <button type="button" onClick={() => setActiveTab('game')} className={`${activeTab === 'game' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tl-xl flex-1 px-1 py-3`}>GAME</button>
+            <button type="button" onClick={() => setActiveTab('games')} className={`${activeTab === 'games' ? 'bg-gray-700' : 'bg-gray-600'} flex-1 px-1 py-3`}>GAMES</button>
+            <button type="button" onClick={() => setActiveTab('players')} className={`${activeTab === 'players' ? 'bg-gray-700' : 'bg-gray-600'} rounded-tr-xl flex-1 px-1 py-3`}>PLAYERS</button>
           </div>
-          <div className="m-2 flex-grow">
+          <div className="m-2">
             {tabs[activeTab].content}
           </div>
-          <div className="flex-grow scrollbar-custom overflow-y-auto rounded-b-xl max-h-full">
+          <div className="scrollbar-custom overflow-y-auto rounded-b-xl flex-grow">
             <ChatWindow gameCode={gameCode} socket={socket} />
           </div>
         </div>

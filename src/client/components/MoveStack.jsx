@@ -4,8 +4,8 @@ import Image from 'next/image';
 
 export default function MoveStack({ moveStack, endOfMoves }) {
   return (
-    <>
-      {moveStack && moveStack.map((move, index) => (
+    <div className="h-[150px] overflow-auto scrollbar-custom-white bg-gray-300 px-2 py-1 mt-2 rounded-lg w-full">
+      {moveStack ? moveStack.map((move, index) => (
         <div key={index}>
           <div className="flex justify-left items-center flex-wrap">
             <div className="inline-flex">
@@ -44,8 +44,12 @@ export default function MoveStack({ moveStack, endOfMoves }) {
             </div>
           </div>
         </div>
-      ))}
+      )) : (
+        <p className="w-full flex text-xl h-full items-center justify-center text-gray-400 font-semibold">
+          No Move History
+        </p>
+      )}
       <div ref={endOfMoves} />
-    </>
+    </div>
   );
 }
