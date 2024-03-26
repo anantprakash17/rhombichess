@@ -25,6 +25,8 @@ class ChessBoard:
         PieceType.HAWK: Hawk,
     }
 
+    COLUMN_MAP = {i: chr(81 - i) for i in range(17)}
+
     def __init__(self):
         """
         Creates a chess board
@@ -41,6 +43,7 @@ class ChessBoard:
         self.promotion = False
         self.promotion_loc = None
         self.sim_game = False
+        self.move_stack = []
 
     def create_board(self) -> None:
         """
@@ -331,11 +334,13 @@ class ChessBoard:
         end_tile = self.board[end[0]][end[1]]
         start_tile = self.board[start[0]][start[1]]
 
+        captured_piece = None
         # Check if king captured
         if not end_tile.is_empty():
             if "king" in end_tile.piece.get_piece():
                 self.game_over = True
             self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece.get_piece())
+            captured_piece = end_tile.piece.get_piece()
 
         # Check if king is being moved
         if "king" in start_tile.piece.get_piece():
@@ -349,14 +354,18 @@ class ChessBoard:
         end_tile.piece = start_tile.piece
         start_tile.piece = None
 
-        self.update_valid_moves()
-        self.in_check = (self.king_check(0), self.king_check(1))
-
         color = 1 if end_tile.piece.color == 0 else 0
+        self.update_game_state(color)
 
-        if not self.filter_dangerous_moves(color):
-            self.checkmate = True
-            self.game_over = True
+        move_info = {
+            "piece": end_tile.piece.get_piece(),
+            "start": f"{self.COLUMN_MAP[start[0]]}{start[1]}",
+            "end": f"{self.COLUMN_MAP[end[0]]}{end[1]}",
+            "piece_affected": captured_piece,
+            "piece_promoted": False,
+            "check": any(self.in_check),
+        }
+        self.move_stack.append(move_info)
 
         return True
 
@@ -406,10 +415,19 @@ class ChessBoard:
             return False
 
         piece_type = PieceType(piece.lower())
-        promotion_piece = self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece
-        self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece = self.PIECE_CLASSES[piece_type](
-            promotion_piece.color
-        )
+        promotion_tile = self.board[self.promotion_loc[0]][self.promotion_loc[1]]
+        promotion_piece = promotion_tile.piece
+        promotion_tile.piece = self.PIECE_CLASSES[piece_type](promotion_piece.color)
+        self.update_game_state(1 if promotion_piece.color == 0 else 0)
+        move_info = {
+            "piece": promotion_piece.get_piece(),
+            "start": f"{self.COLUMN_MAP[self.promotion_loc[0]]}{self.promotion_loc[1]}",
+            "end": f"{self.COLUMN_MAP[self.promotion_loc[0]]}{self.promotion_loc[1]}",
+            "piece_affected": promotion_tile.piece.get_piece(),
+            "piece_promoted": True,
+            "check": any(self.in_check),
+        }
+        self.move_stack.append(move_info)
         self.promotion = False
         self.promotion_loc = None
         return True
@@ -464,3 +482,15 @@ class ChessBoard:
                 checkmate = False
             self.valid_moves[k] = v
         return not checkmate
+
+    def update_game_state(self, color) -> None:
+        """
+        Updates the game state
+        Args:
+            color (int): color of the player
+        """
+        self.update_valid_moves()
+        self.in_check = (self.king_check(0), self.king_check(1))
+        if not self.filter_dangerous_moves(color):
+            self.checkmate = True
+            self.game_over = True

@@ -209,6 +209,7 @@ def game(game_id):
                 "in_check": games[game_id]["board"].in_check,
                 "promotion": games[game_id]["board"].promotion,
                 "checkmate": games[game_id]["board"].checkmate,
+                "move_stack": games[game_id]["board"].move_stack,
             }
         )
     else:
@@ -294,6 +295,7 @@ def emit_timer_update(game_id):
         "captured_pieces": games[game_id]["board"].captured_pieces,
         "promotion": games[game_id]["board"].promotion,
         "in_check": games[game_id]["board"].in_check,
+        "move_stack": games[game_id]["board"].move_stack,
     }
     socketio.emit("timer_update", response_data, to=game_id)
 

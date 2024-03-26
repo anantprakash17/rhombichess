@@ -1,9 +1,10 @@
 /* eslint-disable consistent-return */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Timer from './Timer';
 import CapturedPieces from './CapturedPieces';
+import MoveStack from './MoveStack';
 
 export default function GameStatsTab({ gameData, socket }) {
   const [copiedField, setCopiedField] = useState(null);
@@ -16,6 +17,9 @@ export default function GameStatsTab({ gameData, socket }) {
   const [capturedP1, setCapturedP1] = useState(null);
   const [capturedP2, setCapturedP2] = useState(null);
 
+  const [moveStack, setMoveStack] = useState(null);
+  const endOfMoves = useRef(null);
+
   useEffect(() => {
     if (gameData?.player_1?.color === 'white') {
       setCapturedP1(gameData?.captured_pieces?.black);
@@ -27,6 +31,10 @@ export default function GameStatsTab({ gameData, socket }) {
   }, [gameData]);
 
   useEffect(() => {
+    endOfMoves.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [moveStack]);
+
+  useEffect(() => {
     if (!socket || !gameData) return;
 
     const handleTimerUpdate = (data) => {
@@ -34,6 +42,8 @@ export default function GameStatsTab({ gameData, socket }) {
       setTimeLeftP2(data.timer_duration_p2);
       setTimerRunningP1(data.timer_running_p1);
       setTimerRunningP2(data.timer_running_p2);
+
+      setMoveStack(data.move_stack);
 
       setTurn(data?.turn);
       if (gameData?.player_1?.color === 'white') {
@@ -59,7 +69,7 @@ export default function GameStatsTab({ gameData, socket }) {
   };
 
   return (
-    <section className="m-2 h-1/2 flex-grow">
+    <section className="m-2 flex-grow">
       <div className="flex gap-4 justify-between">
         <button
           onClick={() => copyToClipboard('CODE', gameData?.game_id)}
@@ -100,9 +110,9 @@ export default function GameStatsTab({ gameData, socket }) {
           </button>
         )}
       </div>
-      <div className="flex flex-col w-full text-2xl font-bold mt-6">
+      <div className="flex flex-col w-full text-2xl font-bold mt-4">
         <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_1?.color && 'bg-green-300'}`}>
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[150px] ${turn === gameData?.player_1?.color && 'bg-green-300'}`}>
             <Image src={`/pieces/pawn-${gameData?.player_1?.color}.png`} alt="pawn1" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -112,13 +122,13 @@ export default function GameStatsTab({ gameData, socket }) {
               />
             ) : null }
           </div>
-          <div className="flex flex-1 justify-center h-[180px]">
+          <div className="flex flex-1 justify-center h-[150px]">
             <CapturedPieces capturedPieces={capturedP1} />
           </div>
         </div>
 
-        <div className="flex flex-1 items-center justify-between">
-          <div className={`flex flex-col items-center justify-center rounded-lg h-[163px] ${turn === gameData?.player_2?.color && 'bg-green-300'}`}>
+        <div className="flex flex-1 items-center justify-between mt-2">
+          <div className={`flex flex-col items-center justify-center rounded-lg h-[150px] ${turn === gameData?.player_2?.color && 'bg-green-300'}`}>
             <Image src={`/pieces/pawn-${gameData?.player_2?.color}.png`} alt="pawn2" width={80} height={60} />
             {gameData.timed_game ? (
               <Timer
@@ -128,10 +138,13 @@ export default function GameStatsTab({ gameData, socket }) {
               />
             ) : null }
           </div>
-          <div className="flex flex-1 justify-center h-[180px]">
+          <div className="flex flex-1 justify-center h-[150px]">
             <CapturedPieces capturedPieces={capturedP2} />
           </div>
         </div>
+      </div>
+      <div>
+        <MoveStack moveStack={moveStack} endOfMoves={endOfMoves} />
       </div>
     </section>
   );
