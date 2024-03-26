@@ -25,6 +25,8 @@ class ChessBoard:
         PieceType.HAWK: Hawk,
     }
 
+    COLUMN_MAP = {i: chr(81 - i) for i in range(17)}
+
     def __init__(self):
         """
         Creates a chess board
@@ -41,6 +43,7 @@ class ChessBoard:
         self.promotion = False
         self.promotion_loc = None
         self.sim_game = False
+        self.move_stack = []
 
     def create_board(self) -> None:
         """
@@ -331,11 +334,13 @@ class ChessBoard:
         end_tile = self.board[end[0]][end[1]]
         start_tile = self.board[start[0]][start[1]]
 
+        captured_piece = None
         # Check if king captured
         if not end_tile.is_empty():
             if "king" in end_tile.piece.get_piece():
                 self.game_over = True
             self.captured_pieces["black" if end_tile.piece.color == 0 else "white"].append(end_tile.piece.get_piece())
+            captured_piece = end_tile.piece.get_piece()
 
         # Check if king is being moved
         if "king" in start_tile.piece.get_piece():
@@ -358,6 +363,14 @@ class ChessBoard:
             self.checkmate = True
             self.game_over = True
 
+        self.move_stack.append(
+            (
+                f"{end_tile.piece.get_piece()}",
+                f"{self.COLUMN_MAP[start[0]]}-{start[1]}",
+                f"{self.COLUMN_MAP[end[0]]}-{end[1]}",
+                captured_piece,
+            )
+        )
         return True
 
     def update_valid_moves(self, test_move=False) -> None | dict[tuple[int, int], list[tuple[int, int]]]:
