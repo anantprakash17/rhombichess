@@ -1,5 +1,6 @@
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
 
+
 class King(ChessPiece):
     def __init__(self, color: int) -> None:
         """
@@ -139,16 +140,22 @@ class Rook(ChessPiece):
                 if board[i][y].is_empty():
                     valid_moves.append((i, y))
                 else:
+                    if super().can_capture(i, y, board):
+                        valid_moves.append((i, y))
                     break
             elif tile.orientation == 0:
                 if board[i][y].is_empty():
                     valid_moves.append((i, y))
                     y -= 1
                 else:
+                    if super().can_capture(i, y, board):
+                        valid_moves.append((i, y))
                     break
             elif board[i][y].is_empty():  # tile is normal
                 valid_moves.append((i, y))
             else:
+                if super().can_capture(i, y, board):
+                    valid_moves.append((i, y))
                 break
         return valid_moves
 
@@ -686,7 +693,8 @@ class Bishop(ChessPiece):  # Author: Anant
             potential_moves += self.move_lr(position, board, True)
         valid_moves = []
         for move in potential_moves:
-            if board[move[0]][move[1]].color == self.color:
+            tile = board[move[0]][move[1]]
+            if tile.piece and tile.piece.color == self.color:
                 continue
             valid_moves.append(move)
         return valid_moves
@@ -1068,12 +1076,14 @@ class Jester(ChessPiece):  # Author: Phil
                     continue
                 valid_moves.append((x, b))
                 b += 1
-            if b < (len(board[x]) - 1) and board[x][b].type != TileType.PADDING and board[x][b].piece.color != self.color:
+            if (
+                b < (len(board[x]) - 1)
+                and board[x][b].type != TileType.PADDING
+                and board[x][b].piece.color != self.color
+            ):
                 valid_moves.append((x, b))
         elif current_tile.orientation == 1:
             a, b = x + 2, y + 1
-            #print((a,b),end='')
-            #print(board[a][b].type)
             while (
                 a < len(board)
                 and b < (len(board[a]) - 1)
