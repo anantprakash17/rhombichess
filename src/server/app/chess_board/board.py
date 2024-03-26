@@ -354,19 +354,13 @@ class ChessBoard:
         end_tile.piece = start_tile.piece
         start_tile.piece = None
 
-        self.update_valid_moves()
-        self.in_check = (self.king_check(0), self.king_check(1))
-
         color = 1 if end_tile.piece.color == 0 else 0
-
-        if not self.filter_dangerous_moves(color):
-            self.checkmate = True
-            self.game_over = True
+        self.update_game_state(color)
 
         move_info = {
             "piece": end_tile.piece.get_piece(),
-            "start": f"{self.COLUMN_MAP[start[0]]}-{start[1]}",
-            "end": f"{self.COLUMN_MAP[end[0]]}-{end[1]}",
+            "start": f"{self.COLUMN_MAP[start[0]]}{start[1]}",
+            "end": f"{self.COLUMN_MAP[end[0]]}{end[1]}",
             "piece_affected": captured_piece,
             "piece_promoted": False,
             "check": any(self.in_check),
@@ -424,13 +418,14 @@ class ChessBoard:
         promotion_tile = self.board[self.promotion_loc[0]][self.promotion_loc[1]]
         promotion_piece = promotion_tile.piece
         promotion_tile.piece = self.PIECE_CLASSES[piece_type](promotion_piece.color)
+        self.update_game_state(1 if promotion_piece.color == 0 else 0)
         move_info = {
             "piece": promotion_piece.get_piece(),
-            "start": f"{self.COLUMN_MAP[self.promotion_loc[0]]}-{self.promotion_loc[1]}",
-            "end": f"{self.COLUMN_MAP[self.promotion_loc[0]]}-{self.promotion_loc[1]}",
+            "start": f"{self.COLUMN_MAP[self.promotion_loc[0]]}{self.promotion_loc[1]}",
+            "end": f"{self.COLUMN_MAP[self.promotion_loc[0]]}{self.promotion_loc[1]}",
             "piece_affected": promotion_tile.piece.get_piece(),
             "piece_promoted": True,
-            "check": False,
+            "check": any(self.in_check),
         }
         self.move_stack.append(move_info)
         self.promotion = False
@@ -487,3 +482,15 @@ class ChessBoard:
                 checkmate = False
             self.valid_moves[k] = v
         return not checkmate
+
+    def update_game_state(self, color) -> None:
+        """
+        Updates the game state
+        Args:
+            color (int): color of the player
+        """
+        self.update_valid_moves()
+        self.in_check = (self.king_check(0), self.king_check(1))
+        if not self.filter_dangerous_moves(color):
+            self.checkmate = True
+            self.game_over = True
