@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Timer from './Timer';
 import CapturedPieces from './CapturedPieces';
+import MoveStack from './MoveStack';
 
 
 export default function GameStatsTab({ gameData, socket }) {
@@ -143,36 +144,8 @@ export default function GameStatsTab({ gameData, socket }) {
           </div>
         </div>
       </div>
-      <div className="overflow-auto h-[155px] scrollbar-custom bg-gray-300 px-2 py-1 rounded">
-        {moveStack && moveStack.map((move, index) => (
-          <div key={index} className="flex justify-left items-center">
-            <div className="inline-flex">
-              <Image
-                src={`/pieces/${move[0]}.png`}
-                alt={move[0]}
-                width={38}
-                height={18}
-              />
-            </div>
-            <div className="flex items-center">
-              <p>
-                {` moved from ${move[1]} to ${move[2]}`}
-              </p>
-              {move[3] && (
-                <div className="inline-flex items-center ml-2">
-                  <p>and captured</p>
-                  <Image
-                    src={`/pieces/${move[3]}.png`}
-                    alt={move[3]}
-                    width={38}
-                    height={18}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-        <div ref={endOfMoves}></div>
+      <div className="overflow-auto min-h-[155px] max-h-[300px] scrollbar-custom bg-gray-300 px-2 py-1 rounded">
+        < MoveStack moveStack={moveStack} endOfMoves={endOfMoves} />
       </div>
     </section>
   );

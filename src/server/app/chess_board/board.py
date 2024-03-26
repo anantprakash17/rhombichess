@@ -363,14 +363,16 @@ class ChessBoard:
             self.checkmate = True
             self.game_over = True
 
-        self.move_stack.append(
-            (
-                f"{end_tile.piece.get_piece()}",
-                f"{self.COLUMN_MAP[start[0]]}-{start[1]}",
-                f"{self.COLUMN_MAP[end[0]]}-{end[1]}",
-                captured_piece,
-            )
-        )
+        move_info = {
+            "piece": end_tile.piece.get_piece(),
+            "start": f"{self.COLUMN_MAP[start[0]]}-{start[1]}",
+            "end": f"{self.COLUMN_MAP[end[0]]}-{end[1]}",
+            "piece_affected": captured_piece,
+            "piece_promoted": False,
+            "check": any(self.in_check),
+        }
+        self.move_stack.append(move_info)
+
         return True
 
     def update_valid_moves(self, test_move=False) -> None | dict[tuple[int, int], list[tuple[int, int]]]:
@@ -419,10 +421,18 @@ class ChessBoard:
             return False
 
         piece_type = PieceType(piece.lower())
-        promotion_piece = self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece
-        self.board[self.promotion_loc[0]][self.promotion_loc[1]].piece = self.PIECE_CLASSES[piece_type](
-            promotion_piece.color
-        )
+        promotion_tile = self.board[self.promotion_loc[0]][self.promotion_loc[1]]
+        promotion_piece = promotion_tile.piece
+        promotion_tile.piece = self.PIECE_CLASSES[piece_type](promotion_piece.color)
+        move_info = {
+            "piece": promotion_piece.get_piece(),
+            "start": f"{self.COLUMN_MAP[self.promotion_loc[0]]}-{self.promotion_loc[1]}",
+            "end": f"{self.COLUMN_MAP[self.promotion_loc[0]]}-{self.promotion_loc[1]}",
+            "piece_affected": promotion_tile.piece.get_piece(),
+            "piece_promoted": True,
+            "check": False,
+        }
+        self.move_stack.append(move_info)
         self.promotion = False
         self.promotion_loc = None
         return True

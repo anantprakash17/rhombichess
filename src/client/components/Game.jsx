@@ -63,7 +63,7 @@ export default function Game({ gameData }) {
           <div className="m-2 flex-grow">
             {tabs[activeTab].content}
           </div>
-          <div className="flex-grow scrollbar-custom overflow-y-auto rounded-b-xl max-h-[375px]">
+          <div className="flex-grow scrollbar-custom overflow-y-auto rounded-b-xl max-h-full">
             <ChatWindow gameCode={gameCode} socket={socket} />
           </div>
         </div>

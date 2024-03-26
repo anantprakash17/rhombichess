@@ -41,7 +41,7 @@ export default function ChatWindow({ gameCode, socket }) {
   }, [messages]);
 
   return (
-    <section className="flex flex-col bg-gray-700 p-2 text-lg h-[375px]">
+    <section className="flex flex-col bg-gray-700 p-2 text-lg min-h-[150px] h-full overflow-y-auto">
       <div className="flex-1 scrollbar-custom overflow-y-auto bg-gray-600 rounded-lg mb-2 pt-2">
         {messages.map((msg, index) => (
           <div key={`message-${index}`} className="pb-1 px-2" ref={index === messages.length - 1 ? lastMessageRef : null}>
