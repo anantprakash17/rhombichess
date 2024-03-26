@@ -1,9 +1,10 @@
 /* eslint-disable consistent-return */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import Image from 'next/image';
 import Timer from './Timer';
 import CapturedPieces from './CapturedPieces';
+import { set } from 'lodash';
 
 export default function GameStatsTab({ gameData, socket }) {
   const [copiedField, setCopiedField] = useState(null);
@@ -16,6 +17,9 @@ export default function GameStatsTab({ gameData, socket }) {
   const [capturedP1, setCapturedP1] = useState(null);
   const [capturedP2, setCapturedP2] = useState(null);
 
+  const [moveStack, setMoveStack] = useState(null);
+  const endOfMoves = useRef(null);
+
   useEffect(() => {
     if (gameData?.player_1?.color === 'white') {
       setCapturedP1(gameData?.captured_pieces?.black);
@@ -27,6 +31,10 @@ export default function GameStatsTab({ gameData, socket }) {
   }, [gameData]);
 
   useEffect(() => {
+    endOfMoves.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [moveStack]);
+
+  useEffect(() => {
     if (!socket || !gameData) return;
 
     const handleTimerUpdate = (data) => {
@@ -34,6 +42,8 @@ export default function GameStatsTab({ gameData, socket }) {
       setTimeLeftP2(data.timer_duration_p2);
       setTimerRunningP1(data.timer_running_p1);
       setTimerRunningP2(data.timer_running_p2);
+
+      setMoveStack(data.move_stack);
 
       setTurn(data?.turn);
       if (gameData?.player_1?.color === 'white') {
@@ -132,6 +142,37 @@ export default function GameStatsTab({ gameData, socket }) {
             <CapturedPieces capturedPieces={capturedP2} />
           </div>
         </div>
+      </div>
+      <div className="overflow-auto h-[155px] scrollbar-custom bg-gray-300 px-2 py-1 rounded">
+        {moveStack && moveStack.map((move, index) => (
+          <div key={index} className="flex justify-left items-center">
+            <div className="inline-flex">
+              <Image
+                src={`/pieces/${move[0]}.png`}
+                alt={move[0]}
+                width={38}
+                height={18}
+              />
+            </div>
+            <div className="flex items-center">
+              <p>
+                {` moved from ${move[1]} to ${move[2]}`}
+              </p>
+              {move[3] && (
+                <div className="inline-flex items-center ml-2">
+                  <p>and captured</p>
+                  <Image
+                    src={`/pieces/${move[3]}.png`}
+                    alt={move[3]}
+                    width={38}
+                    height={18}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+        <div ref={endOfMoves}></div>
       </div>
     </section>
   );
