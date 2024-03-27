@@ -17,7 +17,7 @@ export default function GameStatsTab({ gameData, socket }) {
   const [capturedP1, setCapturedP1] = useState(null);
   const [capturedP2, setCapturedP2] = useState(null);
 
-  const [moveStack, setMoveStack] = useState(null);
+  const [moveStack, setMoveStack] = useState(gameData?.move_stack);
   const endOfMoves = useRef(null);
 
   useEffect(() => {

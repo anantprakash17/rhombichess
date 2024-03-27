@@ -170,6 +170,7 @@ def game(game_id):
                 "in_check": games[game_id]["board"].in_check,
                 "checkmate": games[game_id]["board"].checkmate,
                 "promotion": games[game_id]["board"].promotion,
+                "move_stack": games[game_id]["board"].move_stack,
             }
         )
     elif request.method == "POST":
