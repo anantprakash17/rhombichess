@@ -20,7 +20,7 @@ export default function MoveStack({ moveStack, endOfMoves }) {
               {!move.piece_promoted
                 && (
                 <p className="ml-2">
-                    {`${move.start}-${move.end}`}
+                    {`${move.start} → ${move.end}`}
                 </p>
                 )}
               {move.piece_affected && (
@@ -29,9 +29,9 @@ export default function MoveStack({ moveStack, endOfMoves }) {
                 <>
                   <p className="mr-2">{move.start}</p>
                   {' '}
-                  <p className="bg-gray-200 px-1 rounded mr-2">pr</p>
+                  <p className="bg-gray-200 text-gray-800 px-1 rounded mr-2">⬆</p>
                 </>
-                )) || (<p className="bg-gray-200 px-1 rounded mr-1"> x </p>)}
+                )) || (<p className="px-1 rounded mr-1 text-lg"> × </p>)}
                 <Image
                   src={`/pieces/${move.piece_affected}.png`}
                   alt={move.piece_affected}
