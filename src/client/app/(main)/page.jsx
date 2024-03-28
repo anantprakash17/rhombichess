@@ -14,11 +14,11 @@ export default async function Home() {
   const data = await response.json();
 
   return (
-    <main className="relative flex justify-center items-center h-screen">
-      <div className="w-1/2 -mr-16">
+    <main className="relative flex-col sm:flex-row flex justify-center items-center min-h-screen sm:h-screen">
+      <div className="w-full sm:w-1/2 sm:-mr-16">
         <LandingHero />
       </div>
-      <div className="w-1/2 scale-[.85] flex justify-center items-center content-center">
+      <div className="hidden sm:flex w-1/2 scale-[.85] justify-center items-center content-center">
         <Board initialGameData={data} disabled labels={false} />
       </div>
     </main>

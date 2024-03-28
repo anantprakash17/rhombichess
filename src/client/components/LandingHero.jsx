@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PlayLocalButton, PlayOnlineButton } from './Buttons';
+import Logo from './icons/Logo';
 
 export default function LandingHero() {
   return (
@@ -15,7 +16,7 @@ export default function LandingHero() {
             <svg className="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" /></svg>
           </div>
         </Link>
-        <h1 className="mb-4 text-5xl font-bold tracking-tight leading-none text-gray-900">
+        <h1 className="mb-8 sm:mb-4 text-3xl sm:text-5xl font-bold tracking-tight sm:leading-none text-gray-900">
           All-New Strategic Online
           <br />
           Chess Variant!
@@ -24,9 +25,23 @@ export default function LandingHero() {
           Experience the thrill of RhombiChess, where traditional strategy meets innovative gameplay!
           A fresh twist on classic chess, featuring a challenging rhombus-shaped board and exciting new pieces!
         </p>
-        <div className="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
-          <PlayOnlineButton />
-          <PlayLocalButton />
+        <div className="flex flex-col">
+          <div className="flex sm:mb-8 lg:mb-16 flex-row justify-center space-y-0 space-x-4 pointer-events-none sm:pointer-events-auto">
+            <PlayOnlineButton />
+            <PlayLocalButton />
+          </div>
+          <div className="sm:hidden">
+            <p className="font-semibold bg-red-200 text-red-800 rounded-lg p-3 m-4">
+              Gameplay is not yet available on mobile or tablet devices. We apologize for the inconvenience.
+            </p>
+            <img src="/board.png" alt="Default Game Board" className="mt-16 my-40" />
+            <div className="absolute w-full left-0 bottom-0 flex flex-col justify-center items-center pt-6 bg-gray-800">
+              <Logo width="125" />
+              <div className="text-gray-500 justify-center p-4 space-x-4 w-full flex">
+                {`RhombiChess © ${new Date().getFullYear()}`}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
