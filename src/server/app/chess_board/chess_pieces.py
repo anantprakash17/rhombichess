@@ -763,6 +763,8 @@ class Bishop(ChessPiece):  # Author: Anant
         potential_moves = []
         move = range(x - 1, -1, -1) if direction else range(x + 1, len(board) - 1)
         for i in move:
+            if board[i][y].orientation == 0:
+                continue
             if board[i][y].is_empty() and board[i][y].type != TileType.PADDING:
                 if board[i][y].color == color:
                     potential_moves.append((i, y))
