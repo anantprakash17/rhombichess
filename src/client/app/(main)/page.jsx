@@ -14,7 +14,7 @@ export default async function Home() {
   const data = await response.json();
 
   return (
-    <main className="z-10 absolute top-0 sm:relative flex-col sm:flex-row flex justify-center items-center h-screen">
+    <main className="relative flex-col sm:flex-row flex justify-center items-center min-h-screen sm:h-screen">
       <div className="w-full sm:w-1/2 sm:-mr-16">
         <LandingHero />
       </div>

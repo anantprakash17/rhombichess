@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PlayLocalButton, PlayOnlineButton } from './Buttons';
+import Logo from './icons/Logo';
 
 export default function LandingHero() {
   return (
@@ -29,9 +30,18 @@ export default function LandingHero() {
             <PlayOnlineButton />
             <PlayLocalButton />
           </div>
-          <p className="sm:hidden font-semibold bg-red-200 text-red-800 rounded-lg p-3 m-4">
-            Gameplay is not yet available on mobile or tablet devices. We apologize for the inconvenience.
-          </p>
+          <div className="sm:hidden">
+            <p className="font-semibold bg-red-200 text-red-800 rounded-lg p-3 m-4">
+              Gameplay is not yet available on mobile or tablet devices. We apologize for the inconvenience.
+            </p>
+            <img src="/board.png" alt="Default Game Board" className="mt-16 my-40" />
+            <div className="absolute w-full left-0 bottom-0 flex flex-col justify-center items-center pt-6 bg-gray-800">
+              <Logo width="125" />
+              <div className="text-gray-500 justify-center p-4 space-x-4 w-full flex">
+                {`RhombiChess © ${new Date().getFullYear()}`}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
