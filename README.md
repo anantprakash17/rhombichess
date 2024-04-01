@@ -115,11 +115,12 @@ SHADOW_DATABASE_URL="postgres://***REMOVED***/shadow"
 ## Testing
 
 ### Backend
-To run the tests for the backend (`/src/server`), run the following command:
+To run the tests for the backend (`/src/server`), run the following commands:
 ```bash
 cd src/server
 python3 -m pytest tests
 ```
+> You need to be in the server directory to run the tests as the tests are relative to the server directory.
 
 For stress tests, run the following command:
 ```bash
@@ -127,6 +128,8 @@ python3 -m locust -f src/server/tests/locustfile.py
 ```
 
 This will start a locust server on `localhost:8089`. To view the locust server, navigate to `localhost:8089` in your browser.
+
+> You need the backend server running to run the locust tests. You can start the backend server using `python3 server.py --debug`.
 
 Use locust to test the backend by entering the number of users and the spawn rate, then click start.
 
