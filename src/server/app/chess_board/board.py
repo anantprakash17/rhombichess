@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import copy
 
 from app.chess_board.chess_objects import ChessPiece, ChessTile, PieceType, TileType
