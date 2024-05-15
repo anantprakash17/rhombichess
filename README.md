@@ -104,12 +104,13 @@ This will start the frontend on port 3000. To view the frontend, navigate to `lo
 ### Environment Variables
 The front-end requires a few environment variables to function. In a real-world setting, these variables would be distributed in a more secure manner - however, these are not too sensitive and can be re-generated if needed. Navigate to `/src/client/.env` (or create the file if it doesn't exist) and paste in the following:
 
+> Note: the NEXTAUTH_SECRET is a randomly generated string that is used to secure the session tokens. You can generate a new one by running `openssl rand -base64 32` in your terminal.
 ```
 NEXTAUTH_SECRET=3c1af333b04c584f2b9c4f0718fa6ad7
 NEXTAUTH_URL=http://localhost:3000
 
-DATABASE_URL="postgres://***REMOVED***/neondb"
-SHADOW_DATABASE_URL="postgres://***REMOVED***/shadow"
+DATABASE_URL="<your database URL>" # This project uses a postgres database
+SHADOW_DATABASE_URL="<your shadow database URL>"
 ```
 
 ## Testing
