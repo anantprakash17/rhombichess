@@ -1,3 +1,3 @@
-const baseUrl = 'http://anantprakash.pythonanywhere.com';
+const baseUrl = 'https://anantprakash.pythonanywhere.com';
 
 export default baseUrl;
