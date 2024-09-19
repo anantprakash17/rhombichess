@@ -1,12 +1,12 @@
 bidict==0.23.1
 blinker==1.7.0
 Brotli==1.1.0
-certifi==2024.2.2
+certifi==2024.07.04
 charset-normalizer==3.3.2
 click==8.1.7
 ConfigArgParse==1.7
 Flask==3.0.0
-Flask-Cors==4.0.0
+Flask-Cors==4.0.2
 Flask-Login==0.6.3
 Flask-SocketIO==5.3.6
 gevent==24.2.1
@@ -31,10 +31,10 @@ python-socketio==5.11.2
 pyzmq==25.1.2
 requests==2.31.0
 roundrobin==0.0.4
-setuptools==69.2.0
+setuptools==70.0.0
 simple-websocket==1.0.0
 six==1.16.0
-urllib3==2.2.1
+urllib3==2.2.2
 Werkzeug==3.0.1
 wsproto==1.2.0
 zope.event==5.0
